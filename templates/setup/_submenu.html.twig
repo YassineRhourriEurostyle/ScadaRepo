@@ -1,0 +1,7 @@
+<div class="submenu">
+    {% for t in typesOfDevice %}
+        <a href="?id={{ t.id }}" class="nav-item standard-hover-bg-red 
+           {% if "" == current_route %} standard-bg-grey standard-white active {% endif %}
+           ">{{ t.name }}</a>
+    {% endfor %}
+</div>

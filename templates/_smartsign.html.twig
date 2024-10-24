@@ -1,0 +1,71 @@
+{% extends 'fullsize.html.twig' %}
+{% block title %}
+    Sign for: {{ o.name }}
+{% endblock %}
+{% block body %}
+    
+    <script src="https://cdn.jsdelivr.net/npm/signature_pad@2.3.2/dist/signature_pad.min.js"></script>
+    <script>
+        var canvas;
+        var signaturePad;
+        $(function () {
+            canvas = document.querySelector("canvas");
+            $(canvas).attr('width', $(canvas).width());
+            $(canvas).attr('height', $(canvas).height());
+            signaturePad = new SignaturePad(canvas, {
+                minWidth: 2,
+                maxWidth: 5,
+                penColor: "rgb(21, 30, 90)"
+            });
+            signaturePad.clear();
+            signaturePad.on();
+        });
+
+        function exportSignAndSave() {
+            $('input[name=signature]').val(signaturePad.toDataURL("image/png"));
+            $('form').submit();
+        }
+        ;
+
+    </script>
+    
+    <h2>{{ o.name }}</h2>
+    <div class="row">       
+        <div class="col-sm-12" id="signatureForm">
+
+            {% if get_env('APP_ENV')=='dev' %}
+                <div class="col-12 standard-bg-red standard-black">
+                    <h1 class="ps-0 ms-0 pe-0 me-0">/!\ WARNING /!\ 
+                        In debug mode, signature may not work. 
+                        Please contact the IT dev for further information.</h1>
+                </div>
+            {% endif %}
+
+            <form method="post" enctype="multipart/form-data" action="{{ action }}">
+                <div class="form-group row">
+                    Sign with your finger/mouse:
+                </div>
+                <div class="form-group row">
+                    <input type="hidden" name="signature"/>
+                    <canvas class="col-12" style="height:60vh;"></canvas>
+                    <br/>
+                    <input type="button" onclick="signaturePad.clear();" value="Clear signature"/><br/>
+                </div>
+                <div class="form-group row ms-0 me-0 ps-0 pe-0">
+                    <input class=" ms-0 me-0 ps-0 pe-0" type="submit" value="Submit signature" class="col-6" onclick="exportSignAndSave();"/>
+                </div>
+            </form>
+
+        </div>
+    </div>
+
+    <script>
+        $(function () {
+            $('canvas').attr('width', $('canvas').width());
+        });
+    </script>
+
+
+    
+
+{% endblock %}

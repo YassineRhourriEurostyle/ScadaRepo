@@ -1,0 +1,43 @@
+{% extends 'column.html.twig' %}
+
+{% block title %}User Access | Show{% endblock %}
+{% block submenu %}
+    {{ include('admin/_submenu.html.twig') }}
+{% endblock %}
+{% block body %}
+    {% embed '__titleAndLinks.html.twig' %}
+        {%  block title %}
+            User Access
+        {% endblock %}
+        {%  block subtitle %}
+            <strong>Record details</strong>
+        {% endblock %}
+        {%  block links %}
+            <a href="{{ path('admin_index') }}">Back to admin</a><br/>
+            <a href="{{ path('useraccess_edit', {'id': useraccess.id}) }}">Edit</a><br/>
+            <a href="{{ path('useraccess_index') }}">Back to list</a>
+        {% endblock %}
+    {% endembed %}
+    <table class="no-filtering col-md-12 table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ useraccess.id }}</td>
+            </tr>
+            <tr>
+                <th>User</th>
+                <td>{{ useraccess.User }}</td>
+            </tr>
+            <tr>
+                <th>EntityField</th>
+                <td>{{ useraccess.EntityField }}</td>
+            </tr>
+            <tr>
+                <th>Value</th>
+                <td>{{ useraccess.Value }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    {{ include('useraccess/_delete_form.html.twig') }}
+{% endblock %}

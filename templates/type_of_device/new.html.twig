@@ -1,0 +1,14 @@
+{% extends 'column.html.twig' %}
+
+{% block title %}New TypeOfDevice{% endblock %}
+{% block submenu %}
+    {{ include('admin/_submenu.html.twig') }}
+{% endblock %}
+{% block body %}
+<h1>Create new TypeOfDevice</h1>
+<div class="col">
+    <a href="{{ path('typeofdevice_index') }}">Back to list</a>
+</div>
+{{ include('type_of_device/_form.html.twig') }}
+
+{% endblock %}

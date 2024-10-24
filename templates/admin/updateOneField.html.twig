@@ -1,0 +1,101 @@
+{% extends 'column.html.twig' %}
+{% block title %}
+    Administration: Update 1 Field
+{% endblock %}
+{% block submenu %}
+    {{ include('admin/_submenu.html.twig') }}
+{% endblock %}
+{% block body %}
+
+    {% embed '__titleAndLinks.html.twig' %}
+        {%  block title %}
+            Update One Field
+        {% endblock %}
+        {%  block subtitle %}
+            {% if entities[entity] is defined and entities[entity]|length %}
+                {{ entity }}
+            {% endif %}
+            {% if id %}
+                / Record #{{ id }}
+            {% endif %}
+        {% endblock %}
+        {%  block links %}
+            <a href="/admin">Back to admin</a>
+            {% if entities[entity] is defined and entities[entity]|length %}
+                <br/>
+                <a href="/admin/update-one-field?entity={{ entity }}">Change entity</a>
+            {% endif %}
+        {% endblock %}
+    {% endembed %}
+
+    <form method="get" class="row">
+        <select name="entity" class="submitOnChange col-2">
+            <option value="">-- Choose --</option>
+            {% for name, values in entities %}
+                <option value="{{ name }}" {% if entity==name %}selected="selected"{% endif %}>{{ name }}</option>
+            {% endfor %}
+        </select>
+
+        {% if entities[entity] is defined and entities[entity]|length %}
+            {% if entities[entity]|length>10000 %}
+                <input type='text' name='filter' placeholder='Over 10k records, filter here' class='col-6'/>
+            {% else %}
+                <input type="hidden" name="filter" value="{{ filter }}"/>
+                <select name="id" class="submitOnChange col-10">
+                    <option value="">-- Choose --</option>
+                    {% for entry in entities[entity] %}
+                        <option value="{{ entry.id }}" {% if id==entry.id %}selected="selected"{% endif %}>{{ entry }}</option>
+                    {% endfor %}
+                </select>
+            {% endif %}
+        {% endif %}
+    </form>
+
+    {% if id %}
+        <hr/>
+        <form method="post" class="row">
+            <select name="method" class="col-4">
+                <option value="">-- Choose --</option>
+                {% for method, value in methods %}
+                    <option value="{{ method }}">{{ method }} = {{ value.current_value }}</option>
+                {% endfor %}
+            </select>
+            {% for method, value in methods %}
+                {% if value.all_values is defined %}
+                    <select name="value_{{ method }}" class="value {{method}} col-8" style="display:none;">
+                        <option value="">-- Choose --</option>
+                        {% for e in value.all_values %}
+                            <option value="{{ e.id }}">{{ e.__toString }}</option>
+                        {% endfor %}
+                    </select>
+                {% else %}
+                    <input type="text" class="value {{method}} col-8" name="value_{{ method }}"  style="display:none;"/>
+                {% endif %}
+            {% endfor %}
+            <div>
+                <input type="checkbox" class="col-1" name="changeAll" value="1"/> Change for all records of {{ entity }}.
+            </div>
+            <input type="submit" class="col-2" value="Save"/>
+        </form>
+
+        <script>
+            $(function () {
+                $('.value').hide();
+                $('select[name=method]').on('change', function () {
+                    $('.value').hide();
+                    $('.value.' + $(this).val()).show();
+
+                });
+
+                $('form').on('submit', function () {
+                    if ($('input[name=changeAll]').prop('checked')) {
+                        if (!confirm('Replace all values?'))
+                            return false;
+                    }
+                    return true;
+                });
+            });
+        </script>
+    {% endif %}
+
+{% endblock %}

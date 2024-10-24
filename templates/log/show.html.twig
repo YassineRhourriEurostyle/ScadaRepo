@@ -1,0 +1,79 @@
+{% extends 'column.html.twig' %}
+
+{% block title %}Log | #{{log.id}}{% endblock %}
+{% block submenu %}
+    {{ include('admin/_submenu.html.twig') }}
+{% endblock %}
+{% block body %}
+     {% embed '__titleAndLinks.html.twig' %}
+        {%  block title %}
+            Log
+        {% endblock %}
+        {%  block subtitle %}
+            <strong>Entry details</strong>
+        {% endblock %}
+        {%  block links %}
+            <a href="{{ path('admin_index') }}">Back to admin</a><br/>
+            <a href="{{ path('log_index') }}">Back to list</a><br/>
+            <a href="{{ path('log_history', {'entity': log.Entity, 'id': log.FieldID}) }}">Show history log</a>
+        {% endblock %}
+    {% endembed %}
+    
+    <table class="no-filtering col-md-12 table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ log.id }}</td>
+            </tr>
+            <tr>
+                <th>Date</th>
+                <td>{{ log.Date ? log.Date|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>User</th>
+                <td>{{ log.User }}</td>
+            </tr>
+            <tr>
+                <th>Entity</th>
+                <td>{{ log.Entity }}</td>
+            </tr>
+            <tr>
+                <th>Field</th>
+                <td>{{ log.Field }}</td>
+            </tr>
+            <tr>
+                <th>Value</th>
+                <td>{{ log.Value }}</td>
+            </tr>
+            <tr>
+                <th>FieldID</th>
+                <td>{{ log.FieldID }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div id="graph" style="height:400px;"></div>
+    <script>
+
+        networkChart('graph', 'Object relationship',
+        [
+        {% for node, level in nodes %}
+            {
+            id: '{{node}}',
+                    dataLabels: {
+                    enabled: true
+                    },
+                    marker: {
+                    radius: 20 /{{level+1}} ,
+                            fillColor: {% if level==0 %}'#de1128' {%else%}changeHue('#de1128', {{level*40}}){%endif%}
+                    }
+            },
+        {%endfor%}
+            ],
+            [{%for node in network %}
+            [{% for sub in node%}
+                    '{{ sub }}',{%endfor%} ],
+        {%endfor%}
+            ]);
+        </script>
+        {% endblock %}

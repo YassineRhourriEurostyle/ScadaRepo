@@ -1,0 +1,27 @@
+{% extends 'column.html.twig' %}
+
+{% block title %}TypeOfDevice{% endblock %}
+{% block submenu %}
+    {{ include('admin/_submenu.html.twig') }}
+{% endblock %}
+{% block body %}
+<h1>TypeOfDevice</h1>
+<div class="col">
+    <a href="{{ path('typeofdevice_index') }}">Back to list</a> - 
+    <a href="{{ path('typeofdevice_edit', {'id': typeofdevice.id}) }}">Edit</a>
+</div>
+<table class="no-filtering col-md-12 table table-sm table-bordered">
+    <tbody>
+                    <tr>
+                <th>Id</th>
+                <td>{{ typeofdevice.id }}</td>
+            </tr>
+                    <tr>
+                <th>Name</th>
+                <td>{{ typeofdevice.Name }}</td>
+            </tr>
+            </tbody>
+</table>
+
+{{ include('type_of_device/_delete_form.html.twig') }}
+{% endblock %}

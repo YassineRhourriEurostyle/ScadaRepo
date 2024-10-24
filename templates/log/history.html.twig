@@ -1,0 +1,94 @@
+{% extends 'column.html.twig' %}
+
+{% block title %}Log | History: {{ entity }} #{{ id }} ({{ toString }}){% endblock %}
+{% block submenu %}
+    {{ include('admin/_submenu.html.twig') }}
+{% endblock %}
+{% block body %}
+    {% embed '__titleAndLinks.html.twig' %}
+        {%  block title %}
+            Log History
+        {% endblock %}
+        {%  block subtitle %}
+            <strong>{{ entity }} #{{ id }} (<em>{{ toString }}</em>)</strong>
+        {% endblock %}
+        {%  block links %}
+            <a href="{{ path('admin_index') }}">Back to admin</a><br/>
+            <a href="{{ path('log_index') }}">Back to list</a><br/>
+        {% endblock %}
+    {% endembed %}
+    <table class="no-filtering col-md-12 table table-sm table-bordered">
+        <thead class="standard-bg-grey standard-white">
+            <tr>
+                <th>Date</th>
+                <th>User</th>
+                <th>Field</th>
+                <th>Value</th>
+            </tr>
+        </thead>
+        <tbody>           
+            {% for log in logs %}
+                <tr>
+                    <td>{{ log.Date ? log.Date|date('Y-m-d H:i:s') : '' }}</td>
+                    <td>{{ log.User }}</td>
+                    <td>{{ log.Field }}</td>
+                    <td>{{ log.Value }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    {% for class, subs in collections %}
+        {% for id, sublogs in subs %}
+            {% if sublogs.logs|length %}
+                <h2 class="ps-0 ms-0 pe-0 me-0">{{ class }} #{{ id }} (<em>{{ sublogs.name }}</em>)</h2>
+                <a href="/log/history/{{ class }}/{{ id }}">Show history log</a>
+                <table class="no-filtering col-md-12 table table-sm table-bordered">
+                    <thead class="standard-bg-grey standard-white">
+                        <tr>
+                            <th>Date</th>
+                            <th>User</th>
+                            <th>Field</th>
+                            <th>Value</th>
+                        </tr>
+                    </thead>
+                    <tbody>           
+                        {% for log in sublogs.logs %}
+                            <tr>
+                                <td>{{ log.Date ? log.Date|date('Y-m-d H:i:s') : '' }}</td>
+                                <td>{{ log.User }}</td>
+                                <td>{{ log.Field }}</td>
+                                <td>{{ log.Value }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% endif %}
+        {% endfor %}
+    {% endfor %}
+
+    <div id="graph" style="height:400px;"></div>
+    <script>
+
+        networkChart('graph', 'Object relationship',
+        [
+        {% for node, level in nodes %}
+            {
+            id: '{{node}}',
+                    dataLabels: {
+                    enabled: true
+                    },
+                    marker: {
+                    radius: 20 /{{level+1}} ,
+                            fillColor: {% if level==0 %}'#de1128' {%else%}changeHue('#de1128', {{level*40}}){%endif%}
+                    }
+            },
+        {%endfor%}
+            ],
+            [{%for node in network %}
+            [{% for sub in node%}
+                    '{{ sub }}',{%endfor%} ],
+        {%endfor%}
+            ]);
+        </script>
+        {% endblock %}

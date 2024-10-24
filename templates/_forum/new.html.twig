@@ -1,0 +1,119 @@
+{% extends 'column.html.twig' %}
+{% block title %}
+    {% if not parent %}New message{% else %}New reply{% endif %}
+{% endblock %}
+{% block submenu %}
+
+{% endblock %}
+{% block body %}
+    {% embed '__titleAndLinks.html.twig' %}
+        {%  block title %}
+            Forum
+        {% endblock %}
+        {%  block subtitle %}
+            {% if not parent %}New message{% else %}New reply{% endif %}
+        {% endblock %}
+        {%  block links %}
+            <a href="/forum/">Back to forum</a>
+        {% endblock %}
+    {% endembed %}
+    
+    {% if not parent %}
+        <p>All discussions here must be related to the <strong>{{ project_code }} tool</strong> uses or misfunctions.</p>
+        <p>All other topics will be removed and untreated.</p>
+        <p>Please ensure the topic you wish to discuss about has not already been treated.</p>
+    {% else %}
+        <h3>Previous messages</h3>
+        {% set prevUser="" %}
+        {% for m in hierarchy %}
+            {% if m.User==app.session.get('logged') %}
+                <div class="discussion row text-left">
+                    {% if prevUser != m.User %}
+                        <div class="avatar col-1">
+                            <img src="/img/me-talking.png"/>
+                            <small>Me</small>
+                        </div>
+                    {% endif %}
+                    <div class="talk col-8 {% if prevUser == m.User %}offset-1{%endif%}">
+                        {{ m.Message|raw }}
+                        <small class="fst-italic">{{ m.Date.date|slice(0,10) }}, {{ m.Status }}</small>
+                        {% if m.files|length %}
+                            <hr class="m-1 p-0"/>
+                            {{ include('_forum/_files.html.twig', {'message': m}) }}
+                        {% endif %}
+                    </div>
+                </div>
+            {% else %}
+                <div class="discussion row text-left col-12 ">
+                    <div class="talk col-8 offset-3">
+                        {{ m.Message|raw }}
+                        <small class="fst-italic">{{ m.Date.date|slice(0,10) }}, {{ m.Status }}</small>
+                        {% if m.files|length %}
+                            <hr class="m-1 p-0"/>
+                            {{ include('_forum/_files.html.twig', {'message': m}) }}
+                        {% endif %}
+                    </div>
+                    {% if prevUser != m.User %}
+                        <div class="avatar col-1">
+                            <img src="/img/other-talking-1.png"/>
+                            <small>{{ m.User }}</small>
+                        </div>
+                    {% endif %}
+                </div>
+            {% endif %}
+            {% set prevUser=m.User %}
+        {% endfor %}
+    {% endif %}
+    <hr/>
+    
+
+    <form method="post" action="/forum/save" class="mt-5" enctype="multipart/form-data">
+        <input type="hidden" name="project" value="{{ project_code }}"/>
+        <input type="hidden" name="user" value="{{ app.session.get('logged') }}"/>
+        <input type="hidden" name="parent" value="{{ parent }}"/>
+        <div class="row">
+            <label for="category" class="required">Category</label>
+            {% if not parent %}
+                <select name="category" id="category" required="required">
+                    <option value="">-- Choose --</option>
+                    <option value="Problem">Problem</option>
+                    <option value="Idea">Idea/Suggestion</option>
+                    <option value="Improvement">Improvement</option>
+                </select>
+            {% else %}
+                <div class="col-8">{{ hierarchy[0].Category }}</div>
+                <input type="hidden" name="category" value="{{ hierarchy[0].Category }}"/>
+            {% endif %}
+        </div>
+
+        <div class="row">
+            <label for="status" class="required">Status</label>
+
+            <select name="status" id="status" required="required">
+                <option value="New request">New request</option>
+                {% if parent %}
+                    <option value="Planned by IT">Planned by IT</option>
+                    <option value="Coded, waiting approval">Coded, waiting approval</option>
+                    <option value="Approved">Approved</option>
+                    <option value="Modify coded feature">Modify coded feature</option>
+                    <option value="Abandoned">Abandoned</option>
+                {% endif %}
+            </select>
+
+        </div>
+
+        <div class="row">
+            <label for="message">Your message</label>
+            <textarea name="message" id="message" required="required"></textarea>
+        </div>
+        <div class="row">
+            <label for="files">Link documents</label>
+            <input type="file" multiple="multiple" name="files[]" id="files"/>
+        </div>
+
+        <div class="row">
+            <input type="submit" class="col-8 m-auto" value="Save message"/>
+        </div>
+
+    </form>
+{% endblock %}

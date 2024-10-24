@@ -1,0 +1,21 @@
+{% extends 'column.html.twig' %}
+
+{% block title %}Edit Log{% endblock %}
+{% block submenu %}
+    {{ include('admin/_submenu.html.twig') }}
+{% endblock %}
+{% block body %}
+    {% embed '__titleAndLinks.html.twig' %}
+        {%  block title %}
+            Log
+        {% endblock %}
+        {%  block subtitle %}
+            <strong>Edit</strong>
+        {% endblock %}
+        {%  block links %}
+            <a href="{{ path('admin_index') }}">Back to admin</a><br/>
+            <a href="{{ path('log_index') }}">Back to list</a>
+        {% endblock %}
+    {% endembed %}
+    Logs are automatically generated; no way to edit one manually.
+{% endblock %}

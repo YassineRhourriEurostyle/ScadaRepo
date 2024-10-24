@@ -1,0 +1,40 @@
+{% for url, label in menu %}
+    {% set border_left='' %}
+    {% if label|slice(0,1)=='*' %}
+        {% set border_left='ms-2 ps-1 border-start border-dark border-2' %}
+        {% set label=label|slice(1,100) %}
+    {% endif %}
+    {% set active=0 %}
+    {% if current_route is defined and current_route and path(url)|slice(0, 12) == path(current_route, {"id": 0})|replace({'?id=0':''})|slice(0, 12) %}
+        {% set active=1 %}
+    {% endif %}
+    <li class="nav-item animated standard-hover-bg-white {{border_left}} {% if active==1 %} active{% endif %}">        
+        <a class="nav-link standard-white standard-hover-black 
+           {% if active==1 %} standard-white{% endif %}" 
+           href="{{ path(url) }}?{{ filterQuery ?? '' }}">{{ label }}</a>
+    </li>
+{% endfor %}
+
+{%  if app.session.get('logged') and app.session.get('touchScreen')!=1 %}
+    <li class="nav-item animated standard-hover-bg-white {% if menu|length>0%}ms-2 ps-1 border-start border-dark border-2{%endif%}  {% if 'search'|slice(0, 5) == current_route|slice(0, 4) %} active{% endif %}">        
+        <form method="get" action="/search">
+            <input placeholder="Search (beta)" name="q" style="{% if not search is defined %}display:none;{%endif%}" type="text" id="menu_search" class="nav-link" value="{% if search is defined %}{{ search }}{% endif %}"/>
+        </form>
+        {% if not search is defined %}
+            <a title="Search (beta)..." class="no-event nav-link standard-white standard-hover-black" 
+               href="#" id="menu_search_link"><i class="fas fa-search"></i></a>
+            {%endif%}
+    </li>
+    <li class="nav-item animated standard-hover-bg-white  {% if 'help'|slice(0, 5) == current_route|slice(0, 4) %} active{% endif %}">        
+        <a target="_blank" title="Help center/FAQ" class="nav-link standard-white standard-hover-black" 
+           href="{{ path('help') }}"><i class="fas fa-question-circle"></i></a>
+    </li>
+    <li class="nav-item animated standard-hover-bg-white  {% if 'forum'|slice(0, 5) == current_route|slice(0, 5) %} active{% endif %}">        
+        <a title="Problems/Ideas" class="nav-link standard-white standard-hover-black" 
+           href="{{ path('forum') }}"><i class="fas fa-comments"></i></a>
+    </li>
+    <li class="nav-item animated standard-hover-bg-white ">        
+        <a title="Logout" class="nav-link standard-white standard-hover-black" 
+           href="{{ path('security_logout') }}"><i class="fas fa-sign-out-alt"></i></a>
+    </li>
+{% endif %}

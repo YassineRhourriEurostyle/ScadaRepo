@@ -1,0 +1,20 @@
+{% extends 'column.html.twig' %}
+{% block title %}
+    Auto Login
+{% endblock %}
+{% block body %}
+    <div class="row">            
+        <h1 class="ps-0 ms-0 pe-0 me-0">Auto Login, please wait</h1>
+        <form method="post" action="/security/check?redirect={{ redirect }}" id="autologin" class="col-6 m-auto">
+            <input type="hidden" name="password"/>
+            <input type="hidden" name="touchScreen" value="1"/>
+            <input type="hidden" name="logAs" value="1"/>
+            <input type="hidden" name="login" value="{{ autologin }}"/>
+        </form>
+    </div>
+    <script>
+        $(function () {
+           $('form#autologin').submit();
+        })
+    </script>
+{% endblock %}

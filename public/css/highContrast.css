@@ -1,0 +1,33 @@
+/* 
+    Created on : 2 nov. 2020, 16:01:18
+    Author     : aurelien.stride
+*/
+
+*{
+    --standard-red: #de1128;
+    --standard-lightgrey: #535656;
+    --standard-grey: #dee2e6;
+    --standard-white: #222222;
+    --standard-black: #ffffff;
+    --standard-blue: #007bff;
+    --standard-green: #12B002;
+
+    font-family: Tahoma;
+}
+
+
+/*tbody:not(.standard-bg-white):not(.standard-bg-lightgrey) tr:not(.standard-bg-white):not(.standard-bg-lightgrey) td {  
+    color:white;
+}
+*/
+
+.h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6 {
+    text-shadow: 1px 1px 1px black;
+}
+
+pre {
+    color: white;
+}
+/*.standard-bg-lightgrey, .standard-bg-white{
+    color:black !important;
+}*/

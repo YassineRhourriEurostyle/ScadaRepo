@@ -1,0 +1,7 @@
+<div class="submenu">
+    {% for page, route in pages %}
+        <a href="{{ path(route) }}" class="nav-item standard-hover-bg-red 
+           {% if route|slice(0,route|length-6) == current_route|slice(0,route|length-6) %} standard-bg-grey standard-white active {% endif %}
+           ">{{ page }}</a>
+    {% endfor %}
+</div>
