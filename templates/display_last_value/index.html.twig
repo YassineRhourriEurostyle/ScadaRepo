@@ -1,0 +1,20 @@
+{% extends 'column.html.twig' %}
+
+{% block title %}Display Last Values{% endblock %}
+
+{% block submenu %}
+
+{% endblock %}
+
+{% block body %}
+    <h1>Last Recorded Values</h1>
+
+    <form name="dispParamVal" action="{{ path('displaylastvalue_index') }}" method="get">
+        <table id="tabFilter">
+            <tr>
+                <th width="100">Site</th>
+                <th width="120">Machine</th>
+                <th width="140">Mould</th>
+                <th>&nbsp;</th>
+            </tr>
+{% endblock %}
