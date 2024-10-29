@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Entity\GenericSite; // Assuming "Site" represents the `sites` table
+use App\Entity\Sites; // Assuming "Site" represents the `sites` table
 use App\Entity\ConfigMachines; // Assuming "ConfigMachines" represents `config_machines`
 use App\Entity\ConfigTools; // Assuming "ConfigTools" represents `config_tools`
 use App\Entity\Records; // Assuming "Records" represents `records`
@@ -29,7 +29,7 @@ class DisplayLastValueController extends AbstractController
         $idMould = $request->query->get('idmould');
 
         // Fetch all sites for the site dropdown
-        $sites = $this->entityManager->getRepository(GenericSite::class)->findBy([], ['id' => 'ASC']);
+        $sites = $this->entityManager->getRepository(Sites::class)->findBy([], ['idsites' => 'ASC']);
 
         // Fetch machines for selected site
         $machines = $this->entityManager->getRepository(ConfigMachines::class)->findBy(['idsite' => $idSite], ['macreference' => 'ASC']);
@@ -43,9 +43,9 @@ class DisplayLastValueController extends AbstractController
             $records = $this->entityManager->getRepository(Records::class)->findLastValues($idSite, $idMac, $idMould);
             foreach ($records as $record) {
                 $recordData[] = [
-                    'DateRecord' => $record->getDateRecord(),
-                    'ParamName' => $record->getIdparameter(),
-                    'ParamValue' => $record->getParamvalue(),
+                    'DateRecord' => null,
+                    'ParamName' => null,
+                    'ParamValue' => null,
                     'StdValue' => null,
                     'ToleranceMini' => null,
                     'ToleranceMaxi' => null,

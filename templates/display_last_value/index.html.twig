@@ -12,8 +12,8 @@
                     <select id="refsite" name="idSite" {#onchange="this.form.submit()"#} class="form-select">
                         <option selected>Select a site</option>
                         {% for site in sites %}
-                            <option value="{{ site.id }}" {% if site.id == app.request.query.get('idSite') %}selected{% endif %}>
-                                {{ site.code }}
+                            <option value="{{ site.idsites }}" {% if site.idsites == app.request.query.get('idSite') %}selected{% endif %}>
+                                {{ site.siteref }}
                             </option>
                         {% endfor %}
                     </select>
