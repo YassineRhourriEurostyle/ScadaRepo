@@ -2,19 +2,75 @@
 
 {% block title %}Display Last Values{% endblock %}
 
-{% block submenu %}
-
-{% endblock %}
-
 {% block body %}
-    <h1>Last Recorded Values</h1>
+    <h1 class="page-title">🔍 Last Recorded Values</h1>
 
-    <form name="dispParamVal" action="{{ path('displaylastvalue_index') }}" method="get">
-        <table id="tabFilter">
+    <form name="dispParamVal" action="{{ path('displaylastvalue_index') }}" method="get" class="filter-form">
+        <table id="tabFilter" class="filter-table">
             <tr>
-                <th width="100">Site</th>
-                <th width="120">Machine</th>
-                <th width="140">Mould</th>
-                <th>&nbsp;</th>
+                <td>
+                    <select id="refsite" name="idSite" {#onchange="this.form.submit()"#} class="form-select">
+                        <option selected>Select a site</option>
+                        {% for site in sites %}
+                            <option value="{{ site.id }}" {% if site.id == app.request.query.get('idSite') %}selected{% endif %}>
+                                {{ site.code }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </td>
+                <td>
+                    <select id="refmac" name="idmac" class="form-select">
+                        <option selected>Select a machine</option>
+                        {% for machine in machines %}
+                            <option value="{{ machine.idCfgMachine }}" {% if machine.idCfgMachine == app.request.query.get('idmac') %}selected{% endif %}>
+                                {{ machine.macreference }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </td>
+                <td>
+                    <select id="refmould" name="idmould" class="form-select">
+                        <option selected>Select a mould</option>
+                        {% for tool in tools %}
+                            <option value="{{ tool.idCfgTool }}" {% if tool.idCfgTool == app.request.query.get('idmould') %}selected{% endif %}>
+                                {{ tool.toolreference }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </td>
+                <td><button type="submit" class="btn-primary">Display</button></td>
             </tr>
+        </table>
+        <input type="hidden" name="initPage" value="888">
+    </form>
+
+    {% if recordData %}
+        <hr>
+        <table id="tabStyleA" class="records-table">
+            <tr>
+                <th>#</th>
+                <th>Mould</th>
+                <th>Date (Y-M-D)</th>
+                <th>Parameter</th>
+                <th>Value</th>
+                <th>Standard Value</th>
+                <th>Tolerance Min</th>
+                <th>Tolerance Max</th>
+            </tr>
+            {% for record in recordData %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ record.ToolReference }}</td>
+                    <td>{{ record.DateRecord|date("Y-m-d H:i:s") }}</td>
+                    <td>{{ record.ParamName }}</td>
+                    <td>{{ record.ParamValue }}</td>
+                    <td>{{ record.StdValue }}</td>
+                    <td>{{ record.ToleranceMini }}</td>
+                    <td>{{ record.ToleranceMaxi }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p class="no-records">No records found.</p>
+    {% endif %}
 {% endblock %}

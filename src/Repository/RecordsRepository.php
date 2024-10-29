@@ -63,4 +63,23 @@ class RecordsRepository extends ServiceEntityRepository
 //            ->getOneOrNullResult()
 //        ;
 //    }
+    public function findLastValues($idSite, $idMac, $idMould = null)
+    {
+        $qb = $this->createQueryBuilder('r')
+            ->where('r.idsite = :idSite')
+            ->andWhere('r.idmac = :idMac')
+            ->setParameter('idSite', $idSite)
+            ->setParameter('idMac', $idMac);
+
+        if ($idMould) {
+            $qb->andWhere('r.idmould = :idMould')
+            ->setParameter('idMould', $idMould);
+        }
+
+        $qb->orderBy('r.idrecords', 'DESC')
+            ->setMaxResults(10);
+
+        return $qb->getQuery()->getResult();
+    }
+
 }
