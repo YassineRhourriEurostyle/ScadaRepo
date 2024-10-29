@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * AuthGroupes
  *
  * @ORM\Table(name="auth_groupes")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\AuthGroupesRepository")
  */
 class AuthGroupes
 {

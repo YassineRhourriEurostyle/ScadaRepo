@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * AuthFeatures
  *
  * @ORM\Table(name="auth_features")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\AuthFeaturesRepository")
  */
 class AuthFeatures
 {

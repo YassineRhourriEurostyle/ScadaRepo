@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * OpcParameters
  *
  * @ORM\Table(name="opc_parameters")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\OpcParametersRepository")
  */
 class OpcParameters
 {

@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * ConfigMachines
  *
  * @ORM\Table(name="config_machines")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\ConfigMachinesRepository")
  */
 class ConfigMachines
 {

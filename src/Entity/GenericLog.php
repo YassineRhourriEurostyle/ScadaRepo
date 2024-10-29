@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * GenericLog
  *
  * @ORM\Table(name="generic_log")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\GenericLogRepository")
  */
 class GenericLog
 {

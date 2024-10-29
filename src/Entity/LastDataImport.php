@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * LastDataImport
  *
  * @ORM\Table(name="last_data_import")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\LastDataImportRepository")
  */
 class LastDataImport
 {

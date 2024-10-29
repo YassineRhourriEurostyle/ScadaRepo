@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * OpcTypes
  *
  * @ORM\Table(name="opc_types")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\OpcTypesRepository")
  */
 class OpcTypes
 {

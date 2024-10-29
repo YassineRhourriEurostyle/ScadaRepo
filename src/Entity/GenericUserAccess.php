@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * GenericUserAccess
  *
  * @ORM\Table(name="generic_user_access")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\GenericUserAccessRepository")
  */
 class GenericUserAccess
 {

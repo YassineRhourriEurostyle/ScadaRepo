@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * ConfigToolVersions
  *
  * @ORM\Table(name="config_tool_versions")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\ConfigToolVersionsRepository")
  */
 class ConfigToolVersions
 {

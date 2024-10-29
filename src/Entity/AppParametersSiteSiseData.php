@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * AppParametersSiteSiseData
  *
  * @ORM\Table(name="app_parameters_site_sise_data")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\AppParametersSiteSiseDataRepository")
  */
 class AppParametersSiteSiseData
 {

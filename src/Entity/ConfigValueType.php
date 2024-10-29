@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * ConfigValueType
  *
  * @ORM\Table(name="config_value_type")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\ConfigValueTypeRepository")
  */
 class ConfigValueType
 {

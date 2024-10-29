@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * ConfigDeviceTypes
  *
  * @ORM\Table(name="config_device_types")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\ConfigDeviceTypesRepository")
  */
 class ConfigDeviceTypes
 {

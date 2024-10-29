@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * GenericMaterial
  *
  * @ORM\Table(name="generic_material")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\GenericMaterialRepository")
  */
 class GenericMaterial
 {

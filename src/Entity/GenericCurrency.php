@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * GenericCurrency
  *
  * @ORM\Table(name="generic_currency")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\GenericCurrencyRepository")
  */
 class GenericCurrency
 {

@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * GenericSiteMaterials
  *
  * @ORM\Table(name="generic_site_materials", indexes={@ORM\Index(name="IDX_3A005691F6BD1646", columns={"site_id"}), @ORM\Index(name="IDX_3A005691E308AC6F", columns={"material_id"})})
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\GenericSiteMaterialsRepository")
  */
 class GenericSiteMaterials
 {

@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * GenericCountry
  *
  * @ORM\Table(name="generic_country", indexes={@ORM\Index(name="IDX_EE3DEB3738248176", columns={"currency_id"})})
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\GenericCountryRepository")
  */
 class GenericCountry
 {
