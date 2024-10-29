@@ -47,7 +47,7 @@ class OpcParameters
      *
      * @ORM\Column(name="Coeff_A", type="float", precision=10, scale=0, nullable=true)
      */
-    private $coeffA = '0';
+    private $coeffA;
 
     /**
      * @var float|null
@@ -68,7 +68,7 @@ class OpcParameters
      *
      * @ORM\Column(name="Coeff_B", type="float", precision=10, scale=0, nullable=true)
      */
-    private $coeffB = '0';
+    private $coeffB;
 
     /**
      * @var \DateTime|null

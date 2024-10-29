@@ -39,11 +39,11 @@ class ConfigToolVersions
      * @var bool|null
      *
      * @ORM\Column(name="Archived", type="boolean", nullable=true, options={"comment"="Archived :
-0 -> No
-1 -> Yes
-"})
+        0 -> No
+        1 -> Yes
+        "})
      */
-    private $archived = '0';
+    private $archived;
 
     /**
      * @var \DateTime|null

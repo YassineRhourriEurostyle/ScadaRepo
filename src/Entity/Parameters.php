@@ -61,7 +61,7 @@ class Parameters
      *
      * @ORM\Column(name="ParamNbDecimals", type="smallint", nullable=true)
      */
-    private $paramnbdecimals = '0';
+    private $paramnbdecimals;
 
     /**
      * @var bool|null

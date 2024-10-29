@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * GenericSite
  *
- * @ORM\Table(name="generic_site", indexes={@ORM\Index(name="IDX_5339E5775602A942", columns={"default_language_id"}), @ORM\Index(name="IDX_5339E577A58ECB40", columns={"business_unit_id"}), @ORM\Index(name="IDX_5339E577F92F3E70", columns={"country_id"})})
+ * @ORM\Table(name="generic_site", indexes={@ORM\Index(name="IDX_5339E577A58ECB40", columns={"business_unit_id"}), @ORM\Index(name="IDX_5339E577F92F3E70", columns={"country_id"}), @ORM\Index(name="IDX_5339E5775602A942", columns={"default_language_id"})})
  * @ORM\Entity(repositoryClass="App\Repository\GenericSiteRepository")
  */
 class GenericSite
