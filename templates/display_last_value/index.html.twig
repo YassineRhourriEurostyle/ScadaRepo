@@ -6,7 +6,7 @@
     <h1 class="page-title">🔍 Last Recorded Values</h1>
 
     <form name="dispParamVal" action="{{ path('displaylastvalue_index') }}" method="get" class="filter-form">
-        <table id="tabFilter" class="filter-table">
+        <table id="tabFilter" class="table table-borderless">
             <tr>
                 <td>
                     <select id="refsite" name="idSite" {#onchange="this.form.submit()"#} class="form-select">
@@ -38,38 +38,45 @@
                         {% endfor %}
                     </select>
                 </td>
-                <td><button type="submit" class="btn-primary">Display</button></td>
+                <td>
+                    <button type="submit" class="btn-primary btn-lg">Display</button>
+                </td>
             </tr>
         </table>
         <input type="hidden" name="initPage" value="888">
     </form>
 
     {% if recordData %}
-        <hr>
-        <table id="tabStyleA" class="records-table">
-            <tr>
-                <th>#</th>
-                <th>Mould</th>
-                <th>Date (Y-M-D)</th>
-                <th>Parameter</th>
-                <th>Value</th>
-                <th>Standard Value</th>
-                <th>Tolerance Min</th>
-                <th>Tolerance Max</th>
-            </tr>
-            {% for record in recordData %}
+        <div class = "table-responsive">
+            <table id="tabStyleA" class="table">
+                <thead class = "thead-dark">
                 <tr>
-                    <td>{{ loop.index }}</td>
-                    <td>{{ record.ToolReference }}</td>
-                    <td>{{ record.DateRecord|date("Y-m-d H:i:s") }}</td>
-                    <td>{{ record.ParamName }}</td>
-                    <td>{{ record.ParamValue }}</td>
-                    <td>{{ record.StdValue }}</td>
-                    <td>{{ record.ToleranceMini }}</td>
-                    <td>{{ record.ToleranceMaxi }}</td>
+                    <th>#</th>
+                    <th>Mould</th>
+                    <th>Date (Y-M-D)</th>
+                    <th>Parameter</th>
+                    <th>Value</th>
+                    <th>Standard Value</th>
+                    <th>Tolerance Min</th>
+                    <th>Tolerance Max</th>
                 </tr>
-            {% endfor %}
-        </table>
+                </thead>
+                <tbody>
+                {% for record in recordData %}
+                    <tr>
+                        <td>{{ loop.index }}</td>
+                        <td>{{ record.ToolReference }}</td>
+                        <td>{{ record.DateRecord|date("Y-m-d H:i:s") }}</td>
+                        <td>{{ record.ParamName }}</td>
+                        <td>{{ record.ParamValue }}</td>
+                        <td>{{ record.StdValue }}</td>
+                        <td>{{ record.ToleranceMini }}</td>
+                        <td>{{ record.ToleranceMaxi }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
     {% else %}
         <p class="no-records">No records found.</p>
     {% endif %}

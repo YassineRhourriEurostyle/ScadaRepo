@@ -73,20 +73,26 @@ class RecordsRepository extends ServiceEntityRepository
                 tabRec.idmould,
                 tabRec.daterecord,
                 tabRec.idparameter,
-                tabRec.paramvalue
-            ')
+                tabRec.paramvalue,
+                cfgtools.toolreference,
+                param.paramname
+                ')
+            ->leftjoin('App\Entity\Parameters', 'param', 'WITH', 'tabRec.idparameter = param.idparameters')
+            ->leftjoin('App\Entity\ConfigTools', 'cfgtools','WITH','cfgtools.idcfgtool = tabRec.idmould')
+            ->leftjoin('App\Entity\ConfigMachines','cfgmachines','WITH', 'cfgmachines.idcfgmachine = tabRec.idmac' )
+            //->leftjoin('App\Entity\SettingsStandard', 'settingsstd', 'WITH', 'tabRec.idparameter = settingsstd.idparameter')
             ->where('tabRec.idsite = :idSite')
             ->andWhere('tabRec.idmac = :idMac')
             ->setParameter('idSite', $idSite)
             ->setParameter('idMac', $idMac);
-    
+        /*
         if ($idMould) {
             $qb->andWhere('tabRec.idmould = :idMould')
             ->setParameter('idMould', $idMould);
         }
-
+        */
         $qb->orderBy('tabRec.idrecords', 'DESC')
-            ->setMaxResults(10);
+            ->setMaxResults(180);
 
         return $qb->getQuery()->getResult();
     }

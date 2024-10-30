@@ -43,13 +43,14 @@ class DisplayLastValueController extends AbstractController
             $records = $this->entityManager->getRepository(Records::class)->findLastValues($idSite, $idMac, $idMould);
             foreach ($records as $record) {
                 $recordData[] = [
-                    'DateRecord' => null,
-                    'ParamName' => null,
-                    'ParamValue' => null,
+                    'Mould'=> $record['idmould'],
+                    'DateRecord' => $record['daterecord'],
+                    'ParamName' => $record['paramname'],
+                    'ParamValue' => $record['paramvalue'],
                     'StdValue' => null,
                     'ToleranceMini' => null,
                     'ToleranceMaxi' => null,
-                    'ToolReference' => null,
+                    'ToolReference' => $record['toolreference'],
                 ];
             }
         }
