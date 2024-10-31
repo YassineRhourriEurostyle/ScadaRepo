@@ -2,10 +2,10 @@
 
 namespace App\Controller;
 
-use App\Entity\Sites; // Assuming "Site" represents the `sites` table
-use App\Entity\ConfigMachines; // Assuming "ConfigMachines" represents `config_machines`
-use App\Entity\ConfigTools; // Assuming "ConfigTools" represents `config_tools`
-use App\Entity\Records; // Assuming "Records" represents `records`
+use App\Entity\Sites;
+use App\Entity\ConfigMachines; 
+use App\Entity\ConfigTools; 
+use App\Entity\Records; 
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,7 +24,7 @@ class DisplayLastValueController extends AbstractController
      */
     public function index(Request $request)
     {
-        $idSite = $request->query->get('idSite', 120); // Default site ID as in the original file
+        $idSite = $request->query->get('idSite', 120);
         $idMac = $request->query->get('idmac');
         $idMould = $request->query->get('idmould');
 

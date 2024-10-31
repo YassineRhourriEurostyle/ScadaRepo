@@ -85,12 +85,12 @@ class RecordsRepository extends ServiceEntityRepository
             ->andWhere('tabRec.idmac = :idMac')
             ->setParameter('idSite', $idSite)
             ->setParameter('idMac', $idMac);
-        /*
+        
         if ($idMould) {
             $qb->andWhere('tabRec.idmould = :idMould')
             ->setParameter('idMould', $idMould);
         }
-        */
+    
         $qb->orderBy('tabRec.idrecords', 'DESC')
             ->setMaxResults(180);
 
