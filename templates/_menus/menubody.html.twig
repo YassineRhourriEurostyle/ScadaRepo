@@ -28,7 +28,7 @@
         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
             <li><a class="dropdown-item" href="{{ path('displaylastvalue_index') }}">Display Last Values</a></li>
             <li><a class="dropdown-item" href="{{ path('testco') }}"> Test co</a></li>
-            <li><a class="dropdown-item" href="#">Option 3</a></li>
+            <li><a class="dropdown-item" href="{{path('displayoneparameter_index')}}">Display One Parameter</a></li>
         </ul>
     </li>
     <li class="nav-item animated standard-hover-bg-white {% if menu|length>0%}ms-2 ps-1 border-start border-dark border-2{%endif%}  {% if 'search'|slice(0, 5) == current_route|slice(0, 4) %} active{% endif %}">        

@@ -63,4 +63,20 @@ class SettingsStandardRepository extends ServiceEntityRepository
 //            ->getOneOrNullResult()
 //        ;
 //    }
+    public function findStandardSettings($siteId, $machineId, $toolId, $paramId)
+        {
+            $qb = $this->createQueryBuilder('std')
+                ->innerJoin('App\Entity\SettingsStandardFiles', 'file','WITH','std.idsettstdfile=file.idsettstdfile')
+                ->where('file.idsite = :siteId')
+                ->andWhere('file.idmachine = :machineId')
+                ->andWhere('file.idtool = :toolId')
+                //->andWhere('std.idparameter = :paramId')
+                ->setParameters([
+                    'siteId' => $siteId,
+                    'machineId' => $machineId,
+                    'toolId' => $toolId,
+                    //'paramId' => $paramId,
+                ]);
+            return $qb->getQuery()->getResult();
+        }
 }

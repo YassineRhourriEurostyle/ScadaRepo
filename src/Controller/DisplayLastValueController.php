@@ -35,16 +35,16 @@ class DisplayLastValueController extends AbstractController
         $idMac = $request->query->get('idmac');
         $idMould = $request->query->get('idmould');
 
-        // Fetch all sites for the site dropdown
+        // sites for the site dropdown
         $sites = $this->entityManager->getRepository(Sites::class)->findBy([], ['idsites' => 'ASC']);
 
-        // Fetch machines for selected site
+        // machines
         $machines = $this->entityManager->getRepository(ConfigMachines::class)->findBy(['idsite' => $idSite], ['macreference' => 'ASC']);
 
-        // Fetch moulds for selected site
+        // moulds
         $tools = $this->entityManager->getRepository(ConfigTools::class)->findBy(['idsite' => $idSite], ['toolreference' => 'ASC']);
 
-        // If initialized, fetch the last records based on filters
+
         $recordData = [];
         if ($request->query->get('initPage')) {
             $records = $this->entityManager->getRepository(Records::class)->findLastValues($idSite, $idMac, $idMould);

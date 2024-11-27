@@ -97,4 +97,27 @@ class RecordsRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
     }
 
+    public function findRecords($siteId, $macId, $mouldId, $paramId, $startDate, $endDate)
+    {
+        $qb = $this->createQueryBuilder('r')
+        ->where('r.idsite = :siteId')
+        ->andWhere('r.idmac = :macId')
+        ->andWhere('r.idmould = :mouldId')
+        ->andWhere('r.idparameter = :paramId')
+        ->andWhere('r.daterecord BETWEEN :startDate AND :endDate')
+        ->setParameters([
+            'siteId' => $siteId,         
+            'mouldId' => $mouldId,
+            'paramId' => $paramId,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+            'macId'=> $macId,
+        ])
+        ->orderBy('r.daterecord', 'DESC');
+        
+        return $qb->getQuery()->getResult();
+
+    }
+    
+
 }
