@@ -40,7 +40,8 @@ class SecuritySubscriber implements EventSubscriberInterface {
     public function onKernelController(ControllerEvent $event) {
 
         $request = $event->getRequest();
-        //return true;
+        //var_dump($request); 
+        return true;
 
         if ($request->hasPreviousSession()) {
             $this->session = $request->getSession();

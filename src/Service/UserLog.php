@@ -76,7 +76,6 @@ class UserLog {
         /*
          * Test 3: User exists on a site
          */
-
         $this->session->invalidate();
 
         $inputLogin = $login;
@@ -133,7 +132,10 @@ class UserLog {
                             . ')');
                 $results = $query->execute();
                 unset($ldap);
+                print_r("titi");
+                //var_dump($results);
                 if ($results->count()):
+                    print_r("toto");
                     $userSite = $this->getUserSites($userDomain, $sites);
                     $userSiteCode = $site->getCode();
                     $userSiteId = $site->getId();
