@@ -121,25 +121,25 @@
                 {
                     name: 'Std value',
                     data: [
-                        {% for para in paramvalues %}
-                            {{ para.stdValue|default(0) }},
-                        {% endfor %}
+                        {% for p in paramvalues %}
+                            {{ p.stdValue|default(0)|number_format(0, '.', '') }},
+                        {% endfor %}                    
                     ]
                 },
                 {
                     name: 'Tolerance Mini',
                     data: [
-                        {% for para in paramvalues %}
-                            {{ para.toleranceMin|default(0) }},
-                        {% endfor %}
+                        {% for p in paramvalues %}
+                            {{ p.toleranceMin|default(0)|number_format(0, '.', '') }},
+                        {% endfor %}                     
                     ]
                 },
                 {
                     name: 'Tolerance Max',
                     data: [
-                        {% for para in paramvalues %}
-                            {{ para.toleranceMax|default(0) }},
-                        {% endfor %}
+                        {% for p in paramvalues %}
+                            {{ p.toleranceMax|default(0)|number_format(0, '.', '') }},
+                        {% endfor %} 
                     ]
                 }
             ]
@@ -153,6 +153,15 @@
         </ul>
     {% else %}
         <p>No sites found.</p>
+    {% endif %}
+    {% if records is not empty %}
+        <ul>
+            {% for r in records %}
+                <li>{{ r.paramvalue }}: {{ r.daterecord|date('Y-m-d H:i') }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No rec found.</p>
     {% endif %}
 
 {% endblock %}

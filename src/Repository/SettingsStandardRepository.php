@@ -63,6 +63,7 @@ class SettingsStandardRepository extends ServiceEntityRepository
 //            ->getOneOrNullResult()
 //        ;
 //    }
+    //retrive data for display one parameter
     public function findStandardSettings($siteId, $machineId, $toolId, $paramId)
         {
             $qb = $this->createQueryBuilder('std')

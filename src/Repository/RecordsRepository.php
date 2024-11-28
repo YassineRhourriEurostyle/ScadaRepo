@@ -63,6 +63,7 @@ class RecordsRepository extends ServiceEntityRepository
 //            ->getOneOrNullResult()
 //        ;
 //    }
+    //retrieve data for display last value
     public function findLastValues($idSite, $idMac, $idMould = null)
     {
         $qb = $this->createQueryBuilder('tabRec')
@@ -97,6 +98,7 @@ class RecordsRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
     }
 
+    //retrieve data for display one parameter
     public function findRecords($siteId, $macId, $mouldId, $paramId, $startDate, $endDate)
     {
         $qb = $this->createQueryBuilder('r')
