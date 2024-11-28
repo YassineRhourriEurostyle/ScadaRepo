@@ -86,8 +86,6 @@ class DisplayOneParameterController extends AbstractController
                 ];
             }
         }
-        print_r("toto");
-        var_dump($stdValue);
         return $this->render('display_one_parameter/index.html.twig', [
             'controller_name' => 'DisplayOneParameterController',
             'sites' => $sites,
