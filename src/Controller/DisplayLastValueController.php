@@ -15,15 +15,19 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\Ldap\Ldap;
 
 class DisplayLastValueController extends AbstractController
 {
     private $entityManager;
     private $requestStack;
+    private $session;
 
-    public function __construct(EntityManagerInterface $entityManager,RequestStack $requestStack) {
+    public function __construct(EntityManagerInterface $entityManager,RequestStack $requestStack,SessionInterface $session) {
         $this->entityManager = $entityManager;
         $this->requestStack = $requestStack;
+        $this->session = $session;
     }
 
     /**
@@ -72,19 +76,30 @@ class DisplayLastValueController extends AbstractController
     /**
      * @Route("/displaylastvalue/testco", name="testco")
      */
-    public function testco(Request $request): Response
+    public function testco(Request $request)
     {
         try {
-            $sites2 = $this->entityManager->getRepository(Site::class)->findBy([], ['Code' => 'DESC']);
-    
-            return $this->render('display_last_value/test.html.twig', [
-                'sites2' => $sites2, 
-            ]);
-        } catch (AccessDeniedException $e) {
-            return $this->render('display_last_value/test.html.twig', [
-                'message' => $e->getMessage(), 
-            ]);
-        }  
+            //$entityManager = $this->getDoctrine()->getManager();  // If you're in a Symfony controller
+
+            // Instantiate the UserLog service
+            //$userLogService = new UserLog($this->session, $entityManager);
+
+            // Test user credentials
+            $login = 'yassine.rhourri.dev';  // example login
+            $password = 'Euro$tyle1111!';  // example password
+            //$userLogService->checkAccess($login, $password);
+            $ldap_server='ldap://10.4.1.21';
+            $ldap_port = 389;
+            $ad = ldap_connect($ldap_server, $ldap_port);
+            $domain = "esy.src.local";
+            if(ldap_bind($ad,"$login@$domain", "$password")){
+                echo "ldap valide";
+            }
+
+        } catch (\Exception $e) {
+            // Handle authentication or access errors
+            echo "Error: " . $e->getMessage();
+        }
     }
     
 }

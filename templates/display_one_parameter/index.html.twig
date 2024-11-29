@@ -88,7 +88,13 @@
                 text: '{{ paramnamechart }}',  // Use dynamic parameter name from controller
                 align: 'center'
             },
-
+            chart: {
+                shadow: true,  // Enable shadow for the entire chart
+                zoomType: 'xy',  // Enable zooming
+                borderColor: '#cccccc',  // Light border color
+                borderWidth: 1,
+                borderRadius: 10  // Rounded corners for the chart
+            },
             xAxis: {
                 categories: [
                     {% for record in records %}
@@ -108,7 +114,12 @@
                     format: '{value}'
                 }
             },
-
+            tooltip: {
+                backgroundColor : '#FCFFC5',
+                borderColor : 'black',
+                borderRadius : '10',
+                borderWidth : '3'
+            },
             series: [
                 {
                     name: '{{ paramnamechart }}',  // Dynamic parameter name
@@ -116,7 +127,12 @@
                         {% for record in records %}
                             {{ record.paramvalue|default(0) }},
                         {% endfor %}
-                    ]
+                    ],
+                    marker: {
+                        enabled: true,  
+                        radius: 4, 
+                        symbol: 'circle',
+                    }
                 },
                 {
                     name: 'Std value',
@@ -124,7 +140,10 @@
                         {% for p in paramvalues %}
                             {{ p.stdValue|default(0)|number_format(0, '.', '') }},
                         {% endfor %}                    
-                    ]
+                    ],
+                    marker :{
+                        symbol : 'diamond'
+                    }
                 },
                 {
                     name: 'Tolerance Mini',
@@ -132,7 +151,10 @@
                         {% for p in paramvalues %}
                             {{ p.toleranceMin|default(0)|number_format(0, '.', '') }},
                         {% endfor %}                     
-                    ]
+                    ],
+                    marker:{
+                        symbol : 'triangle-down'
+                    }
                 },
                 {
                     name: 'Tolerance Max',
@@ -140,7 +162,10 @@
                         {% for p in paramvalues %}
                             {{ p.toleranceMax|default(0)|number_format(0, '.', '') }},
                         {% endfor %} 
-                    ]
+                    ],
+                    marker:{
+                        symbol : 'triangle'
+                    }
                 }
             ]
         });

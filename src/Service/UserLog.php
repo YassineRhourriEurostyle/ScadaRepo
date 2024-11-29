@@ -109,7 +109,12 @@ class UserLog {
 
 //            if (!$site->ping())
 //                continue;
-
+            $totalSites = $this->em->getRepository(Site::class)->count([]);
+            echo "Total sites: " . $totalSites;
+            echo "Site ID: " . $site->getLdapIp() . "\n";
+            echo "Site Code: " . $site->getCode() . "\n";
+            echo "Site Name: " . $site->getLDAPDomain() . "\n";
+            echo "-------------\n";
             $userDomain = $site->getLDAPDomain();
             $currentCode = strtolower(substr(explode(',', $userDomain)[0], 3));
             if ($currentCode == 'src')
@@ -132,10 +137,15 @@ class UserLog {
                             . ')');
                 $results = $query->execute();
                 unset($ldap);
-                print_r("titi");
-                //var_dump($results);
+                echo "nb".$results->count(). "\n";
+                foreach ($results as $result) {
+                    echo 'DN: ' . $result['dn'] . "\n";
+                    echo 'sAMAccountName: ' . $result['sAMAccountName'] . "\n";
+                    echo 'Name: ' . $result['name'] . "\n";
+                    echo 'Email: ' . $result['mail'] . "\n";
+                    // Print other attributes...
+                }
                 if ($results->count()):
-                    print_r("toto");
                     $userSite = $this->getUserSites($userDomain, $sites);
                     $userSiteCode = $site->getCode();
                     $userSiteId = $site->getId();
@@ -150,11 +160,13 @@ class UserLog {
                 /*
                  * Bad search filter
                  */
+                echo "Bad search filter. Error details: " . $ex->getMessage() .$currentCode.$currentSite. "\n";
                 continue;
             } catch (ConnectionException $ex) {
                 /*
                  * User XXX.ldap not created
                  */
+                echo "Connection Exception:Error details: " . $ex->getMessage() .$currentCode.$currentSite."\n";
                 continue;
             }
 
