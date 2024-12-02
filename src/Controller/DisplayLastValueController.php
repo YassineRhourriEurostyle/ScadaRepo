@@ -35,6 +35,7 @@ class DisplayLastValueController extends AbstractController
      */
     public function index(Request $request)
     {
+        //get values with get method entered by user
         $idSite = $request->query->get('idSite', 120);
         $idMac = $request->query->get('idmac');
         $idMould = $request->query->get('idmould');
@@ -49,6 +50,7 @@ class DisplayLastValueController extends AbstractController
         $tools = $this->entityManager->getRepository(ConfigTools::class)->findBy(['idsite' => $idSite], ['toolreference' => 'ASC']);
 
 
+        //get values from database in records repository and send to the page
         $recordData = [];
         if ($request->query->get('initPage')) {
             $records = $this->entityManager->getRepository(Records::class)->findLastValues($idSite, $idMac, $idMould);
@@ -79,7 +81,7 @@ class DisplayLastValueController extends AbstractController
     public function testco(Request $request)
     {
         try {
-            //$entityManager = $this->getDoctrine()->getManager();  // If you're in a Symfony controller
+            //$entityManager = $this->getDoctrine()->getManager();
 
             // Instantiate the UserLog service
             //$userLogService = new UserLog($this->session, $entityManager);
@@ -88,10 +90,10 @@ class DisplayLastValueController extends AbstractController
             $login = 'yassine.rhourri.dev';  // example login
             $password = 'Euro$tyle1111!';  // example password
             //$userLogService->checkAccess($login, $password);
-            $ldap_server='ldap://10.4.1.21';
+            $ldap_server='ldap://10.4.200.56';
             $ldap_port = 389;
             $ad = ldap_connect($ldap_server, $ldap_port);
-            $domain = "esy.src.local";
+            $domain = "esb.src.local";
             if(ldap_bind($ad,"$login@$domain", "$password")){
                 echo "ldap valide";
             }

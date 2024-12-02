@@ -41,7 +41,7 @@ class SecuritySubscriber implements EventSubscriberInterface {
 
         $request = $event->getRequest();
         //var_dump($request); 
-        return true;
+        //return true;
 
         if ($request->hasPreviousSession()) {
             $this->session = $request->getSession();
@@ -115,6 +115,7 @@ class SecuritySubscriber implements EventSubscriberInterface {
         if (($controller instanceof SecurityController))
             return;
 
+        /*
         if (UserLog::IsLogged($this->session) &&
                 $this->params->get('kernel.environment') == 'dev' &&
                 !UserLog::isMemberOf($this->session, UserLog::DEV_ADMIN) &&
@@ -124,7 +125,7 @@ class SecuritySubscriber implements EventSubscriberInterface {
                 return new RedirectResponse('/security/maintenance');
             });
         endif;
-
+        */
         /*
          * User logged
          */

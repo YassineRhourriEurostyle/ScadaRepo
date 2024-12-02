@@ -33,6 +33,7 @@ class DisplayOneParameterController extends AbstractController
         
         //$em = $this->getDoctrine()->getManager();
 
+        //get all values by get method entered by user in page to use them
         $idSite = $request->query->get('idSite', 120);
         $idMac = $request->query->get('idmac');
         $idMould = $request->query->get('idmould');
@@ -40,6 +41,7 @@ class DisplayOneParameterController extends AbstractController
         $startDate = $request->query->get('startDate');
         $endDate = $request->query->get('endDate');
 
+        //find the parameter selected by user in table in database
         $paramnamechart = null;
         if ($idParam) {
             $selectedParameter = $this->getDoctrine()->getRepository(Parameters::class)->find($idParam);

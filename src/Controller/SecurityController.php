@@ -142,6 +142,7 @@ class SecurityController extends AbstractController {
             return $this->redirect('/security/login?redirect=' . urlencode($redir));
         endif;
 
+        /*
         $api = ApiController::call('common', 'User', array('filter' => array('UserName' => $this->session->get('logged'))));
         if (count($api) == 0):
             ApiController::set('common', 'User', 0, 'UserName', $this->session->get('logged'));
@@ -158,8 +159,9 @@ class SecurityController extends AbstractController {
         if (count($api) == 1 && $api[0]['MenuRight']):
             $this->session->set('MenuRight', 1);
         endif;
-
-
+        */
+        $this->session->set('HighContrast', 0);
+        $this->session->set('MenuRight', 0);
         if ($redir)
             return $this->redirect($redir);
         return $this->redirectToRoute('root');

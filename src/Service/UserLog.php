@@ -18,6 +18,7 @@ use Symfony\Component\Ldap\Exception\LdapException;
 use Symfony\Component\Ldap\Ldap;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
+use App\Entity\BusinessUnit;
 
 class UserLog {
 
@@ -109,12 +110,6 @@ class UserLog {
 
 //            if (!$site->ping())
 //                continue;
-            $totalSites = $this->em->getRepository(Site::class)->count([]);
-            echo "Total sites: " . $totalSites;
-            echo "Site ID: " . $site->getLdapIp() . "\n";
-            echo "Site Code: " . $site->getCode() . "\n";
-            echo "Site Name: " . $site->getLDAPDomain() . "\n";
-            echo "-------------\n";
             $userDomain = $site->getLDAPDomain();
             $currentCode = strtolower(substr(explode(',', $userDomain)[0], 3));
             if ($currentCode == 'src')
@@ -137,14 +132,6 @@ class UserLog {
                             . ')');
                 $results = $query->execute();
                 unset($ldap);
-                echo "nb".$results->count(). "\n";
-                foreach ($results as $result) {
-                    echo 'DN: ' . $result['dn'] . "\n";
-                    echo 'sAMAccountName: ' . $result['sAMAccountName'] . "\n";
-                    echo 'Name: ' . $result['name'] . "\n";
-                    echo 'Email: ' . $result['mail'] . "\n";
-                    // Print other attributes...
-                }
                 if ($results->count()):
                     $userSite = $this->getUserSites($userDomain, $sites);
                     $userSiteCode = $site->getCode();
@@ -160,13 +147,13 @@ class UserLog {
                 /*
                  * Bad search filter
                  */
-                echo "Bad search filter. Error details: " . $ex->getMessage() .$currentCode.$currentSite. "\n";
+                //echo "Bad search filter. Error details: " . $ex->getMessage() .$currentCode.$currentSite. "\n";
                 continue;
             } catch (ConnectionException $ex) {
                 /*
                  * User XXX.ldap not created
                  */
-                echo "Connection Exception:Error details: " . $ex->getMessage() .$currentCode.$currentSite."\n";
+                //echo "Connection Exception:Error details: " . $ex->getMessage() .$currentCode.$currentSite."\n";
                 continue;
             }
 
@@ -234,7 +221,13 @@ class UserLog {
         $this->session->set('siteId', $userSiteId);
         $this->session->set('allSites', explode(',', $userSite));
         $this->session->set('login', $login);
-        $this->session->set('department', $results[0]->getAttribute('department')[0]);
+        if (isset($results[0]) && $results[0]->getAttribute('department')) {
+            $department = $results[0]->getAttribute('department')[0] ?? null;
+        } else {
+            $department = null; // Or set a default value if needed
+        }
+        
+        $this->session->set('department', $department);        
         $this->session->set('memberOf', $memberOf);
         $this->session->set('roles', $roles);
         $this->session->set('touchScreen', $touchScreen ? 1 : 0);
@@ -242,10 +235,12 @@ class UserLog {
         if ($logASFromAdmin)
             $this->session->set('loggedByAdmin', 1);
 
-        $bus = ApiController::call('common', 'BusinessUnit');
+        //changed from common to scada
+        //$bus = ApiController::call('common', 'BusinessUnit');
+        $bus = $this->em->getRepository(BusinessUnit::class)->findAll();
         $isBU = false;
         foreach ($bus as $bu):
-            if ($bu['Signatory'] == $results[0]->getAttribute('name')[0]):
+            if ($bu->getSignatory() == $results[0]->getAttribute('name')[0]):
                 $isBU = true;
                 break;
             endif;
