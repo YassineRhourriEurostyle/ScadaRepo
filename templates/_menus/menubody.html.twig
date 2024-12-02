@@ -15,7 +15,7 @@
     </li>
 {% endfor %}
 
-{ {% if app.session.get('logged') and app.session.get('touchScreen')!=1 %} }
+{% if app.session.get('logged') and app.session.get('touchScreen')!=1 %}
     <li class="nav-item dropdown animated standard-hover-bg-white">
         <a class="nav-link dropdown-toggle standard-white standard-hover-black"
         href="#" 
@@ -52,4 +52,4 @@
         <a title="Logout" class="nav-link standard-white standard-hover-black" 
            href="{{ path('security_logout') }}"><i class="fas fa-sign-out-alt"></i></a>
     </li>
-{{% endif %}}
+{% endif %}
