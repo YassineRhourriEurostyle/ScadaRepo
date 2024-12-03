@@ -41,7 +41,7 @@ class SecuritySubscriber implements EventSubscriberInterface {
 
         $request = $event->getRequest();
         //var_dump($request); 
-        //return true;
+        return true;
 
         if ($request->hasPreviousSession()) {
             $this->session = $request->getSession();

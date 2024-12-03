@@ -17,7 +17,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\ORM\EntityManagerInterface;
 
 
-class DisplayOneParameterController extends AbstractController
+class DisplayMultipleParametersController extends AbstractController
 {
     private $entityManager;
     private $session;
@@ -28,27 +28,29 @@ class DisplayOneParameterController extends AbstractController
     }
 
     /**
-     * @Route("/displayoneparameter", name="displayoneparameter_index")
+     * @Route("/displaymultipleparameters", name="displaymultipleparameters_index")
      */
     public function index(Request $request)
     {
         //UserLog::isAllowed($this->session, UserLog::DEV_ADMIN);
         
         //$em = $this->getDoctrine()->getManager();
-
         //get all values by get method entered by user in page to use them
         $idSite = $request->query->get('idSite', 120);
         $idMac = $request->query->get('idmac');
         $idMould = $request->query->get('idmould');
-        $idParam = $request->query->get('idparam');
+        $idParams = $request->query->all('idparam');
         $startDate = $request->query->get('startDate');
         $endDate = $request->query->get('endDate');
 
         //find the parameter selected by user in table in database
         $paramnamechart = null;
-        if ($idParam) {
-            $selectedParameter = $this->getDoctrine()->getRepository(Parameters::class)->find($idParam);
-            $paramnamechart = $selectedParameter ? $selectedParameter->getParamname() : null;
+        $selectedParameters = [];
+        if ($idParams) {
+            $selectedParameters = $this->entityManager->getRepository(Parameters::class)->findBy(['idparameters' => $idParams]);
+            foreach ($selectedParameters as $param) {
+                $paramnamechart[] = $param->getParamname();
+            }
         }
 
         // all sites for dropdown
@@ -69,9 +71,8 @@ class DisplayOneParameterController extends AbstractController
         $dateNow->modify("-1 day");
         $txtDateDebut = $dateNow->format("Y-m-d H:i");
 
-        $records = $this->entityManager->getRepository(Records::class)->findRecords($idSite, $idMac, $idMould, $idParam, $startDate, $endDate);
-
-        $standardSettings = $this->entityManager->getRepository(SettingsStandard::class)->findStandardSettings($idSite, $idMac, $idMould, $idParam);
+        $records = $this->entityManager->getRepository(Records::class)->findRecordsMultipleParameters($idSite, $idMac, $idMould, $idParams, $startDate, $endDate);
+        $standardSettings = $this->entityManager->getRepository(SettingsStandard::class)->findStandardSettingsParamaters($idSite, $idMac, $idMould, $idParams);
 
         $paramValues = [];
         $stdValue = 0.00;
@@ -91,8 +92,9 @@ class DisplayOneParameterController extends AbstractController
                 ];
             }
         }
-        return $this->render('display_one_parameter/index.html.twig', [
-            'controller_name' => 'DisplayOneParameterController',
+        
+        return $this->render('display_multiple_parameters/index.html.twig', [
+            'controller_name' => 'DisplayMultipleParametersController',
             'sites' => $sites,
             'machines' => $machines,
             'tools' => $tools,
@@ -105,7 +107,7 @@ class DisplayOneParameterController extends AbstractController
             'toleranceMax' => $toleranceMax,
             'paramnamechart' => $paramnamechart,
             'paramvalues'=>$paramValues,
-
+            'selectedparameters'=>$selectedParameters,
         ]);
     }
 }

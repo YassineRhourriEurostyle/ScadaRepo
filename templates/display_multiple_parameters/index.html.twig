@@ -1,0 +1,178 @@
+{% extends 'column.html.twig' %}
+
+{% block title %}Display Multiple Parameters{% endblock %}
+
+
+{% block submenu %}
+    {#% include 'displaymultipleparameters/_submenu.html.twig' %#}
+{% endblock %}
+{% block body %}
+
+    <h1>🔍 Display Multiple Parameters</h1>
+    <!-- Form -->
+    <form name="dispParamVal" action="{{ path('displaymultipleparameters_index') }}" method="get" class="filter-form">
+        <table id="tabFilter" class="table table-borderless">
+            <tr>
+                <!-- Site -->
+                <td>
+                    <select id="refsite" name="idSite" class="form-select">
+                        <option selected>Select a site</option>
+                        {% for site in sites %}
+                            <option value="{{ site.idsites }}" {% if site.idsites == app.request.query.get('idSite') %}selected{% endif %}>
+                                {{ site.siteref }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </td>
+
+                <!-- Machine -->
+                <td>
+                    <select id="refmac" name="idmac" class="form-select">
+                        <option selected>Select a machine</option>
+                        {% for machine in machines %}
+                            <option value="{{ machine.idCfgMachine }}" {% if machine.idCfgMachine == app.request.query.get('idmac') %}selected{% endif %}>
+                                {{ machine.macreference }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </td>
+
+                <!-- Mould -->
+                <td>
+                    <select id="refmould" name="idmould" class="form-select">
+                        <option selected>Select a mould</option>
+                        {% for tool in tools %}
+                            <option value="{{ tool.idCfgTool }}" {% if tool.idCfgTool == app.request.query.get('idmould') %}selected{% endif %}>
+                                {{ tool.toolreference }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </td>
+                <tr>
+                    <!-- Parameter -->
+                    <td>
+                        <label for="param" class="form-label">Parameters</label>
+                        <small class="text-muted d-block mb-2">
+                            Hold <strong>Ctrl</strong> (or <strong>Cmd</strong> on Mac) to select multiple values.
+                        </small>
+                        <select id="param" name="idparam[]" class="form-select form-select-sm" multiple aria-label="multiple select example">
+                            {% for parameter in parameters %}
+                                <option value="{{ parameter.idparameters }}" {% if parameter.idparameters == app.request.query.get('idparam') %}selected{% endif %}>
+                                    {{ parameter.paramname }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </td>
+
+                    <!-- Date -->
+
+                    <td>
+                        <label for="startDate">Start Date</label>
+                        <input type="datetime-local" id="startDate" name="startDate" class="form-select" 
+                            value="{{ txtDateDebut }}" placeholder="Select start date">
+                    </td>
+
+                    <td>
+                        <label for="endDate">End Date</label>
+                        <input type="datetime-local" id="endDate" name="endDate" class="form-select" 
+                            value="{{ txtDateFin }}" placeholder="Select end date">
+                    </td>
+                </tr>
+                <td>
+                    <button type="submit" class="btn btn-primary btn-lg">Display</button>
+                </td>
+            </tr>
+        </table>
+        <input type="hidden" name="initPage" value="888">
+    </form>
+
+    <div id="GraphContainer"></div>
+
+    <script>
+        Highcharts.chart('GraphContainer', {
+            title: {
+                text: '{{ paramnamechart | join(', ')}}',  // Use dynamic parameter name from controller
+                align: 'center'
+            },
+            chart: {
+                shadow: true,  // Enable shadow for the entire chart
+                zoomType: 'xy',  // Enable zooming
+                borderColor: '#cccccc',  // Light border color
+                borderWidth: 1,
+                borderRadius: 10  // Rounded corners for the chart
+            },
+            xAxis: {
+                categories: [
+                    {% for record in records %}
+                        '{{ record.daterecord|date('Y-m-d H:i') }} / {{ record.cycleId }}',
+                    {% endfor %}
+                ],
+                accessibility: {
+                    description: 'Date / Cycle'
+                }
+            },
+
+            yAxis: {
+                title: {
+                    text: 'Values'
+                },
+                labels: {
+                    format: '{value}'
+                }
+            },
+            tooltip: {
+                backgroundColor : '#FCFFC5',
+                borderColor : 'black',
+                borderRadius : '10',
+                borderWidth : '3'
+            },
+            series: [
+            {% for parameter in selectedparameters %}
+                {
+                    name: '{{ parameter.paramname}}',  // Dynamic parameter name
+                    data: [
+                        {% for record in records %}
+                            {% if record.idparameter == parameter.idparameters %}
+                                {{ record.paramvalue|default(0) }},
+                            {% endif %}
+                        {% endfor %}
+                    ]
+                },
+            {% endfor %}
+                {
+                    name: 'Std value',
+                    data: [
+                        {% for p in paramvalues %}
+                            {{ p.stdValue|default(0)|number_format(0, '.', '') }},
+                        {% endfor %}                    
+                    ],
+                    marker :{
+                        symbol : 'diamond'
+                    }
+                },
+                {
+                    name: 'Tolerance Mini',
+                    data: [
+                        {% for p in paramvalues %}
+                            {{ p.toleranceMin|default(0)|number_format(0, '.', '') }},
+                        {% endfor %}                     
+                    ],
+                    marker:{
+                        symbol : 'triangle-down'
+                    }
+                },
+                {
+                    name: 'Tolerance Max',
+                    data: [
+                        {% for p in paramvalues %}
+                            {{ p.toleranceMax|default(0)|number_format(0, '.', '') }},
+                        {% endfor %} 
+                    ],
+                    marker:{
+                        symbol : 'triangle'
+                    }
+                }
+            ]
+        });
+    </script>
+{%  endblock %}

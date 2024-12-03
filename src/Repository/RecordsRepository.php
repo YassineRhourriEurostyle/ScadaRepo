@@ -120,6 +120,23 @@ class RecordsRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
 
     }
-    
+    public function findRecordsMultipleParameters ($siteId, $macId, $mouldId, $paramIds, $startDate, $endDate)
+    {
+        $qb = $this->createQueryBuilder('r')
+        ->where('r.idsite = :siteId')
+        ->andWhere('r.idmac = :macId')
+        ->andWhere('r.idmould = :mouldId')
+        ->andWhere('r.daterecord BETWEEN :startDate AND :endDate')
+        ->andWhere('r.idparameter IN (:paramIds)')
+        ->setParameters([
+            'siteId'=>$siteId,
+            'macId'=>$macId,
+            'mouldId'=>$mouldId,
+            'paramIds'=>$paramIds,
+            'startDate'=>$startDate,
+            'endDate'=>$endDate,
+        ]);
+        return $qb->getQuery()->getresult();
+    }
 
 }

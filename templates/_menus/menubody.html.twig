@@ -15,7 +15,7 @@
     </li>
 {% endfor %}
 
-{% if app.session.get('logged') and app.session.get('touchScreen')!=1 %}
+{#{% if app.session.get('logged') and app.session.get('touchScreen')!=1 %}#}
     <li class="nav-item dropdown animated standard-hover-bg-white">
         <a class="nav-link dropdown-toggle standard-white standard-hover-black"
         href="#" 
@@ -28,7 +28,7 @@
         <div class="dropdown-menu">
             <a class="dropdown-item" href="{{ path('displaylastvalue_index') }}">Display Last Values</a>
             <a class="dropdown-item" href="{{ path('displayoneparameter_index') }}">Display One Parameter</a>
-            <a class="dropdown-item" href="{{path('testco')}}">Test</a>
+            <a class="dropdown-item" href="{{path('displaymultipleparameters_index')}}">Display Multiple Parameters</a>
         </div>
     </li>
     <li class="nav-item animated standard-hover-bg-white {% if menu|length>0%}ms-2 ps-1 border-start border-dark border-2{%endif%}  {% if 'search'|slice(0, 5) == current_route|slice(0, 4) %} active{% endif %}">        
@@ -52,4 +52,4 @@
         <a title="Logout" class="nav-link standard-white standard-hover-black" 
            href="{{ path('security_logout') }}"><i class="fas fa-sign-out-alt"></i></a>
     </li>
-{% endif %}
+{#{% endif %}#}
