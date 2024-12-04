@@ -41,6 +41,8 @@ class SecuritySubscriber implements EventSubscriberInterface {
 
         $request = $event->getRequest();
         //var_dump($request); 
+        //if return true is commented authentication page will be showed, now no comment to acces
+        //directly to page without athentication
         return true;
 
         if ($request->hasPreviousSession()) {
@@ -115,6 +117,7 @@ class SecuritySubscriber implements EventSubscriberInterface {
         if (($controller instanceof SecurityController))
             return;
 
+        //lines commented because when log it redirects to maintenance
         /*
         if (UserLog::IsLogged($this->session) &&
                 $this->params->get('kernel.environment') == 'dev' &&

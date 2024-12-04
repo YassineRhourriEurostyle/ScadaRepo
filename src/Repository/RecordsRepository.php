@@ -120,6 +120,7 @@ class RecordsRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
 
     }
+    //retrieve data for display multiple parameters
     public function findRecordsMultipleParameters ($siteId, $macId, $mouldId, $paramIds, $startDate, $endDate)
     {
         $qb = $this->createQueryBuilder('r')

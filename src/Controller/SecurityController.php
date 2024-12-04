@@ -142,6 +142,7 @@ class SecurityController extends AbstractController {
             return $this->redirect('/security/login?redirect=' . urlencode($redir));
         endif;
 
+        //lines commented because calls to API not working
         /*
         $api = ApiController::call('common', 'User', array('filter' => array('UserName' => $this->session->get('logged'))));
         if (count($api) == 0):

@@ -235,7 +235,7 @@ class UserLog {
         if ($logASFromAdmin)
             $this->session->set('loggedByAdmin', 1);
 
-        //changed from common to scada
+        //api not working so access to repository diretly instead
         //$bus = ApiController::call('common', 'BusinessUnit');
         $bus = $this->em->getRepository(BusinessUnit::class)->findAll();
         $isBU = false;
