@@ -19,6 +19,7 @@ use Symfony\Component\Ldap\Ldap;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use App\Entity\BusinessUnit;
+use Symfony\Component\VarDumper\VarDumper;
 
 class UserLog {
 
@@ -221,10 +222,11 @@ class UserLog {
         $this->session->set('siteId', $userSiteId);
         $this->session->set('allSites', explode(',', $userSite));
         $this->session->set('login', $login);
+        //to handle error
         if (isset($results[0]) && $results[0]->getAttribute('department')) {
             $department = $results[0]->getAttribute('department')[0] ?? null;
         } else {
-            $department = null; // Or set a default value if needed
+            $department = null; 
         }
         
         $this->session->set('department', $department);        
@@ -236,8 +238,8 @@ class UserLog {
             $this->session->set('loggedByAdmin', 1);
 
         //api not working so access to repository diretly instead
-        //$bus = ApiController::call('common', 'BusinessUnit');
-        $bus = $this->em->getRepository(BusinessUnit::class)->findAll();
+        $bus = ApiController::call('common', 'BusinessUnit');
+        //$bus = $this->em->getRepository(BusinessUnit::class)->findAll();
         $isBU = false;
         foreach ($bus as $bu):
             if ($bu->getSignatory() == $results[0]->getAttribute('name')[0]):

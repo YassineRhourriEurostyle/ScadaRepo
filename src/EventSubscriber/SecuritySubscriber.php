@@ -43,7 +43,7 @@ class SecuritySubscriber implements EventSubscriberInterface {
         //var_dump($request); 
         //if return true is commented authentication page will be showed, now no comment to acces
         //directly to page without athentication
-        return true;
+        //return true;
 
         if ($request->hasPreviousSession()) {
             $this->session = $request->getSession();

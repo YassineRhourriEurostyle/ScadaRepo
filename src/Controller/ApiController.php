@@ -144,19 +144,33 @@ class ApiController extends AbstractController {
         if (isset($actions['filter'])):
             $url .= base64_encode(serialize($actions['filter']));
         endif;
+        echo "URL: " . $url;
 
 
         $ch = curl_init();
+        echo "premier";
+        var_dump($ch);
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        echo "second";
+        var_dump($ch);
         $response = curl_exec($ch);
-        curl_close($ch);
+        echo "response";
+        var_dump($response);
+        echo "error ". curl_error($ch);
+        echo "close";
+        var_dump($ch);
         $decode = json_decode($response, 1);
+        echo "la la";
+        var_dump($decode);
 
         if (is_array($decode) && isset($actions['order'])):
             self::$sortOrder = $actions['order'];
             usort($decode, array('App\Controller\ApiController', 'order'));
         endif;
+
+        echo "la ";
+        var_dump($decode);
 
         return $decode;
     }
