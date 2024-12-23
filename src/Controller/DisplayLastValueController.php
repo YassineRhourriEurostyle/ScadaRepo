@@ -52,8 +52,7 @@ class DisplayLastValueController extends AbstractController
 
         //get values from database in records repository and send to the page
         $recordData = [];
-        if ($request->query->get('initPage')) {
-            $records = $this->entityManager->getRepository(Records::class)->findLastValues($idSite, $idMac, $idMould);
+        $records = $this->entityManager->getRepository(Records::class)->findLastValues($idSite, $idMac, $idMould);
             foreach ($records as $record) {
                 $recordData[] = [
                     'Mould'=> $record['idmould'],
@@ -66,7 +65,6 @@ class DisplayLastValueController extends AbstractController
                     'ToolReference' => $record['toolreference'],
                 ];
             }
-        }
 
         return $this->render('display_last_value/index.html.twig', [
             'sites' => $sites,
