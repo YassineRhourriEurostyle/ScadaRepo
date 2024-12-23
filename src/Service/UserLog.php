@@ -238,8 +238,8 @@ class UserLog {
             $this->session->set('loggedByAdmin', 1);
 
         //api not working so access to repository diretly instead
-        $bus = ApiController::call('common', 'BusinessUnit');
-        //$bus = $this->em->getRepository(BusinessUnit::class)->findAll();
+        //$bus = ApiController::call('common', 'BusinessUnit');
+        $bus = $this->em->getRepository(BusinessUnit::class)->findAll();
         $isBU = false;
         foreach ($bus as $bu):
             if ($bu->getSignatory() == $results[0]->getAttribute('name')[0]):

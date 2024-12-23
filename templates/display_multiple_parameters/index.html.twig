@@ -68,14 +68,12 @@
 
                     <td>
                         <label for="startDate">Start Date</label>
-                        <input type="datetime-local" id="startDate" name="startDate" class="form-select" 
-                            value="{{ txtDateDebut }}" placeholder="Select start date">
+                        <input type="datetime-local" id="startDate" name="startDate" class="form-select" placeholder="Select start date">
                     </td>
 
                     <td>
                         <label for="endDate">End Date</label>
-                        <input type="datetime-local" id="endDate" name="endDate" class="form-select" 
-                            value="{{ txtDateFin }}" placeholder="Select end date">
+                        <input type="datetime-local" id="endDate" name="endDate" class="form-select" placeholder="Select end date">
                     </td>
                 </tr>
                 <td>
@@ -83,104 +81,50 @@
                 </td>
             </tr>
         </table>
-        <input type="hidden" name="initPage" value="888">
     </form>
-
-    <div id="GraphContainer"></div>
-
-    <script>
-        Highcharts.chart('GraphContainer', {
-            title: {
-                text: '{{ paramnamechart | join(', ')}}',  // Use dynamic parameter name from controller
-                align: 'center'
-            },
-            chart: {
-                shadow: true,  // Enable shadow for the entire chart
-                zoomType: 'xy',  // Enable zooming
-                borderColor: '#cccccc',  // Light border color
-                borderWidth: 1,
-                borderRadius: 10  // Rounded corners for the chart
-            },
-            xAxis: {
-                categories: [
-                    {% for record in records %}
-                        '{{ record.daterecord|date('Y-m-d H:i') }} / {{ record.cycleId }}',
+    <div class = "table-responsive">
+        <table border="1" class="table">
+            <thead class = "thead-dark">
+                <tr>
+                    <th>Date</th>
+                    <th>Cycle</th>
+                    {% for parameter in selectedparameters %}
+                        <th>{{ parameter.paramname }}</th>
                     {% endfor %}
-                ],
-                accessibility: {
-                    description: 'Date / Cycle'
-                }
-            },
-
-            yAxis: {
-                title: {
-                    text: 'Values'
-                },
-                labels: {
-                    format: '{value}'
-                }
-            },
-            tooltip: {
-                backgroundColor : '#FCFFC5',
-                borderColor : 'black',
-                borderRadius : '10',
-                borderWidth : '3',
-                style : {
-                    fontWeight : 'bold'
-                }
-            },
-            series: [
-            {% for parameter in selectedparameters %}
-                {
-                    name: '{{ parameter.paramname}}',  // Dynamic parameter name
-                    data: [
-                        {% for record in records %}
-                            {% if record.idparameter == parameter.idparameters %}
-                                {{ record.paramvalue|default(0) }},
-                            {% endif %}
+                    <th>Details</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for record in records %}
+                    <tr>
+                        <td>{{ record.daterecord|date("Y-m-d H:i:s") }}</td>
+                        <td>{{ record.cycleId }}</td>
+                        {% for parameter in selectedparameters %}
+                            <td>
+                                {% if record.idparameter == parameter.idparameters %}
+                                    {{ record.paramvalue|default(0) }}
+                                {% endif %}                            
+                            </td>
                         {% endfor %}
-                    ],
-                    marker: {
-                        enabled: true,  
-                        radius: 4, 
-                        symbol: 'circle',
-                    }
-                },
-            {% endfor %}
-                {
-                    name: 'Std value',
-                    data: [
-                        {% for p in paramvalues %}
-                            {{ p.stdValue|default(0)|number_format(0, '.', '') }},
-                        {% endfor %}                    
-                    ],
-                    marker :{
-                        symbol : 'diamond'
-                    }
-                },
-                {
-                    name: 'Tolerance Mini',
-                    data: [
-                        {% for p in paramvalues %}
-                            {{ p.toleranceMin|default(0)|number_format(0, '.', '') }},
-                        {% endfor %}                     
-                    ],
-                    marker:{
-                        symbol : 'triangle-down'
-                    }
-                },
-                {
-                    name: 'Tolerance Max',
-                    data: [
-                        {% for p in paramvalues %}
-                            {{ p.toleranceMax|default(0)|number_format(0, '.', '') }},
-                        {% endfor %} 
-                    ],
-                    marker:{
-                        symbol : 'triangle'
-                    }
-                }
-            ]
-        });
-    </script>
+                            <td>
+                                <a href="{{ path('displayoneparameter_index', {
+                                        'idSite': app.request.query.get('idSite'),
+                                        'idmac': app.request.query.get('idmac'),
+                                        'idmould': app.request.query.get('idmould'),
+                                        'idparam': record.idparameter,
+                                        'startDate': app.request.query.get('startDate'),
+                                        'endDate': app.request.query.get('endDate')
+                                    }) }}">
+                                    {% for parameter in selectedparameters %}
+                                        {% if record.idparameter == parameter.idparameters %}
+                                            Detailed graph for {{ parameter.paramname|default(0) }}
+                                        {% endif %}
+                                    {% endfor %}
+                                </a>
+                            </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 {%  endblock %}
