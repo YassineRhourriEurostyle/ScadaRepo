@@ -93,7 +93,7 @@ class RecordsRepository extends ServiceEntityRepository
         }
     
         $qb->orderBy('tabRec.idrecords', 'DESC')
-            ->setMaxResults(180);
+            ->setMaxResults(250);
 
         return $qb->getQuery()->getResult();
     }
