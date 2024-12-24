@@ -136,7 +136,9 @@ class RecordsRepository extends ServiceEntityRepository
             'paramIds'=>$paramIds,
             'startDate'=>$startDate,
             'endDate'=>$endDate,
-        ]);
+        ])
+        ->orderBy('r.daterecord')
+        ->setMaxResults(500);
         return $qb->getQuery()->getresult();
     }
 

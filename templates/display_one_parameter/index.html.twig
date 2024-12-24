@@ -15,7 +15,7 @@
                 <!-- Site -->
                 <td>
                     <select id="refsite" name="idSite" class="form-select">
-                        <option value = "" disabled selected>Select a site</option>
+                        <option value = "" disabled selected>🏭 Select a site</option>
                         {% for site in sites %}
                             <option value="{{ site.idsites }}" {% if site.idsites == app.request.query.get('idSite') %}selected{% endif %}>
                                 {{ site.siteref }}
@@ -27,7 +27,7 @@
                 <!-- Machine -->
                 <td>
                     <select id="refmac" name="idmac" class="form-select">
-                        <option value = "" disabled selected>Select a machine</option>
+                        <option value = "" disabled selected>⚙️ Select a machine</option>
                         {% for machine in machines %}
                             <option value="{{ machine.idCfgMachine }}" {% if machine.idCfgMachine == app.request.query.get('idmac') %}selected{% endif %}>
                                 {{ machine.macreference }}
@@ -39,7 +39,7 @@
                 <!-- Mould -->
                 <td>
                     <select id="refmould" name="idmould" class="form-select">
-                        <option value = "" disabled selected>Select a mould</option>
+                        <option value = "" disabled selected>🛠 Select a mould</option>
                         {% for tool in tools %}
                             <option value="{{ tool.idCfgTool }}" {% if tool.idCfgTool == app.request.query.get('idmould') %}selected{% endif %}>
                                 {{ tool.toolreference }}
@@ -50,7 +50,7 @@
                 <!-- Parameter -->
                 <td>
                     <select id="param" name="idparam" class="form-select">
-                        <option value = "" disabled selected>Select a parameter</option>
+                        <option value = "" disabled selected>🔧 Select a parameter</option>
                         {% for parameter in parameters %}
                             <option value="{{ parameter.idparameters }}" {% if parameter.idparameters == app.request.query.get('idparam') %}selected{% endif %}>
                                 {{ parameter.paramname }}
