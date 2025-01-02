@@ -31,6 +31,19 @@
             <a class="dropdown-item" href="{{path('displaymultipleparameters_index')}}">Display Multiple Parameters</a>
         </div>
     </li>
+    <li class="nav-item dropdown animated standard-hover-bg-white">
+        <a class="nav-link dropdown-toggle standard-white standard-hover-black"
+        href="#" 
+        id="navbarDropdown" 
+        role="button" 
+        data-bs-toggle="dropdown" 
+        aria-expanded="false">
+            Settings Standard
+        </a>
+        <div class="dropdown-menu">
+            <a class="dropdown-item" href="{{ path('settingsstandard_index') }}">Settings Standard</a>
+        </div>
+    </li>
     <li class="nav-item animated standard-hover-bg-white {% if menu|length>0%}ms-2 ps-1 border-start border-dark border-2{%endif%}  {% if 'search'|slice(0, 5) == current_route|slice(0, 4) %} active{% endif %}">        
         <form method="get" action="/search">
             <input placeholder="Search (beta)" name="q" style="{% if not search is defined %}display:none;{%endif%}" type="text" id="menu_search" class="nav-link" value="{% if search is defined %}{{ search }}{% endif %}"/>
