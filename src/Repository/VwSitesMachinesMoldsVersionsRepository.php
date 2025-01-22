@@ -38,6 +38,43 @@ class VwSitesMachinesMoldsVersionsRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
+    //retrieve data for filtration
+    public function filter($SiteRef=null, $MacRef=null, $ToolRef = null)
+    {
+        $qb = $this->createQueryBuilder('data')
+            ->select('
+                data.IdSettStdFile,
+                data.IdSite,
+                data.IdMachine,
+                data.IdTool,
+                data.IdToolVersion,
+                data.activeFile,
+                data.SiteRef,
+                data.SiteSAPCode,
+                data.SiteDescription,
+                data.MacReference,
+                data.ToolReference,
+                data.ToolVersionText,
+                data.Archived,
+                data.PictMoldMain
+                ');
+        
+        if ($SiteRef) {
+            $qb->andWhere('data.SiteRef = :SiteRef')
+            ->setParameter('SiteRef', $SiteRef);
+        }
+        if ($MacRef) {
+            $qb->andWhere('data.MacRef = :MacRef')
+            ->setParameter('MacRef', $MacRef);
+        }
+        if ($SiteRef) {
+            $qb->andWhere('data.ToolRef = :ToolRef')
+            ->setParameter('ToolRef', $ToolRef);
+        }
+
+        return $qb->getQuery()->getResult();
+    }
+
 
 //    /**
 //     * @return VwSitesMachinesMoldsVersions[] Returns an array of VwSitesMachinesMoldsVersions objects

@@ -42,6 +42,7 @@
         </a>
         <div class="dropdown-menu">
             <a class="dropdown-item" href="{{ path('settingsstandard_index') }}">Settings Standard</a>
+            <a class="dropdown-item" href="{{ path('setting_list_index') }}">Setting List</a>
         </div>
     </li>
     <li class="nav-item animated standard-hover-bg-white {% if menu|length>0%}ms-2 ps-1 border-start border-dark border-2{%endif%}  {% if 'search'|slice(0, 5) == current_route|slice(0, 4) %} active{% endif %}">        

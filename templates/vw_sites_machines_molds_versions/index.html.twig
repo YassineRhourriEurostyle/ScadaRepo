@@ -1,0 +1,38 @@
+{% extends 'column.html.twig' %}
+
+{% block title %}Standard Setting List{% endblock %}
+
+
+{% block submenu %}
+    
+{% endblock %}
+{% block body %}
+
+    <h1>Standard Setting List</h1>
+    <div class = "table-responsive">
+        <table class = "table table-hover table-lg">
+            <thead class = "thead-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Site Ref</th>
+                    <th>Machine Reference</th>
+                    <th>Tool Reference</th>
+                    <th>Images</th>
+                    <th>Version<th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for da in data %}
+                    <tr>
+                        <td>{{ da.IdSettStdFile }}</td>
+                        <td>{{ da.SiteRef }}</td>
+                        <td>{{ da.MacReference }}</td>
+                        <td>{{ da.ToolReference }}</td>
+                        <td class ="text-truncate">{{ da.PictMoldMain }}</td>
+                        <td>{{ da.ToolVersionText }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{%  endblock %}
