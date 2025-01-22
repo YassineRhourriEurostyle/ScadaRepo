@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\UniqueConstraint; // Into the header comment: @ORM\Table(name="",uniqueConstraints={@UniqueConstraint(name="table_field", columns={"field"})})
 /**
  * @ORM\Entity(readOnly=true)
- * @ORM\Entity(repositoryClass="VwSitesMachinesMoldsVersionsRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\VwSitesMachinesMoldsVersionsRepository")
  * @ORM\Table(name="vw_sites_machines_molds_versions")
  */
 class VwSitesMachinesMoldsVersions
