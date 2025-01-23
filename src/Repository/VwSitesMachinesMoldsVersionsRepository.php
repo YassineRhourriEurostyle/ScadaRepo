@@ -38,8 +38,30 @@ class VwSitesMachinesMoldsVersionsRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
-    //retrieve data for filtration
-    public function filter($SiteRef=null, $MacRef=null, $ToolRef = null)
+    // retrun all site names of table
+    public function allSitesRef(){
+        $qb = $this->createQueryBuilder('v')
+            ->select('v.IdSite,v.SiteRef')
+            ->distinct();
+        return $qb->getQuery()->getResult();
+
+    }
+    //return all machines names of table
+    public function allMachinesRef(){
+        $qb=$this->createQueryBuilder('v')
+            ->select('v.IdMachine,v.MacReference')
+            ->distinct();
+        return $qb->getQuery()->getResult();
+    }
+    //return all tools names of table
+    public function allToolsRef(){
+        $qb=$this->createQueryBuilder('v')
+            ->select ('v.IdTool,v.ToolReference')
+            ->distinct();
+        return $qb->getQuery()->getResult();
+    }
+    //retrieve data for filtration on top of page setting list
+    public function filterSettingList($IdSite=null, $IdMachine=null, $IdTool = null)
     {
         $qb = $this->createQueryBuilder('data')
             ->select('
@@ -59,17 +81,17 @@ class VwSitesMachinesMoldsVersionsRepository extends ServiceEntityRepository
                 data.PictMoldMain
                 ');
         
-        if ($SiteRef) {
-            $qb->andWhere('data.SiteRef = :SiteRef')
-            ->setParameter('SiteRef', $SiteRef);
+        if ($IdSite) {
+            $qb->andWhere('data.IdSite = :IdSite')
+            ->setParameter('IdSite', $IdSite);
         }
-        if ($MacRef) {
-            $qb->andWhere('data.MacRef = :MacRef')
-            ->setParameter('MacRef', $MacRef);
+        if ($IdMachine) {
+            $qb->andWhere('data.IdMachine = :IdMachine')
+            ->setParameter('IdMachine', $IdMachine);
         }
-        if ($SiteRef) {
-            $qb->andWhere('data.ToolRef = :ToolRef')
-            ->setParameter('ToolRef', $ToolRef);
+        if ($IdTool) {
+            $qb->andWhere('data.IdTool = :IdTool')
+            ->setParameter('IdTool', $IdTool);
         }
 
         return $qb->getQuery()->getResult();

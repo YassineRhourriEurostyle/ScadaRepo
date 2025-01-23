@@ -26,16 +26,30 @@ class VwSitesMachinesMoldsVersionsController extends AbstractController
     /**
      * @Route("/", name="setting_list_index")
      */
-    public function index()
+    public function index(Request $request)
     {
+        //values selcted for filtration
+        $IdSiteSelected = $request->query->get('IdSite');
+        $IdMachineSelected = $request->query->get('IdMac');
+        $IdToolSelected = $request->query->get('IdTool');
+
+        //datas for dropdown filter 
+        $sites = $this->entityManager->getRepository(VwSitesMachinesMoldsVersions::class)->allSitesRef();
+        $macs = $this->entityManager->getRepository(VwSitesMachinesMoldsVersions::class)->allMachinesRef();
+        $tools = $this->entityManager->getRepository(VwSitesMachinesMoldsVersions::class)->allToolsRef();
+
+        $datas = $this->entityManager->getRepository(VwSitesMachinesMoldsVersions::class)->filterSettingList($IdSiteSelected,$IdMachineSelected,$IdToolSelected);
+
         //UserLog::isAllowed($this->session, UserLog::DEV_ADMIN);
-        $data = $this->entityManager->getRepository(VwSitesMachinesMoldsVersions::class)->filtrer();
+        //$data = $this->entityManager->getRepository(VwSitesMachinesMoldsVersions::class)->filtrer();
         $em = $this->getDoctrine()->getManager();
         
         return $this->render('vw_sites_machines_molds_versions/index.html.twig', [
             'controller_name' => 'VwSitesMachinesMoldsVersionsController',
-            'data' => $data,
-
+            'datas' => $datas,
+            'sites' =>$sites,
+            'macs' =>$macs,
+            'tools' =>$tools
         ]);
     }
 }
