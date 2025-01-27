@@ -9,14 +9,23 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\SettingsStandard;
 use App\Form\SettingsStandardType;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use App\Entity\AuthGroupes;
+
 
 /**
  * @Route("/settingsstandard")
  */
 class SettingsStandardController extends AbstractController
 {
-    public function __construct(SessionInterface $session) {
+    private $session;
+    private $entityManager;
+    public function __construct(SessionInterface $session, EntityManagerInterface $entityManager ) {
         $this->session = $session;
+        $this->entityManager = $entityManager;
+
     }
 
     /**
@@ -25,7 +34,15 @@ class SettingsStandardController extends AbstractController
     public function index(Request $request)
     {
         //UserLog::isLoggedAs($this->session, UserLog::DEV_ADMIN);
-        
+        $grpNum = UserLog::GroupOfUser($this->session,$this->entityManager);
+        $grpDescription = $this->entityManager->getRepository(AuthGroupes::class)->findGroupDescriptionById($grpNum);
+        if ($grpNum == 1) {
+        } else {
+            $this->session->set('errorFlash', "Your group \"".$grpDescription."\" do not have required permissions");
+            // Throw an AccessDeniedException if $val is not 2
+            throw new AccessDeniedException('');
+        }
+        die();
         $em = $this->getDoctrine()->getManager();
         $settingsStandard = new SettingsStandard();
 

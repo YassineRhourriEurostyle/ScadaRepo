@@ -63,4 +63,9 @@ class AuthGroupesRepository extends ServiceEntityRepository
 //            ->getOneOrNullResult()
 //        ;
 //    }
+    public function findGroupDescriptionById(int $idGroupUsr): ?string
+    {
+        $group = $this->find($idGroupUsr);
+        return $group ? $group->getGroupdescription() : null;
+    }
 }

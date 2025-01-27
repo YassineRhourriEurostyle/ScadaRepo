@@ -20,6 +20,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use App\Entity\BusinessUnit;
 use Symfony\Component\VarDumper\VarDumper;
+use App\Entity\AuthUsers;
 
 class UserLog {
 
@@ -551,6 +552,23 @@ class UserLog {
             
         }
         return $details;
+    }
+    /*
+    *Return group of user connected
+    */
+    public static function GroupOfUser($session, $em){
+        var_dump($session->get('login')); // Check if 'login' exists in session
+        var_dump($session->get('site'));  // Check if 'site' exists in session
+
+        $userLogin = $session->get('login');
+        $userSite = $session->get('site');
+        $userAD = $userSite . '\\' . $userLogin;
+        var_dump($userAD); // Check the full AD login value
+
+        $groupIds = $em->getRepository(AuthUsers::class)->findGroupIdByAdLogin($userAD);
+        $groupIdUser = $groupIds[0]['idgroupusr'];
+        return $groupIdUser;
+
     }
 
 }

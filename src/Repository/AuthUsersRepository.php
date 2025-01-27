@@ -63,4 +63,13 @@ class AuthUsersRepository extends ServiceEntityRepository
 //            ->getOneOrNullResult()
 //        ;
 //    }
+    public function findGroupIdByAdLogin(string $adLogin)
+    {
+        return $this->createQueryBuilder('u')
+            ->select('u.idgroupusr')  // Select only the IdGroupUsr field
+            ->where('u.adLogin = :adLogin')
+            ->setParameter('adLogin', $adLogin)
+            ->getQuery()
+            ->getResult();
+    }
 }
