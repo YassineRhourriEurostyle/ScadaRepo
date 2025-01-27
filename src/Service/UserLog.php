@@ -557,13 +557,9 @@ class UserLog {
     *Return group of user connected
     */
     public static function GroupOfUser($session, $em){
-        var_dump($session->get('login')); // Check if 'login' exists in session
-        var_dump($session->get('site'));  // Check if 'site' exists in session
-
         $userLogin = $session->get('login');
         $userSite = $session->get('site');
         $userAD = $userSite . '\\' . $userLogin;
-        var_dump($userAD); // Check the full AD login value
 
         $groupIds = $em->getRepository(AuthUsers::class)->findGroupIdByAdLogin($userAD);
         $groupIdUser = $groupIds[0]['idgroupusr'];

@@ -42,7 +42,6 @@ class SettingsStandardController extends AbstractController
             // Throw an AccessDeniedException if $val is not 2
             throw new AccessDeniedException('');
         }
-        die();
         $em = $this->getDoctrine()->getManager();
         $settingsStandard = new SettingsStandard();
 
