@@ -1,0 +1,22 @@
+{% extends 'column.html.twig' %}
+{% block title %}
+    Tool in maintenance
+{% endblock %}
+{% block body %}
+    <div class="row">
+        <img src="/img/maintenance.png" class="align-left col-3"/>
+        <div class="col-9">
+            <h1 class="text-center standard-red fw-bold">Tool in maintenance.</h1>
+            <div class="text-center">During this state, no regular user can access.</div>
+            <div class="text-center">The page will automatically refresh to let you work once this tool's become available again.</div>
+            <div class="text-center fst-italic">Thanks for your patience.</div>
+        </div>
+    </div>
+    <script>
+        $(function() {
+            setTimeout(function(){
+                location.href='/';
+            }, 60000);
+        });
+        </script>
+{% endblock %}

@@ -1,0 +1,45 @@
+{% extends 'fullsize.html.twig' %}
+
+{% block title %}TypeOfDevice index{% endblock %}
+
+{% block submenu %}
+    {{ include('admin/_submenu.html.twig') }}
+{% endblock %}
+{% block body %}
+<h1>TypeOfDevice index</h1>
+<div class="col">
+    <a href="{{ path('admin_index') }}">Back to admin</a> -
+    <a href="#" data-url="{{ path('typeofdevice_new') }}" class="ajaxmodal">Create new</a>
+</div>
+<table class="no-filtering col-md-12 table table-sm table-bordered sortable">
+    <thead class="standard-bg-grey standard-white">
+        <tr>
+                            <th>Id</th>
+                            <th colspan="5">Name</th>
+                        <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for typeofdevice in typeofdevices %}
+        <tr>
+                            <td>{{ typeofdevice.id }}</td>
+                            <td colspan="5" class="font-weight-bold">{{ typeofdevice.Name }}</td>
+                        <td>
+                <form method="post" action="{{ path('typeofdevice_delete', {'id': typeofdevice.id}) }}">
+                    <i class="fas fa-eye standard-grey standard-hover-red ajaxmodal" data-url="{{ path('typeofdevice_show', {'id': typeofdevice.id}) }}" title="Show"></i>
+                    <i class="fas fa-edit standard-grey standard-hover-red ajaxmodal" data-url="{{ path('typeofdevice_edit', {'id': typeofdevice.id}) }}" title="Edit"></i>
+                    <input type="hidden" name="_method" value="DELETE">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ typeofdevice.id) }}">
+                    <a href="#" id="delete{{typeofdevice.id}}" class="confirmAction"  title="Delete"><i class="fas fa-trash-alt standard-grey standard-hover-red"></i></a>
+                </form>
+            </td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="3">no records found</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

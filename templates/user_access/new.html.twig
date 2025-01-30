@@ -1,0 +1,23 @@
+{% extends 'column.html.twig' %}
+
+{% block title %}User Access | New{% endblock %}
+{% block submenu %}
+    {{ include('admin/_submenu.html.twig') }}
+{% endblock %}
+{% block body %}
+    {% embed '__titleAndLinks.html.twig' %}
+        {%  block title %}
+            User Access
+        {% endblock %}
+        {%  block subtitle %}
+            <strong>New</strong>
+        {% endblock %}
+        {%  block links %}
+            <a href="{{ path('admin_index') }}">Back to admin</a><br/>
+            <a href="{{ path('useraccess_index') }}">Back to list</a>
+        {% endblock %}
+    {% endembed %}
+
+    {{ include('user_access/_form.html.twig') }}
+
+{% endblock %}

@@ -1,0 +1,14 @@
+{% if notifications is defined and notifications|length %}
+    <ul class="dots ms-3 p-0 col-auto">
+        {% for notif in notifications %}
+            <li class="standard-hover-bg-red m-1 ms-2 p-0 col-{{ 12/notifications|length-2 }} d-inline-block">
+                <a href="{{ notif.url }}" title="{{ notif.title }}" class="standard-hover-red {% if notif.color is defined %}{{notif.color}}{%else%}standard-grey{%endif%}">
+                    <span>
+                        <i class="{{ notif.icon }}"></i>
+                        <mark class="alert-info">{{ notif.number }}</mark>
+                    </span>
+                </a>  
+            </li>
+        {% endfor %}
+    </ul>
+{% endif %}

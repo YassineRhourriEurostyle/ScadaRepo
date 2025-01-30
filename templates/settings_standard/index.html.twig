@@ -1,0 +1,32 @@
+{% extends 'column.html.twig' %}
+
+{% block title %}SettingsStandardController index{% endblock %}
+
+
+{% block submenu %}
+    {#% include 'settingsstandard/_submenu.html.twig' %#}
+{% endblock %}
+{% block body %}
+
+<h1>Create a New Settings Standard</h1>
+
+    {# Display the form #}
+    {{ form_start(form) }}
+        {{ form_row(form.idrank) }}
+        {{ form_row(form.settingdescription) }}
+        {{ form_row(form.idparameter) }}
+        {{ form_row(form.idvaluetype) }}
+        {{ form_row(form.nbdecimals) }}
+        {{ form_row(form.stdvalue) }}
+        {{ form_row(form.tolerancepct) }}
+        {{ form_row(form.tolerancemini) }}
+        {{ form_row(form.tolerancemaxi) }}
+        {{ form_row(form.exactvalue) }}
+        {{ form_row(form.paramunit) }}
+        {{ form_row(form.parammasterunit) }}
+        {{ form_row(form.paramuniteabs) }}
+        {{ form_row(form.parammandatory) }}
+        {{ form_row(form.paramdeviceid) }}
+        <button type="submit">Save</button>
+    {{ form_end(form) }}
+{%  endblock %}

@@ -1,0 +1,23 @@
+{% extends 'column.html.twig' %}
+{% block title %}
+    Technical issue
+{% endblock %}
+{% block submenu %}
+
+{% endblock %}
+{% block body %}
+    <div class="row">
+        <div class="col-3 mx-auto">
+            <img src="/img/500.png" class="col-12"/>
+        </div>
+        <div class="col-12 text-center">
+            <h1 class="ps-0 ms-0 pe-0 me-0">A technical error occured.</h1>
+            <h3 class="standard-red">Reason: this may occur because of a coding failure or a misconfiguration.<br/>
+                IT team has been notified by e-mail, but feel free to contact them.</h3>
+        </div>
+        <div class="col-12 text-center">
+            <a href="javascript:history.go(-1)">Go back to previous page</a>
+        </div>
+    </div>
+{% endblock %}
+

@@ -1,0 +1,39 @@
+monolog:
+    handlers:
+        main:
+            type: fingers_crossed
+            action_level: critical
+            handler: grouped
+        grouped:
+            type:    group
+            members: [streamed, buffered]
+        streamed :
+            type : stream
+            path : /var/www/sop/var/log/test.log
+            level : debug
+        buffered:
+            type:    buffer
+            handler: swift
+        swift:
+            type:       swift_mailer
+            from_email: 'debug@eurostyle-systems.com'
+            to_email:   ['aurelien.stride@eurostyle-systems.com', 'claire.michel@eurostyle-systems.com']
+            # or list of recipients
+            # to_email:   ['dev1@example.com', 'dev2@example.com', ...]
+            subject:    'An Error Occurred! %%message%%'
+            level:      debug
+            formatter:  monolog.formatter.html
+            content_type: text/html
+        # Uncomment to log deprecations
+        #deprecation:
+        #    type: stream
+        #    path: "%kernel.logs_dir%/%kernel.environment%.deprecations.log"
+        #deprecation_filter:
+        #    type: filter
+        #    handler: deprecation
+        #    max_level: info
+        #    channels: ["php"]
+        #console:
+         #   type: console
+          #  process_psr_3_messages: false
+           # channels: ["!event", "!doctrine"]

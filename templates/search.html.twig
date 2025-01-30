@@ -1,0 +1,22 @@
+{% extends 'column.html.twig' %}
+{% block title %}
+    Search results for: {{ search }}
+{% endblock %}
+{% block submenu %}
+
+{% endblock %}
+{% block body %}
+    <div class="row">
+        <h1 class="col-12m-0 pb-4">Search results for: {{ search }}</h1>
+        <div class="col-12">
+            {% for class, links in results %}
+                <h2 class="standard-green ms-0 ps-0">{{ class }}</h2>
+                <ul>
+                    {% for link in links %}
+                        <li>{{ link|raw }}</li>
+                        {% endfor %}
+                </ul>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

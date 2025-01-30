@@ -1,0 +1,27 @@
+{% extends 'column.html.twig' %}
+
+{% block title %}User Access | Edit{% endblock %}
+{% block submenu %}
+    {{ include('admin/_submenu.html.twig') }}
+{% endblock %}
+{% block body %}
+    {% embed '__titleAndLinks.html.twig' %}
+        {%  block title %}
+            User Access
+        {% endblock %}
+        {%  block subtitle %}
+            <strong>Edit</strong>
+        {% endblock %}
+        {%  block links %}
+            <a href="{{ path('admin_index') }}">Back to admin</a><br/>
+            <a href="{{ path('useraccess_index') }}">Back to list</a>
+        {% endblock %}
+    {% endembed %}
+    <h1 class="ps-0 ms-0 pe-0 me-0">Edit UserAccess</h1>
+    <div class="col">
+        <a href="{{ path('useraccess_index') }}">Back to list</a>
+    </div>
+    {{ include('user_access/_form.html.twig', {'button_label': 'Update'}) }}
+
+    {{ include('user_access/_delete_form.html.twig') }}
+{% endblock %}

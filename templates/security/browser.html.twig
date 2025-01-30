@@ -1,0 +1,16 @@
+{% extends 'column.html.twig' %}
+{% block title %}
+    Browser not compatible
+{% endblock %}
+{% block body %}
+    <div class="row">
+        <img src="/img/no-ie.gif" class="align-left col-3"/>
+        <div class="col-9">
+            <h1 class="text-center">Warning: this browser will not properly display this service, and has been voluntarily blocked.</h1>
+            <div class="text-center">We recommend 
+                <strong>Chrome</strong>,
+                <strong>Microsoft Edge Chromium</strong> (blue and green wave),
+                or <strong>Firefox</strong>.</div>
+        </div>
+    </div>
+{% endblock %}

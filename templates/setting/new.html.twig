@@ -1,0 +1,14 @@
+{% extends 'column.html.twig' %}
+
+{% block title %}New Setting{% endblock %}
+{% block submenu %}
+    {{ include('admin/_submenu.html.twig') }}
+{% endblock %}
+{% block body %}
+<h1>Create new Setting</h1>
+<div class="col">
+    <a href="{{ path('setting_index') }}">Back to list</a>
+</div>
+{{ include('setting/_form.html.twig') }}
+
+{% endblock %}

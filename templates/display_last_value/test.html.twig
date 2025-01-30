@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Site List{% endblock %}
+
+{% block body %}
+    <h1>List of Sites</h1>
+
+    {% if sites2 is not empty %}
+        <ul>
+            {% for site in sites2 %}
+                <li>{{ site.id }}: {{ site.name }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No sites found.</p>
+    {% endif %}
+
+    {% if message is defined %}
+        <p style="color: red;">Error: {{ message }}</p>
+    {% endif %}
+{% endblock %}

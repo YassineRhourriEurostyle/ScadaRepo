@@ -1,0 +1,19 @@
+{{ form_start(form) }}
+{{ form_widget(form) }}
+{{ form_end(form) }}
+
+
+<script>
+    $(function () {
+        $('#user_access_EntityField').on('blur', function () {
+            var select = $('#user_access_Value');
+            select.find('option:gt(0)').remove();
+            $.get('/admin/useraccess/list-values/' + $(this).val())
+                    .done(function (json) {
+                        Object.keys(json).forEach((key) => {
+                            select.append('<option value="' + json[key] + '">' + key + '</option>');
+                        });
+                    });
+        });
+    });
+</script>

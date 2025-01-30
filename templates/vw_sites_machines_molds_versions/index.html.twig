@@ -1,0 +1,70 @@
+{% extends 'column.html.twig' %}
+
+{% block title %}Standard Setting List{% endblock %}
+
+
+{% block submenu %}
+    
+{% endblock %}
+{% block body %}
+
+    <h1>Standard Setting List</h1>
+    <form name = "filter" action="{{path('setting_list_index')}}" method="get" class="filter-form">
+        <table class = "table table-borderless">
+            <tr>
+                <td>
+                    <select id="IdSite" name="IdSite" class="form-select">
+                        <option value ="">🏭 Select a site</option>
+                        {% for site in sites %}
+                            <option value="{{site.IdSite}}" {% if site.IdSite == app.request.query.get('IdSite')%}selected{% endif %}>
+                                {{site.SiteRef}}
+                            </option>
+                        {% endfor %}
+                </td>
+                <td>
+                    <select id = "IdMac" name ="IdMac" class = "form-select">
+                        <option value ="">⚙️ Select a machine</option>
+                        {% for mac in macs %}
+                            <option value ="{{mac.IdMachine}}" {% if mac.IdMachine == app.request.query.get('IdMac')%} selected{% endif %}>
+                                {{mac.MacReference}}
+                            </option>
+                        {% endfor %}
+                </td>
+                <td>
+                    <select id = "IdTool" name = "IdTool" class="form-select">
+                        <option value ="">🛠 Select a mould</option>
+                        {% for tool in tools %}
+                            <option value ="{{tool.IdTool}}" {% if tool.IdTool == app.request.query.get ('IdTool')%}selected {% endif %}>
+                                {{tool.ToolReference}}
+                            </option>
+                        {% endfor %}
+                </td>
+                <td>
+                    <button type = "submit" class ="btn-primary btn-lg">Filter</button>
+                </td>
+            </tr>
+        </table>
+    </form>
+    <div class = "table-reposnsive">
+        <table id="list" class = "table table-hover align-middle">
+            <thead class = "thead-dark">
+                <tr>
+                <th>Site</th>
+                <th>Machine</th>
+                <th>Mold</th>
+                <th>Version</th>
+                </tr>
+            </thead>
+                <tbody>
+                    {% for data in datas %}                        
+                        <tr>
+                            <td>{{data.SiteRef}}</td>
+                            <td>{{data.MacReference}}</td>
+                            <td>{{data.ToolReference}}</td>
+                            <td>{{data.ToolVersionText}}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+        </table>
+    </div>
+{%  endblock %}
