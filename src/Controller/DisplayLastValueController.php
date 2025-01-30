@@ -101,5 +101,51 @@ class DisplayLastValueController extends AbstractController
             echo "Error: " . $e->getMessage();
         }
     }
-    
+    /**
+     * @Route("/displaylastvalue/get-machines", name="get_machines", methods={"GET"})
+     */
+    public function getMachines(Request $request): Response
+    {
+        $idSite = $request->query->get('idSite');
+
+        if (!$idSite) {
+            return $this->json(['error' => 'Site ID is required'], 400);
+        }
+
+        $machines = $this->entityManager->getRepository(ConfigMachines::class)->findBy(['idsite' => $idSite]);
+
+        $data = [];
+        foreach ($machines as $machine) {
+            $data[] = [
+                'id' => $machine->getIdCfgMachine(),
+                'name' => $machine->getMacReference(),
+            ];
+        }
+
+        return $this->json($data);
+    }
+
+    /**
+     * @Route("/displaylastvalue/get-molds", name="get_molds", methods={"GET"})
+     */
+    public function getMolds(Request $request): Response
+    {
+        $idSite = $request->query->get('idSite');
+
+        if (!$idSite) {
+            return $this->json(['error' => 'Site ID is required'], 400);
+        }
+
+        $tools = $this->entityManager->getRepository(ConfigTools::class)->findBy(['idsite' => $idSite], ['toolreference' => 'ASC']);
+
+        $data = [];
+        foreach ($tools as $tool) {
+            $data[] = [
+                'id' => $tool->getIdcfgtool(),
+                'name' => $tool->getToolreference(),
+            ];
+        }
+
+        return $this->json($data);
+    }    
 }
