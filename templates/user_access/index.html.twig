@@ -1,0 +1,63 @@
+{% extends 'fullsize.html.twig' %}
+
+{% block title %}User Access | List of records{% endblock %}
+
+{% block submenu %}
+    {{ include('admin/_submenu.html.twig') }}
+{% endblock %}
+{% block body %}
+    {% embed '__titleAndLinks.html.twig' %}
+        {%  block title %}
+            User Access
+        {% endblock %}
+        {%  block subtitle %}
+            <strong>List of records</strong>
+        {% endblock %}
+        {%  block links %}
+            <a href="{{ path('admin_index') }}">Back to admin</a><br/>
+            <a href="#" data-url="{{ path('useraccess_new') }}" class="ajaxmodal">Create new</a>
+        {% endblock %}
+    {% endembed %}
+
+    <table class="no-filtering col-md-12 table table-sm table-bordered sortable">
+        <thead class="standard-bg-grey standard-white">
+            <tr>
+                <th>Id</th>
+                <th colspan="5">User</th>
+                <th colspan="2">EntityField</th>
+                <th>Value</th>
+                <th>Allow/Deny</th>
+                <th>Read/Write</th>
+                <th>Excel Export</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for useraccess in useraccesses %}
+                <tr>
+                    <td>{{ useraccess.id }}</td>
+                    <td colspan="5"><strong>{{ useraccess.User }}</strong></td>
+                    <td colspan="2">{{ useraccess.EntityField }}</td>
+                    <td>{{ useraccess.Value }}</td>
+                    <td>{% if useraccess.Deny %}Deny{% else %}Allow{% endif %}</td>
+                    <td>{% if useraccess.ReadOnly %}Read{% else %}Write{% endif %}</td>
+                    <td>{% if useraccess.ExportExcel %}Yes{% else %}No{% endif %}</td>
+                    <td>
+                        <form method="post" action="{{ path('useraccess_delete', {'id': useraccess.id}) }}">
+                            <i class="fas fa-eye standard-grey standard-hover-red ajaxmodal" data-url="{{ path('useraccess_show', {'id': useraccess.id}) }}" title="Show"></i>
+                            <i class="fas fa-edit standard-grey standard-hover-red ajaxmodal" data-url="{{ path('useraccess_edit', {'id': useraccess.id}) }}" title="Edit"></i>
+                            <input type="hidden" name="_method" value="DELETE">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ useraccess.id) }}">
+                            <a href="#" id="delete{{useraccess.id}}" class="confirmAction"  title="Delete"><i class="fas fa-trash-alt standard-grey standard-hover-red"></i></a>
+                        </form>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="5">no records found</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}

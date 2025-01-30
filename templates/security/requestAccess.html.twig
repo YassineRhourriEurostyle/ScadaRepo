@@ -1,0 +1,42 @@
+{% extends 'column.html.twig' %}
+{% block title %}
+    Request Access
+{% endblock %}
+{% block body %}
+    <div class="row">
+        <div class="col-2 mx-auto">
+            <img src="/img/request_access.png" class="col-12"/>
+        </div>
+        <div class="col-12 text-center">
+            <h1 class="ps-0 ms-0 pe-0 me-0">Request specific access</h1>            
+        </div>
+        <div class="col-4 mb-2 mx-auto">
+            The request will be sent to:
+            <ul>
+                <li class="fw-bold">{{ manager }}</li>
+            </ul>
+        </div>
+        <form method="post" action="/security/request-access-send" class="col-12 mt-1">
+            <input type="hidden" name="reason" value="{{ reason }}"/>
+            <input type="hidden" name="url" value="{{ url }}"/>
+            <div class="row">
+                <label>Reason of non-access:</label>
+                <div class="fst-italic">{{ reason }}</div>
+            </div>
+            <div class="row">
+                <label>Link to page:</label>
+                <div class="fst-italic">{{ url }}</div>
+            </div>
+            <div class="row">
+                <label for="message">Message to explain your request:</label>
+                <textarea id="message" name="message" required="required"></textarea>
+            </div>
+            <div class="row">
+                <input type="submit" value="Send request" class="col-6 mx-auto"/>
+            </div>
+        </form>
+        <div class="col-12 text-center">
+            <a href="javascript:history.go(-1)">Go back to previous page</a>
+        </div>
+    </div>
+{% endblock %}

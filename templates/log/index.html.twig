@@ -1,0 +1,68 @@
+{% extends 'fullsize.html.twig' %}
+
+{% block title %}Log | List of records{% endblock %}
+
+{% block submenu %}
+    {{ include('admin/_submenu.html.twig') }}
+{% endblock %}
+{% block body %}
+    {% embed '__titleAndLinks.html.twig' %}
+        {%  block title %}
+            Log
+        {% endblock %}
+        {%  block subtitle %}
+            <strong>List of records</strong>
+        {% endblock %}
+        {%  block links %}
+            <a href="{{ path('admin_index') }}">Back to admin</a>
+        {% endblock %}
+    {% endembed %}
+    <div class="col">
+        <form method="get">
+            <select name="user" class="submitOnChange">
+                <option value="">-- All users --</option>
+                {% for u in users %}
+                <option value="{{ u }}"{% if u==user %} selected="selected"{% endif %}>{{ u }}</option>
+                {% endfor %}
+            </select>
+            <select name="entity" class="submitOnChange">
+                <option value="">-- All entities --</option>
+                {% for e in entities %}
+                <option value="{{ e }}"{% if e==entity %} selected="selected"{% endif %}>{{ e }}</option>
+                {% endfor %}
+            </select>
+        </form>
+    </div>
+    <table class="no-filtering col-md-12 table table-sm table-bordered sortable">
+        <thead class="standard-bg-grey standard-white">
+            <tr>
+                <th>Id</th>
+                <th colspan="2">Date / User</th>
+                <th colspan="5">Entity / ID / Field / value</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for log in logs %}
+                <tr class="standard-bg-{% if log.Field=='[DELETION]' %}red{%elseif log.Field=='[CREATION]' %}green{%else%}-white{%endif%}">
+                    <td>{{ log.id }}</td>
+                    <td colspan="2">{{ log.Date ? log.Date|date('Y-m-d H:i:s') : '' }}
+                        <br/><small>{{ log.User }}</small></td>
+                    <td colspan="5">{{ log.Entity }} #{{ log.FieldID }}
+                        <br/><small>{{ log.Field }}{% if log.Field!=log.Value%}: {{ log.Value }}{% endif %}</small></td>
+                    <td>
+                        <form method="post" action="{{ path('log_delete', {'id': log.id}) }}">
+                            <i class="fas fa-eye standard-grey standard-hover-red ajaxmodal" data-url="{{ path('log_show', {'id': log.id}) }}" title="Show"></i>                                                
+                            <a href="{{ path('log_history', {'entity': log.Entity, 'id': log.FieldID}) }}" title="History"><i class="fas fa-history standard-grey standard-hover-red"></i></a>                                                
+                        </form>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="8">no records found</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}

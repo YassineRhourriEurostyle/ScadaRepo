@@ -1,0 +1,32 @@
+{% extends 'column.html.twig' %}
+{% block title %}
+    Save your site
+{% endblock %}
+{% block body %}    
+    <form class="col-md-4 ms-auto me-auto" style="margin-top:50px;" action="/security/set_site" method="post">
+        <input type="hidden" name="id_user_api" value="{{ id_user_api }}"/>
+        To make the tools use more reliable, please select your exact site below.
+        <div class="form-group row">
+            <label for="text" class="col-md-3 col-form-label">Site*:</label>
+            <div class="col-md-9">
+                <select name="site">
+                    {% for site in app.session.get('allSites') %}
+                        <option value="{{ site }}">{{ site }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-12">
+                <input type="checkbox" name="remain" value="1" class="col-1"/> I work for only one site, remain this value and never ask again.
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col">
+                <button type="submit" class="btn standard-white standard-bg-red">Save</button>
+            </div>
+        </div>
+        
+    </form>
+    
+{% endblock %}

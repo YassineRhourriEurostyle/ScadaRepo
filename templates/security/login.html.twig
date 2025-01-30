@@ -1,0 +1,49 @@
+{% extends 'column.html.twig' %}
+{% block title %}
+    Authentication
+{% endblock %}
+{% block body %}  
+    <div class="col-md-4 m-auto text-center">
+        <img class="col-4 ms-2" src="/img/windows.png"/>
+        <img class="col-4 me-2" src="/img/sharepoint.png"/>
+        <div class="small fw-bold">Windows or SharePoint login & password</div>
+    </div>
+    <form class="col-md-4 m-auto mt-2" style="margin-top:50px;" action="/security/check?redirect={{ redir }}" method="post">
+        <div class="form-group row">
+            <label for="text" class="col-md-3 col-form-label">Login*:</label>
+            <div class="col-md-9">
+                <input type="text" class="form-control" id="login" name="login">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="text" class="col-md-3 col-form-label">Password:</label>
+            <div class="col-md-9">
+                <input type="password" class="form-control" id="password" name="password">
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col">
+                <button type="submit" class="btn standard-white standard-bg-red">Envoyer</button>
+            </div>
+        </div>
+        <label for="text" class="col-md-12 col-form-label text-end small">
+            <small><em>*only <strong>firstname.lastname</strong>, no need to precise plant domain 
+                    (except if your login is stored in several domains).</em></small>
+        </label>
+    </form>
+    <div class="col-md-4 m-auto text-center">
+        <hr/>
+        <small>
+            <a href="http://capexpls/">CAPEX</a> - 
+            <a href="http://cuplanpls/">CU Plan</a> -
+            <a href="http://kpipls/">KPI</a> - 
+            <a href="http://marketpls/">Market Place</a> - 
+            <a href="http://spaccesspls/">SP Access</a>
+        </small>
+        <hr/>
+        <small>
+            <a href="https://capexpls.gmd-pls.com/">CAPEX tool (external access)</a>            
+        </small>
+    </div>
+
+{% endblock %}

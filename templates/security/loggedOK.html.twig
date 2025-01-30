@@ -1,0 +1,17 @@
+{% extends 'column.html.twig' %}
+{% block title %}
+    Login successful
+{% endblock %}
+{% block body %}
+    <div class="row">
+        <div class="col-2 mx-auto">
+            <img src="/img/access-granted.png" class="col-12"/>
+        </div>
+        <div class="col-12 text-center">
+            <h1 class="ps-0 ms-0 pe-0 me-0">You are successfully logged in!</h1>
+        </div>
+        <div class="col-12 text-center">
+            Now modify <strong>src/Service/HomeRedirection.php</strong> for perfect logged-in redirection.
+        </div>
+    </div>
+{% endblock %}

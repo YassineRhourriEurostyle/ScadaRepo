@@ -1,0 +1,66 @@
+{% extends 'column.html.twig' %}
+
+{% block title %}Setup{% if type %} | {{ type.name }}{% endif %}{% endblock %}
+
+
+{% block submenu %}
+    {% include 'setup/_submenu.html.twig' %}
+{% endblock %}
+{% block body %}
+
+    {% embed '__titleAndLinks.html.twig' %}
+
+        {% block title %}
+            Setup
+        {% endblock %}
+
+        {% block links %}
+            <a href="/setup/new">New setup</a>
+        {% endblock %}
+
+        {% block subtitle %}
+            {% if type %}
+                {{ type.name }}
+            {% endif %}
+        {% endblock %}
+
+    {% endembed %}
+
+    {% if type %}
+        <hr/>
+        {% set level=0 %}
+        {% for i in type.indicators %}
+            {% if not i.parent %}
+                <div class="row">
+                    <div class="col-6">
+                        <div class="ms-{{ level }} ps-{{ level }}  {% if not i.unit %}fw-bold{% endif %}">{{ i.name }}{% if i.maxiterations>1 %} #{{ iter }}{% endif %}</div> 
+                    </div>
+                    {% if i.unit %}
+                        <div class="col-2 text-center">{{ i.unit.symbol }}</div>
+                        <input type="{% if i.unit.symbol=='txt' %}text{% elseif i.unit.symbol=='photo' %}file{% else %}number{% endif %}" class="col-3"/>
+                    {%  endif %}
+                </div>
+                {{ _self.readIndicators(i.children, 1, 0) }}
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+
+{%  endblock %}
+
+{% macro readIndicators(indicators, level, currIter) %}
+
+    {% for i in indicators %}
+        {% for iter in range(1, i.maxiterations) %}
+            <div class="row">
+                <div class="col-6">
+                    <div class="ms-{{ level }} ps-{{ level }}  {% if not i.unit %}fw-bold{% endif %}">{{ i.name }}{% if i.maxiterations>1 %} #{{ iter }}{% endif %}</div> 
+                </div>
+                {% if i.unit %}
+                    <div class="col-2 text-center">{{ i.unit.symbol }}</div>
+                    <input type="{% if i.unit.symbol=='txt' %}text{% elseif i.unit.symbol=='photo' %}file{% else %}number{% endif %}" class="col-3"/>
+                {%  endif %}
+            </div>
+            {{ _self.readIndicators(i.children, level+1, iter) }}
+        {% endfor %}        
+    {% endfor %}
+{% endmacro %}

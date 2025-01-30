@@ -1,0 +1,23 @@
+{% extends 'column.html.twig' %}
+{% block title %}
+    Page not found
+{% endblock %}
+{% block submenu %}
+
+{% endblock %}
+{% block body %}
+    <div class="row">
+        <div class="col-3 mx-auto">
+            <img src="/img/404.png" class="col-12"/>
+        </div>
+        <div class="col-12 text-center">
+            <h1 class="ps-0 ms-0 pe-0 me-0">The requested page cannot be found.</h1>
+            <h3 class="standard-red">Reason: the current URL doesn't retrieve an existing page.<br/>
+            Either the address is mispelled, or the access to the wanted page has changed.</h3>
+        </div>
+        <div class="col-12 text-center">
+            <a href="javascript:history.go(-1)">Go back to previous page</a>
+        </div>
+    </div>
+{% endblock %}
+

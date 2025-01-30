@@ -1,0 +1,10 @@
+/**{
+    --standard-grey: #535656;
+    --standard-lightgrey: #dee2e6;
+    --standard-white: #ffffff;
+    --standard-black: #000000;
+}*/
+
+nav.navbar {
+    background-color:#feca00 !important;
+}

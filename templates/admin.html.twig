@@ -1,0 +1,49 @@
+{% extends 'column.html.twig' %}
+{% block title %}
+    Administration Panel
+{% endblock %}
+{% block submenu %}
+    {{ include('admin/_submenu.html.twig') }}
+{% endblock %}
+{% block body %}
+    {% embed '__titleAndLinks.html.twig' %}
+        {%  block title %}
+            <span class="standard-orange fw-bold">Administration Panel</span>
+        {% endblock %}
+        {%  block subtitle %}
+            {% if isMemberOf(constant('App\\Service\\UserLog::DEV_ADMIN')) %} 
+                <form method="post" action="/security/check" class="row ms-0 ps-0">
+                    <input type="hidden" name="password"/>
+                    <input type="hidden" name="logAs" value="1"/>
+                    <div class="col-6">
+                        <label>Log as: </label>
+                        <input list="logAs" type="text" name="login" value=""/>
+                        <datalist id="logAs">
+                            {% for u in logAs %}
+                                <option value="{{ u.Site }}\{{ u.Name }}"/>
+                                {% endfor %}
+                                </datalist>
+                                </div>
+                                <div class="col-6">
+                                <input type="submit" value="Log out & log in"/>
+                    </div>
+                </form>
+            {% endif %}
+        {% endblock %}
+        {%  block links %}
+            <a href="/admin/update-one-field">Update one field</a>
+        {% endblock %}
+    {% endembed %}
+    
+    
+    {% for page, route in pages %}
+        {% if page!='Admin home' %}
+            <h3 class="col-11 ms-5 mb-2">
+                <a href="{{ path(route) }}new/" target="_blank" title="Create new record"><i class="fa-solid fa-plus"></i></a> 
+                |
+                <a href="{{ path(route) }}" title="List all records" class="standard-green fw-bold">{{ page }}</a></h3>
+            {% endif %}
+        {% else %}
+        No admin pages yet.
+    {% endfor %}
+{% endblock %}

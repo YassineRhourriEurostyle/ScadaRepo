@@ -1,0 +1,56 @@
+{% extends 'column.html.twig' %}
+{% block title %}
+    Administration Message to Users
+{% endblock %}
+{% block submenu %}
+    {{ include('admin/_submenu.html.twig') }}
+{% endblock %}
+{% block body %}
+    {% embed '__titleAndLinks.html.twig' %}
+        {%  block title %}
+            Administration Message to Users
+        {% endblock %}
+        {%  block subtitle %}
+            
+        {% endblock %}
+        {%  block links %}
+            
+        {% endblock %}
+    {% endembed %}
+    
+    {% if isMemberOf(constant('App\\Service\\UserLog::DEV_ADMIN')) %} 
+        <div class="row">            
+            <form method="post" action="/security/check" class="col-6 m-auto">
+                <input type="hidden" name="password"/>
+                <input type="hidden" name="logAs" value="1"/>
+                <div>
+                    <label>Subject: </label>
+                    <input type="text" name="subject" value=""/>
+
+                </div>
+                <div>
+                    <label>Message: </label>
+                    <select name="message">
+                        <option value="1">Tool maintenance</option>
+                        <option value="2">Custom message</option>
+                    </select>
+
+                </div>
+
+                <div>
+                    <label>Details: </label>
+                    <input type="text" name="details" value=""/>                    
+                </div>
+
+                <div>
+                    <input type="submit" value="Send message"/>
+                </div>
+            </form>
+        </div>
+    {% endif %}
+    {% for page, route in pages %}
+        <h2 class="col-11 ms-5 mb-2">- <a href="{{ path(route) }}">{{ page }}</a></h2>
+        {% else %}
+        No admin pages yet.
+    {% endfor %}
+{% endblock %}

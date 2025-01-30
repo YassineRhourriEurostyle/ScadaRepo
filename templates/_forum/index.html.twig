@@ -1,0 +1,99 @@
+{% extends 'fullsize.html.twig' %}
+{% block title %}
+    Problems / Ideas discussion forum
+{% endblock %}
+{% block submenu %}
+
+{% endblock %}
+{% block body %}
+
+    {% embed '__titleAndLinks.html.twig' %}
+        {%  block title %}
+            Problems / Ideas discussion forum            
+        {% endblock %}
+        {%  block subtitle %}
+            <small>
+                <small>
+                    <p>All discussions here must be related to the <strong>{{ project_code }} tool</strong> uses or misfunctions.</p>
+                    <p>All other topics will be removed and untreated.</p>
+                    <p>Please ensure the topic you wish to discuss about has not already been treated.</p>
+                    <p>All approved <i class="fas fa-thumbs-up standard-green"></i> topics are removed after 1 week.</p>    
+                </small>
+            </small>
+        {% endblock %}
+        {%  block links %}
+            <a href="/forum/new/">Add a new topic</a>
+        {% endblock %}
+    {% endembed %}
+
+
+    <table class="no-filtering col-md-12 table table-sm table-bordered sortable">
+        <thead class="standard-white standard-bg-grey">
+            <tr>
+                <th>Date</th>
+                <th>Category</th>
+                <th colspan="5">Last & First message</th>
+                <th>Status</th>
+                <th colspan="2">Files</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for message in messages %}
+                <tr>
+                    <td>{{ message.Date.date|slice(0, 10) }}</td>
+                    <td>{{ message.Category }}</td>
+                    <td colspan="5">
+                        {{ message.Message|raw }}
+                        <small class="col-12 d-inline-block text-end"><em>{{ message.User }}</em></small>
+                                {% if message.FirstPost %}
+                            <hr/>
+                            {{ message.FirstPost.Message|raw }}
+                            <small class="col-12 d-inline-block text-end"><em>{{ message.FirstPost.User }}</em></small>                            
+                                {% endif %}
+                    </td>
+                    <td>
+                        <i class="fas fa-comment standard-blue"></i>
+                        {% set color='standard-lightgrey' %}
+                        {% if message.Status == 'Abandoned' %}
+                            {% set color='standard-red' %}
+                            <i class="fas fa-long-arrow-alt-right {{color}}"></i>
+                            <i class="fas fa-window-close {{color}}"></i>
+                        {% else %}
+                            {% set color='standard-lightgrey' %}
+                            {% if message.Status == 'Planned by IT' 
+                            or message.Status == 'Coded, waiting approval' 
+                            or message.Status == 'Approved' %}
+                            {% set color='standard-grey' %}
+                        {% endif %}
+                        <!-- <i class="fas fa-long-arrow-alt-right {{color}}"></i>
+                        <i class="fas fa-user-cog {{color}}"></i> -->
+                        {% set color='standard-lightgrey' %}
+                        {% if message.Status == 'Coded, waiting approval'
+                            or message.Status == 'Approved'%}
+                        {% set color='standard-orange' %}
+                        {% endif %}
+                            <i class="fas fa-long-arrow-alt-right {{color}}"></i>
+                            <i class="fas fa-code {{color}}"></i>
+                            {% set color='standard-lightgrey' %}
+                            {% if message.Status == 'Approved' %}
+                                {% set color='standard-green' %}
+                            {% endif %}
+                            <i class="fas fa-long-arrow-alt-right {{color}}"></i>
+                            <i class="fas fa-thumbs-up {{color}}"></i>
+                            {% endif %}
+
+                                <br/>
+                                {{ message.Status }}
+                            </td>
+                            <td colspan="2" class="small">
+                                {{ include('_forum/_files.html.twig', {'message': message}) }}
+                            </td>
+                            <td class="small">
+                                <a href="/forum/new/{{ message.id }}">Read & Reply</a><br/>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                    {% endblock %}

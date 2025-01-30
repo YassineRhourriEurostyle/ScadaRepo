@@ -1,0 +1,17 @@
+{# empty Twig template #}
+{% for path, file in message.files %}
+    <a href="{{ path }}" target="_blank" class="">
+        {% if file|slice(-3,3)=='xls' or file|slice(-4,4)=='xlsx' %}
+            <i class="standard-grey fas fa-file-excel me-1"></i>
+        {% elseif file|slice(-3,3)=='doc' or file|slice(-4,4)=='docx' %}
+            <i class="standard-blue fas fa-file-word me-1"></i>
+        {% elseif file|slice(-3,3)=='pdf' %}
+            <i class="standard-red fas fa-file-pdf me-1"></i>
+        {% elseif file|slice(-3,3)=='jpg' or file|slice(-3,3)=='png' %}
+            <i class="standard-orange fas fa-file-image me-1"></i>
+        {% else %}
+            <i class="standard-orange fas fa-file me-1"></i>
+        {% endif %}
+        {{ file }}
+    </a>
+{% endfor %}
