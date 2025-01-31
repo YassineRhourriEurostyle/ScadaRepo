@@ -144,7 +144,7 @@ class ApiController extends AbstractController {
         if (isset($actions['filter'])):
             $url .= base64_encode(serialize($actions['filter']));
         endif;
-        echo "URL: " . $url;
+        //echo "URL: " . $url;
 
 
         $ch = curl_init();
