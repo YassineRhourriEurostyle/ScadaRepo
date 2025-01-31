@@ -162,6 +162,9 @@ class AdminController extends AbstractController {
         $t = scandir(__DIR__);
         $pages = ['Admin home' => 'admin_index'];
         foreach ($t as $file):
+            if ($file =="." || "..") {
+                continue;
+            }
             if ($file == 'AdminController.php')
                 continue;
             $f = file_get_contents(__DIR__ . '/' . $file);

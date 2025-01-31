@@ -32,7 +32,7 @@ class UserLog {
     const CAPEX_UPLOAD = 'G_CAPEX_UPLOAD';
     const COMEX_PLS = 'G_COMEX_PLS';
     const CUPLAN = 'G_CUPLAN';
-    const DEV_ADMIN = 'G_DEV_ADMIN';
+    const DEV_ADMIN = 'G_DEV_ADMIN_SCADA';
     const IT_FULLACCESS = 'G_IT_FULLACCESS';
     const IT_PRIORITY = 'G_IT_PRIORITY';
     const IT_REDACTOR = 'G_IT_REDACTOR';
