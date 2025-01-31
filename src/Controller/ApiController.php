@@ -153,7 +153,7 @@ class ApiController extends AbstractController {
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         //echo "second";
-        var_dump($ch);
+        //var_dump($ch);
         $response = curl_exec($ch);
         //echo "response";
         //var_dump($response);
