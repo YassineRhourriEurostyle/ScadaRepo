@@ -49,6 +49,10 @@ class AuthUsers
      */
     private $dateutcmodification;
 
+    public function getId(): ?int
+    {
+        return $this->iduser;
+    }
     public function getIduser(): ?string
     {
         return $this->iduser;
