@@ -1,0 +1,14 @@
+{% extends 'column.html.twig' %}
+
+{% block title %}Edit User{% endblock %}
+{% block body %}
+    <h1>Edit User</h1>
+    <form method="post">
+        <label>AD Login:</label>
+        <input type="text" name="ad_login" value="{{ user.adLogin }}" required>
+        <label>Group ID:</label>
+        <input type="number" name="id_group_usr" value="{{ user.idgroupusr }}">
+        <button type="submit">Update</button>
+    </form>
+    <a href="{{ path('auth_users_index') }}">🔙 Back to List</a>
+{% endblock %}
