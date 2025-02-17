@@ -11,6 +11,7 @@ use App\Repository\AuthUsersRepository;
 use Symfony\Component\HttpFoundation\Response;
 use App\Entity\AuthUsers;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 
 /**
@@ -18,15 +19,25 @@ use Doctrine\ORM\EntityManagerInterface;
  */
 class AuthUsersController extends AbstractController
 {
-    public function __construct(SessionInterface $session) {
+    private $session;
+    private $em;
+    public function __construct(SessionInterface $session,EntityManagerInterface $em) {
         $this->session = $session;
+        $this ->em = $em;
     }
-
+    private function checkUserGroup() {
+        $userGroup = UserLog::GroupOfUser($this->session, $this->em);
+        if ($userGroup != 1) {
+            $this->session->set('errorFlash', "You must be in Group 1 to access this section.");
+            throw new AccessDeniedException('');
+        }
+    }
     /**
      * @Route("/", name="auth_users_index")
      */
     public function index(AuthUsersRepository $repository): Response
     {
+        $this->checkUserGroup();
         $users = $repository->findAll();
 
         return $this->render('auth_users/index.html.twig', [
@@ -39,6 +50,8 @@ class AuthUsersController extends AbstractController
      */
     public function new(Request $request, EntityManagerInterface $em): Response
     {
+        $this->checkUserGroup();
+
         if ($request->isMethod('POST')) {
             $user = new AuthUsers();
             $user->setAdLogin($request->request->get('ad_login'));
@@ -59,6 +72,8 @@ class AuthUsersController extends AbstractController
      */
     public function edit(Request $request, AuthUsers $user, EntityManagerInterface $em): Response
     {
+        $this->checkUserGroup();
+
         if ($request->isMethod('POST')) {
             $user->setAdLogin($request->request->get('ad_login'));
             $user->setIdgroupusr($request->request->get('id_group_usr'));
@@ -89,6 +104,8 @@ class AuthUsersController extends AbstractController
      */
     public function delete(Request $request, AuthUsers $user, EntityManagerInterface $em): Response
     {
+        $this->checkUserGroup();
+
         if ($this->isCsrfTokenValid('delete'.$user->getIduser(), $request->request->get('_token'))) {
             $em->remove($user);
             $em->flush();
