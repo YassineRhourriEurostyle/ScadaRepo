@@ -34,9 +34,12 @@ class MenuController extends AbstractController {
         if (UserLog::isLogged($this->session)):
             $menu['setup_index']= 'Setup';
         endif;
+        // Get the user's group
+        $userGroup = UserLog::GroupOfUser($this->session, $this->em);
         return $this->render('_menus/menubody.html.twig', [
                     'menu' => $menu,
-                    'current_route' => $current_route
+                    'current_route' => $current_route,
+                    'userGroup'=>$userGroup
         ]);
     }
 

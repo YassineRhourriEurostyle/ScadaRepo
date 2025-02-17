@@ -562,6 +562,11 @@ class UserLog {
         $userAD = $userSite . '\\' . $userLogin;
 
         $groupIds = $em->getRepository(AuthUsers::class)->findGroupIdByAdLogin($userAD);
+
+        if (empty($groupIds) || !isset($groupIds[0]['idgroupusr'])) {
+            return null;
+        }
+
         $groupIdUser = $groupIds[0]['idgroupusr'];
         return $groupIdUser;
 
