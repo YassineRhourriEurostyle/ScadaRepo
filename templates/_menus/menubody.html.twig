@@ -45,7 +45,7 @@
             <a class="dropdown-item" href="{{ path('setting_list_index') }}">Setting List</a>
         </div>
     </li>
-    {% if userGroup == 1 %}
+    {% if isInGroup1 %}
         <li class="nav-item dropdown animated standard-hover-bg-white">
             <a class="nav-link dropdown-toggle standard-white standard-hover-black"
                 href="{{path('auth_users_index')}}" >

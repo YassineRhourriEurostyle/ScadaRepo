@@ -66,10 +66,39 @@ class AuthUsersRepository extends ServiceEntityRepository
     public function findGroupIdByAdLogin(string $adLogin)
     {
         return $this->createQueryBuilder('u')
-            ->select('u.idgroupusr')  // Select only the IdGroupUsr field
+            ->select('g.idgroupusr')  // Select the group ID from the joined table
+            ->join('u.groups', 'g')   // Join with the groups relation
             ->where('u.adLogin = :adLogin')
             ->setParameter('adLogin', $adLogin)
             ->getQuery()
             ->getResult();
     }
+    public function addGroupsToUser(int $userId, int $groupId)
+    {
+        $connection = $this->getEntityManager()->getConnection();
+
+        // SQL query to insert into the join table
+        $sql = "INSERT INTO auth_users_groups (idgroupusr, iduser) VALUES (:idgroupusr, :iduser)";
+
+        // Prepare and execute the SQL query using executeStatement
+        $connection->executeStatement($sql, [
+            'idgroupusr' => $groupId,
+            'iduser' => $userId
+        ]);
+    }
+    public function removeGroupsFromUser(int $userId, int $groupId)
+    {
+        $connection = $this->getEntityManager()->getConnection();
+    
+        // SQL query to delete from the join table
+        $sql = "DELETE FROM auth_users_groups WHERE idgroupusr = :idgroupusr AND iduser = :iduser";
+    
+        // Prepare and execute the SQL query using executeStatement
+        $connection->executeStatement($sql, [
+            'idgroupusr' => $groupId,
+            'iduser' => $userId
+        ]);
+    }
+    
+
 }
