@@ -6,8 +6,13 @@
     <form method="post">
         <label>AD Login:</label>
         <input type="text" name="ad_login" required>
-        <label>Group ID:</label>
-        <input type="number" name="id_group_usr">
+        <label>Select Group:</label>
+        <select name="id_group_usr[]" multiple>
+            {% for group in groups %}
+                <option value="{{ group.idgroupusr }}">{{ group.groupdescription }}</option>
+            {% endfor %}
+        </select>
+        <p>Hold Ctrl (Cmd on Mac) to select multiple groups.</p>
         <button type="submit">Create</button>
     </form>
 {% endblock %}

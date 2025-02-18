@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -24,16 +26,9 @@ class AuthUsers
     /**
      * @var string|null
      *
-     * @ORM\Column(name="AD_login", type="string", length=150, nullable=true, options={"comment"="Example : ESB\admin.roland"})
+     * @ORM\Column(name="AD_login", type="string", length=150, nullable=true, options={"comment"="Example: ESB\admin.roland"})
      */
     private $adLogin;
-
-    /**
-     * @var int|null
-     *
-     * @ORM\Column(name="IdGroupUsr", type="integer", nullable=true)
-     */
-    private $idgroupusr;
 
     /**
      * @var \DateTime|null
@@ -49,11 +44,17 @@ class AuthUsers
      */
     private $dateutcmodification;
 
-    public function getId(): ?int
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\AuthGroupes", mappedBy="users", cascade={"persist"})
+     */
+    private $groups;
+
+    public function __construct()
     {
-        return $this->iduser;
+        $this->groups = new ArrayCollection();
     }
-    public function getIduser(): ?string
+
+    public function getId(): ?int
     {
         return $this->iduser;
     }
@@ -66,19 +67,6 @@ class AuthUsers
     public function setAdLogin(?string $adLogin): self
     {
         $this->adLogin = $adLogin;
-
-        return $this;
-    }
-
-    public function getIdgroupusr(): ?int
-    {
-        return $this->idgroupusr;
-    }
-
-    public function setIdgroupusr(?int $idgroupusr): self
-    {
-        $this->idgroupusr = $idgroupusr;
-
         return $this;
     }
 
@@ -90,7 +78,6 @@ class AuthUsers
     public function setDateutccreation(?\DateTimeInterface $dateutccreation): self
     {
         $this->dateutccreation = $dateutccreation;
-
         return $this;
     }
 
@@ -102,9 +89,27 @@ class AuthUsers
     public function setDateutcmodification(?\DateTimeInterface $dateutcmodification): self
     {
         $this->dateutcmodification = $dateutcmodification;
+        return $this;
+    }
+
+    // Getter and setter for groups
+    public function getGroups(): Collection
+    {
+        return $this->groups;
+    }
+
+    public function addGroup(AuthGroupes $group): self
+    {
+        if (!$this->groups->contains($group)) {
+            $this->groups[] = $group;
+        }
 
         return $this;
     }
 
-
+    public function removeGroup(AuthGroupes $group): self
+    {
+        $this->groups->removeElement($group);
+        return $this;
+    }
 }

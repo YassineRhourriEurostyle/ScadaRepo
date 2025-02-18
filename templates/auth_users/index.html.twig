@@ -2,20 +2,31 @@
 
 {% block title %}Users List{% endblock %}
 
-
 {% block submenu %}
     {#{% include 'authusers/_submenu.html.twig' %}#}
 {% endblock %}
+
 {% block body %}
     <h1>Users List</h1>
     <a href="{{ path('auth_users_new') }}">➕ Add New User</a>
     <ul>
         {% for user in users %}
             <li>
-                {{ user.adLogin }} (Group ID: {{ user.idgroupusr }}) 
-                <a href="{{ path('auth_users_edit', { id: user.iduser }) }}">✏️ Edit</a> 
-                <!-- Redirect to confirmation page -->
-                <a href="{{ path('auth_users_confirm_delete', { id: user.iduser }) }}">
+                {{ user.adLogin }} 
+                
+                <!-- Loop through the groups associated with the user -->
+                {% if user.groups is not empty %}
+                    (Groups: 
+                    {% for group in user.groups %}
+                        {{ group.groupdescription }}{% if not loop.last %}, {% endif %}
+                    {% endfor %}
+                    )
+                {% else %}
+                    (No groups)
+                {% endif %}
+                
+                <a href="{{ path('auth_users_edit', { id: user.id }) }}">✏️ Edit</a>
+                <a href="{{ path('auth_users_confirm_delete', { id: user.id }) }}">
                     <button class="btn btn-danger">🗑 Delete</button>
                 </a>
             </li>
