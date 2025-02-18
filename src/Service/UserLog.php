@@ -556,20 +556,43 @@ class UserLog {
     /*
     *Return group of user connected
     */
-    public static function GroupOfUser($session, $em){
+    public static function GroupOfUser($session, $em) {
         $userLogin = $session->get('login');
         $userSite = $session->get('site');
         $userAD = $userSite . '\\' . $userLogin;
-
-        $groupIds = $em->getRepository(AuthUsers::class)->findGroupIdByAdLogin($userAD);
-
-        if (empty($groupIds) || !isset($groupIds[0]['idgroupusr'])) {
-            return null;
+    
+        $groupResults = $em->getRepository(AuthUsers::class)->findGroupIdByAdLogin($userAD);
+    
+        if (empty($groupResults)) {
+            return [];
         }
-
-        $groupIdUser = $groupIds[0]['idgroupusr'];
-        return $groupIdUser;
-
+    
+        // Extract all group IDs into an array
+        $groupIds = array_column($groupResults, 'idgroupusr');
+    
+        return $groupIds;
     }
+    public static function isUserInGroup($session, $em, $groupId) {
+        $userLogin = $session->get('login');
+        $userSite = $session->get('site');
+        $userAD = $userSite . '\\' . $userLogin;
+    
+        // Get all groups of the user
+        $groupIds = $em->getRepository(AuthUsers::class)->findGroupIdByAdLogin($userAD);
+    
+        if (empty($groupIds)) {
+            return false; // No groups found
+        }
+    
+        // Extract the group ids from the result
+        $userGroupIds = array_map(function($group) {
+            return $group['idgroupusr']; // Assuming you're getting a result with 'idgroupusr' field
+        }, $groupIds);
+    
+        // Check if the user is in the desired group (e.g., group ID 1)
+        return in_array($groupId, $userGroupIds);
+    }
+    
+    
 
 }
