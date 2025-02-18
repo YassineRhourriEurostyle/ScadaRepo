@@ -1,14 +1,37 @@
 {% extends 'column.html.twig' %}
 
-{% block title %}Edit User{% endblock %}
+{% block title %}Users List{% endblock %}
+
+{% block submenu %}
+    {#{% include 'authusers/_submenu.html.twig' %}#}
+{% endblock %}
+
 {% block body %}
     <h1>Edit User</h1>
-    <form method="post">
-        <label>AD Login:</label>
-        <input type="text" name="ad_login" value="{{ user.adLogin }}" required>
-        <label>Group ID:</label>
-        <input type="number" name="id_group_usr" value="{{ user.idgroupusr }}">
-        <button type="submit">Update</button>
+
+    <form method="POST" action="{{ path('auth_users_edit', {id: user.id}) }}">
+        <div>
+            <label for="group_id">Select Group</label>
+            <select name="group_id" required>
+                {% for group in groups %}
+                    <option value="{{ group.idgroupusr }}">{{ group.groupdescription }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div>
+            <label>Action</label>
+            <select name="action" required>
+                <option value="add">Add Group</option>
+                <option value="remove">Remove Group</option>
+            </select>
+        </div>
+
+        <div>
+            <label for="ad_login">AD Login</label>
+            <input type="text" name="ad_login" value="{{ user.adLogin }}" required>
+        </div>
+
+        <button type="submit">Submit</button>
     </form>
-    <a href="{{ path('auth_users_index') }}">🔙 Back to List</a>
 {% endblock %}

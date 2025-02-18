@@ -1,12 +1,15 @@
 {% extends 'column.html.twig' %}
 
-{% block title %}Delete User{% endblock %}
+{% block title %}Confirm User Deletion{% endblock %}
+
 {% block body %}
     <h1>Confirm Deletion</h1>
-    <p>Are you sure you want to delete <strong>{{ user.adLogin }}</strong>?</p>
-    <form action="{{ path('auth_users_delete', { id: user.iduser }) }}" method="post">
-        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ user.iduser) }}">
-        <button type="submit">🗑 Yes, Delete</button>
+    <p>Are you sure you want to delete user <strong>{{ user.adLogin }}</strong>?</p>
+
+    <form method="POST" action="{{ path('auth_users_delete', {'id': user.id}) }}">
+        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ user.id) }}">
+        
+        <button type="submit" class="btn btn-danger">🗑 Yes, Delete</button>
         <a href="{{ path('auth_users_index') }}">❌ Cancel</a>
     </form>
 {% endblock %}

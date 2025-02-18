@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -31,9 +33,7 @@ class AuthGroupes
     /**
      * @var bool|null
      *
-     * @ORM\Column(name="GroupShow", type="boolean", nullable=true, options={"comment"="Display :
-1 -> Yes
-0 -> No"})
+     * @ORM\Column(name="GroupShow", type="boolean", nullable=true, options={"comment"="Display: 1 -> Yes, 0 -> No"})
      */
     private $groupshow;
 
@@ -51,6 +51,30 @@ class AuthGroupes
      */
     private $dateutcmodification;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\AuthUsers", inversedBy="groups")
+     * @ORM\JoinTable(
+     *     name="auth_users_groups", 
+     *     joinColumns={
+     *         @ORM\JoinColumn(name="idgroupusr", referencedColumnName="IdGroupUsr")
+     *     }, 
+     *     inverseJoinColumns={
+     *         @ORM\JoinColumn(name="iduser", referencedColumnName="IdUser")
+     *     }
+     * )
+     */
+    private $users;
+
+
+    public function __construct()
+    {
+        $this->users = new ArrayCollection();
+    }
+    //changed getIdgroupusr to getId because error inentitychangedsubsciber
+    public function getId(): ?int
+    {
+        return $this->idgroupusr;
+    }
     public function getIdgroupusr(): ?int
     {
         return $this->idgroupusr;
@@ -64,7 +88,6 @@ class AuthGroupes
     public function setGroupdescription(?string $groupdescription): self
     {
         $this->groupdescription = $groupdescription;
-
         return $this;
     }
 
@@ -76,7 +99,6 @@ class AuthGroupes
     public function setGroupshow(?bool $groupshow): self
     {
         $this->groupshow = $groupshow;
-
         return $this;
     }
 
@@ -88,7 +110,6 @@ class AuthGroupes
     public function setDateutccreation(?\DateTimeInterface $dateutccreation): self
     {
         $this->dateutccreation = $dateutccreation;
-
         return $this;
     }
 
@@ -100,9 +121,27 @@ class AuthGroupes
     public function setDateutcmodification(?\DateTimeInterface $dateutcmodification): self
     {
         $this->dateutcmodification = $dateutcmodification;
+        return $this;
+    }
+
+    // Getter and setter for users
+    public function getUsers(): Collection
+    {
+        return $this->users;
+    }
+
+    public function addUser(AuthUsers $user): self
+    {
+        if (!$this->users->contains($user)) {
+            $this->users[] = $user;
+        }
 
         return $this;
     }
 
-
+    public function removeUser(AuthUsers $user): self
+    {
+        $this->users->removeElement($user);
+        return $this;
+    }
 }
