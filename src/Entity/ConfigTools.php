@@ -42,6 +42,10 @@ class ConfigTools
      */
     private $tooldatecreation;
 
+    public function getId(): ?string
+    {
+        return $this->idcfgtool;
+    }
     public function getIdcfgtool(): ?string
     {
         return $this->idcfgtool;

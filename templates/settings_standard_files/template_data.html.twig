@@ -1,0 +1,86 @@
+{% extends 'column.html.twig' %}
+
+{% block title %}Settings Standard Template Data{% endblock %}
+
+{% block body %}
+    <div class="container mt-4">
+        <h2>Settings Standard Template Data</h2>
+
+        <form method="post" action="{{ path('template_data') }}">
+            <table class="table">
+                <thead class = "thead-dark">
+                    <tr>
+                        <th>Fieldname</th>
+                        <th>Field Unit</th>
+                        <th>Decimals</th>
+                        <th>Is Title</th>
+                        <th>Std Value</th>
+                        <th>% Tolerance</th>
+                        <th>Mini</th>
+                        <th>Maxi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for parameter in parameters %}
+                            <td>
+                                {% if parameter.istitle %}
+                                    <strong>{{ parameter.fieldname }}</strong>
+                                {% else %}
+                                    <div style="text-align: right;margin-left: 20px;">{{ parameter.fieldname }}</div>
+                                {% endif %}
+                                <input type="hidden" name="fieldname_{{ parameter.idsettstdtemp }}" value="{{ parameter.fieldname }}">
+                                <input type="hidden" name="fieldunit_{{ parameter.idsettstdtemp }}" value="{{ parameter.fieldunit }}">
+                                <input type="hidden" name="idrank_{{ parameter.idsettstdtemp }}" value="{{ parameter.idrank }}">
+                                <input type="hidden" name="nbdecimals_{{ parameter.idsettstdtemp }}" value="{{ parameter.nbdecimals }}">
+                            </td>
+                            <td><div style="text-align: center;">{{ parameter.fieldunit }}</div></td>
+                            <td>{{ parameter.nbdecimals }}</td>
+                            <td>{{ parameter.istitle ? 'Yes' : 'No' }}</td>
+
+                            {# Conditionally disable input fields if istitle is Yes #}
+                            <td>
+                                <input 
+                                    type="text" 
+                                    name="std_value_{{ parameter.idsettstdtemp }}" 
+                                    class="form-control" 
+                                    {% if parameter.istitle %}disabled{% endif %} 
+                                    {% if not parameter.istitle %}style="border: 2px solid #ccc;"{% endif %} 
+
+                                />
+                            </td>
+                            <td>
+                                <input 
+                                    type="text" 
+                                    name="tolerance_{{ parameter.idsettstdtemp }}" 
+                                    class="form-control" 
+                                    {% if parameter.istitle %}disabled{% endif %} 
+                                    {% if not parameter.istitle %}style="border: 2px solid #ccc;"{% endif %} 
+                                />
+                            </td>
+                            <td>
+                                <input 
+                                    type="text" 
+                                    name="mini_{{ parameter.idsettstdtemp }}" 
+                                    class="form-control" 
+                                    {% if parameter.istitle %}disabled{% endif %} 
+                                    {% if not parameter.istitle %}style="border: 2px solid #ccc;"{% endif %} 
+                                />
+                            </td>
+                            <td>
+                                <input 
+                                    type="text" 
+                                    name="maxi_{{ parameter.idsettstdtemp }}" 
+                                    class="form-control" 
+                                    {% if parameter.istitle %}disabled{% endif %} 
+                                    {% if not parameter.istitle %}style="border: 2px solid #ccc;"{% endif %}                                
+                                />
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <input type="hidden" name="idsettstdfile" value="{{ idstdfile }}"/>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+{% endblock %}

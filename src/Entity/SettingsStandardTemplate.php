@@ -91,6 +91,10 @@ class SettingsStandardTemplate
      */
     private $datemodification;
 
+    public function getId(): ?string
+    {
+        return $this->idsettstdtemp;
+    }
     public function getIdsettstdtemp(): ?string
     {
         return $this->idsettstdtemp;
