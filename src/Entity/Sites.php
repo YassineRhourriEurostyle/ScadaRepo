@@ -49,6 +49,10 @@ class Sites
      */
     private $sitesort;
 
+    public function getId(): ?int
+    {
+        return $this->idsites;
+    }
     public function getIdsites(): ?int
     {
         return $this->idsites;
