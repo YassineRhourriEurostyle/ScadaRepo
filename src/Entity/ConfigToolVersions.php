@@ -51,7 +51,11 @@ class ConfigToolVersions
      * @ORM\Column(name="DateCreation", type="datetime", nullable=true)
      */
     private $datecreation;
-
+    
+    public function getId(): ?string
+    {
+        return $this->idcfgtoolversion;
+    }
     public function getIdcfgtoolversion(): ?string
     {
         return $this->idcfgtoolversion;

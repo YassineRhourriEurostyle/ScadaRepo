@@ -70,6 +70,10 @@ class SettingsStandardFiles
      */
     private $datemodificationutc;
 
+    public function getId(): ?string
+    {
+        return $this->idsettstdfile;
+    }
     public function getIdsettstdfile(): ?string
     {
         return $this->idsettstdfile;

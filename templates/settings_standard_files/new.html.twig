@@ -1,0 +1,46 @@
+{% extends 'column.html.twig' %}
+
+{% block title %}Create New Standard File{% endblock %}
+
+{% block body %}
+    <div class="container mt-4">
+        <h2>Create a New Standard File</h2>
+
+        {# Display flash messages (success or error) #}
+        {% for message in app.flashes('success') %}
+            <div class="alert alert-success">{{ message }}</div>
+        {% endfor %}
+        {% for message in app.flashes('error') %}
+            <div class="alert alert-danger">{{ message }}</div>
+        {% endfor %}
+
+        <form method="post">
+            <div class="row mb-4">
+                <div class="col-md-2">
+                    <select name="site" id="site" class="form-control" required>
+                        <option value="" disabled selected>🏭 Select a site</option>
+                        {% for site in sites %}
+                            <option value="{{ site.idsites }}">{{ site.siteref }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="col-md-3">
+                    <input type="text" name="machine" id="machine" class="form-control" placeholder="🔧 Machine Name" required>
+                </div>
+
+                <div class="col-md-3">
+                    <input type="text" name="tool" id="tool" class="form-control" placeholder="🛠️ Tool Name" required>
+                </div>
+
+                <div class="col-md-2">
+                    <input type="text" name="toolVersion" id="toolVersion" class="form-control" placeholder="📌 Tool Version" required>
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary btn-lg">Create File</button>
+                </div>
+            </div>
+
+        </form>
+    </div>
+{% endblock %}

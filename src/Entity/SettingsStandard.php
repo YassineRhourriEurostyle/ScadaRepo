@@ -133,6 +133,11 @@ class SettingsStandard
      */
     private $paramdeviceid;
 
+    public function getId(): ?string
+    {
+        return $this->idsettingstandard;
+    }
+
     public function getIdsettingstandard(): ?string
     {
         return $this->idsettingstandard;

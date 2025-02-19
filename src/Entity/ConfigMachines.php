@@ -56,6 +56,10 @@ class ConfigMachines
      */
     private $macdescription2;
 
+    public function getId(): ?string
+    {
+        return $this->idcfgmachine;
+    }
     public function getIdcfgmachine(): ?string
     {
         return $this->idcfgmachine;
