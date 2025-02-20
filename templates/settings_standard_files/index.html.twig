@@ -1,12 +1,88 @@
 {% extends 'column.html.twig' %}
 
-{% block title %}Settings Standard Files index{% endblock %}
+{% block title %}Settings Standard Files{% endblock %}
 
-
-{% block submenu %}
-{% endblock %}
 {% block body %}
+    <h1>Settings Standard Files</h1>
 
-<h1>Settings Standard Files index</h1>
+    <!-- FILTER FORM -->
+    <form method="get" class="mb-4">
+        <div class="row">
+            <!-- Site Filter -->
+            <div class="col-md-3">
+                <select name="site" id="site" class="form-control">
+                    <option value="" disabled selected>🏭 Select a site</option>
+                    {% for site in sites %}
+                        <option value="{{ site.idsites }}" {% if site.idsites == selectedSite %}selected{% endif %}>
+                            {{ site.siteref }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
 
-{%  endblock %}
+            <!-- Machine Filter -->
+            <div class="col-md-3">
+                <select name="machine" id="machine" class="form-control">
+                    <option value = "" disabled selected>⚙️ Select a machine</option>
+                    {% for machine in machines %}
+                        <option value="{{ machine.idcfgmachine }}" {% if machine.idcfgmachine == selectedMachine %}selected{% endif %}>
+                            {{ machine.macreference }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Tool Filter -->
+            <div class="col-md-3">
+                <select name="tool" id="tool" class="form-control">
+                    <option value = "" disabled selected>🛠 Select a tool</option>
+                    {% for tool in tools %}
+                        <option value="{{ tool.idcfgtool }}" {% if tool.idcfgtool == selectedTool %}selected{% endif %}>
+                            {{ tool.toolreference }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="col-md-3 d-flex align-items-end">
+                <button type="submit" class="btn btn-primary btn-lg">Filter</button>
+                <a href="{{ path('settingsstandardfiles_index') }}" class="btn btn-secondary ml-2">Reset</a>
+            </div>
+        </div>
+    </form>
+
+    <!-- DISPLAY FILTERED RESULTS -->
+    <div class="container mt-4">
+        {% for siteName, files in groupedFiles %}
+            <h3 style="background-color: rgb(222, 222, 222); color: rgb(0, 0, 0); padding: 10px; margin-top: 20px;">
+                {{ siteName }}
+            </h3>
+            <div class="row">
+                {% for file in files %}
+                    <div class="col-md-3 mb-4">
+                        <div class="card">
+                            {% if file.imageFilename %}
+                                <img src="{{ asset('uploads/' ~ file.imageFilename) }}" alt="Image for {{ file.toolName }}" class="card-img-top" style="height: 200px; object-fit: cover;">
+                            {% else %}
+                                <div class="card-img-top" style="height: 200px; background-color: #f0f0f0; display: flex; justify-content: center; align-items: center;">
+                                    No Image
+                                </div>
+                            {% endif %}
+                            <div class="card-body">
+                                <h5 class="card-title">{{ file.toolName }}</h5>
+                                <p class="card-text">
+                                    <strong>Site:</strong> {{ file.siteName }}<br>
+                                    <strong>Machine:</strong> {{ file.machineName }}<br>
+                                    <strong>Tool Version:</strong> {{ file.toolVersionName }}<br>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="text-muted">No results found for the selected filters.</p>
+        {% endfor %}
+    </div>
+{% endblock %}

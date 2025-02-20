@@ -74,12 +74,13 @@ class SettingsStandardFilesRepository extends ServiceEntityRepository
      * @param int $machineId
      * @param int $toolId
      * @param int $toolVersionId
+     * @param string|null $imageFilename 
      * 
      * @return SettingsStandardFiles
      * 
      * @throws \Exception If any of the references cannot be found
      */
-    public function createNewSettingsStandardFile(int $siteId, int $machineId, int $toolId, int $toolVersionId): SettingsStandardFiles
+    public function createNewSettingsStandardFile(int $siteId, int $machineId, int $toolId, int $toolVersionId, ?string $imageFilename): SettingsStandardFiles
     {
         // Check if a file with the same site, machine, tool, and tool version already exists
         $existingFile = $this->createQueryBuilder('s')
@@ -97,7 +98,6 @@ class SettingsStandardFilesRepository extends ServiceEntityRepository
         // If a file already exists, throw an exception or return the existing file
         if ($existingFile) {
             throw new \Exception("A Settings Standard File already exists for the given site, machine, tool, and tool version.");
-            // return $existingFile;
         }
 
         // Fetch related entities (site, machine, tool, tool version)
@@ -118,6 +118,11 @@ class SettingsStandardFilesRepository extends ServiceEntityRepository
         $settingsFile->setIdtool($tool->getIdcfgtool());
         $settingsFile->setIdtoolversion($toolVersion->getIdcfgtoolversion());
 
+        // Conditionally set the image filename (only if provided)
+        if ($imageFilename) {
+            $settingsFile->setImageFilename($imageFilename);  // Store the image filename here
+        }
+
         // Set default or metadata-based values for the fields
         $settingsFile->setActivefile(true); // You can modify this based on $otherMetadata or default it as true
 
@@ -130,6 +135,34 @@ class SettingsStandardFilesRepository extends ServiceEntityRepository
         $this->add($settingsFile, true);
 
         return $settingsFile;
+    }
+    /**
+     * Fetches SettingsStandardFiles based on optional filtering parameters.
+     *
+     * @param int|null $siteId
+     * @param int|null $machineId
+     * @param int|null $toolId
+     *
+     * @return SettingsStandardFiles[]
+     */
+    public function findFilteredFiles(?int $siteId, ?int $machineId, ?int $toolId): array
+    {
+        $qb = $this->createQueryBuilder('f');
+
+        if ($siteId !== null) {
+            $qb->andWhere('f.idsite = :siteId')
+            ->setParameter('siteId', $siteId);
+        }
+        if ($machineId !== null) {
+            $qb->andWhere('f.idmachine = :machineId')
+            ->setParameter('machineId', $machineId);
+        }
+        if ($toolId !== null) {
+            $qb->andWhere('f.idtool = :toolId')
+            ->setParameter('toolId', $toolId);
+        }
+
+        return $qb->getQuery()->getResult();
     }
 
 }

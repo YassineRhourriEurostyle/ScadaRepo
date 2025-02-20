@@ -14,9 +14,9 @@
             <div class="alert alert-danger">{{ message }}</div>
         {% endfor %}
 
-        <form method="post">
+        <form method="post" enctype="multipart/form-data">
             <div class="row mb-4">
-                <div class="col-md-2">
+                <div class="mb-3">
                     <select name="site" id="site" class="form-control" required>
                         <option value="" disabled selected>🏭 Select a site</option>
                         {% for site in sites %}
@@ -25,22 +25,46 @@
                     </select>
                 </div>
 
-                <div class="col-md-3">
+                <div class="mb-3">
                     <input type="text" name="machine" id="machine" class="form-control" placeholder="🔧 Machine Name" required>
                 </div>
 
-                <div class="col-md-3">
+                <div class="mb-3">
                     <input type="text" name="tool" id="tool" class="form-control" placeholder="🛠️ Tool Name" required>
                 </div>
 
-                <div class="col-md-2">
+                <div class="mb-3">
                     <input type="text" name="toolVersion" id="toolVersion" class="form-control" placeholder="📌 Tool Version" required>
                 </div>
-                <div class="col-md-2">
-                    <button type="submit" class="btn btn-primary btn-lg">Create File</button>
+
+                <div class="mb-3">
+                    <input type="file" name="image" id="image" class="form-control w-auto " accept="image/*" required>
+                    <div class="mt-2">
+                        <img id="imagePreview" src="#" alt="Image Preview" style="max-width: 50%; display: none;">
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <button type="submit" class="btn btn-primary btn-lg ">Create File</button>
                 </div>
             </div>
-
         </form>
     </div>
+
+    <script>
+        // JavaScript to show the preview of the uploaded image
+        document.getElementById('image').addEventListener('change', function(event) {
+            var file = event.target.files[0];
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                var imagePreview = document.getElementById('imagePreview');
+                imagePreview.src = e.target.result;
+                imagePreview.style.display = 'block'; // Show the preview
+            };
+            if (file) {
+                reader.readAsDataURL(file); // Read the image file
+            }
+        });
+    </script>
+
 {% endblock %}
