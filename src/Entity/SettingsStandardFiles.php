@@ -70,6 +70,22 @@ class SettingsStandardFiles
      */
     private $datemodificationutc;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private ?string $imageFilename = null;
+
+    public function getImageFilename(): ?string
+    {
+        return $this->imageFilename;
+    }
+
+    public function setImageFilename(?string $imageFilename): self
+    {
+        $this->imageFilename = $imageFilename;
+        return $this;
+    }
+
     public function getId(): ?string
     {
         return $this->idsettstdfile;

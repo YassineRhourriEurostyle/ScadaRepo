@@ -32,17 +32,58 @@ class SettingsStandardFilesController extends AbstractController
     /**
      * @Route("/", name="settingsstandardfiles_index")
      */
-    public function index()
+    public function index(Request $request,EntityManagerInterface $em)
     {
-        //UserLog::isAllowed($this->session, UserLog::DEV_ADMIN);
+        // Get filter parameters from request
+        $siteId = $request->query->get('site');
+        $machineId = $request->query->get('machine');
+        $toolId = $request->query->get('tool');
+
+        $sites = $em->getRepository(Sites::class)->findAll();
+        $machines = $em->getRepository(ConfigMachines::class)->findAll();
+        $tools = $em->getRepository(ConfigTools::class)->findAll();
+
+        // Convert empty string values to null
+        $siteId = !empty($siteId) ? (int) $siteId : null;
+        $machineId = !empty($machineId) ? (int) $machineId : null;
+        $toolId = !empty($toolId) ? (int) $toolId : null;
+        $settingsFiles = $em->getRepository(SettingsStandardFiles::class)->findFilteredFiles($siteId,$machineId,$toolId);
+        $groupedFiles = [];
         
-        $em = $this->getDoctrine()->getManager();
-        
+        foreach ($settingsFiles as $file) {
+            // Fetch Site by its ID
+            $site = $em->getRepository(Sites::class)->findOneBy(['idsites' => $file->getIdsite()]);
+            //$file->siteName = $site ? $site->getSiteref() : 'Unknown Site';
+            $siteName = $site ? $site->getSiteref() : 'Unknown Site';
+
+            // Fetch Machine by its ID
+            $machine = $em->getRepository(ConfigMachines::class)->findOneBy(['idcfgmachine' => $file->getIdmachine()]);
+            $file->machineName = $machine ? $machine->getMacreference() : 'Unknown Machine';
+    
+            // Fetch Tool by its ID
+            $tool = $em->getRepository(ConfigTools::class)->findOneBy(['idcfgtool' => $file->getIdtool()]);
+            $file->toolName = $tool ? $tool->getToolreference() : 'Unknown Tool';
+    
+            // Fetch Tool Version by its ID
+            $toolVersion = $em->getRepository(ConfigToolVersions::class)->findOneBy(['idcfgtoolversion' => $file->getIdtoolversion()]);
+            $file->toolVersionName = $toolVersion ? $toolVersion->getToolversiontext() : 'Unknown Version';
+
+            $file->siteName = $siteName;
+
+            $groupedFiles[$siteName][] = $file;
+
+        }
         return $this->render('settings_standard_files/index.html.twig', [
-            'controller_name' => 'SettingsStandardFilesController',
+            'settingsFiles' => $settingsFiles,
+            'groupedFiles' => $groupedFiles,
+            'sites' => $sites,
+            'machines' => $machines,
+            'tools' => $tools,
+            'selectedSite' => $siteId,
+            'selectedMachine' => $machineId,
+            'selectedTool' => $toolId,
         ]);
     }
-
     /**
      * @Route("/new", name="settingsstandardfiles_new")
      */
@@ -57,6 +98,10 @@ class SettingsStandardFilesController extends AbstractController
             $machineName = $request->request->get('machine');
             $toolName = $request->request->get('tool');
             $toolVersionName = $request->request->get('toolVersion');
+
+            // Handle image upload (optional)
+            $imageFile = $request->files->get('image'); // Get the uploaded image
+            $imageFilename = null;
 
             // Validate input
             if (!$siteId || !$machineName || !$toolName || !$toolVersionName) {
@@ -78,7 +123,6 @@ class SettingsStandardFilesController extends AbstractController
                     ->setIdsite($siteId) // Set the site ID
                     ->setTooldatecreation((new \DateTime())->format('YmdHis')); // Set the current timestamp for tool date creation
 
-
             // Find or create the tool version
             $toolVersion = $em->getRepository(ConfigToolVersions::class)->findOneBy(['toolversiontext' => $toolVersionName]) 
                         ?? (new ConfigToolVersions())
@@ -87,27 +131,42 @@ class SettingsStandardFilesController extends AbstractController
                         ->setDatecreation(new \DateTime())
                         ->setArchived(false);
 
-                        // Persist new entities if they didn't exist
+            // Persist new entities if they didn't exist
             if (!$machine->getIdcfgmachine()) $em->persist($machine);
             if (!$tool->getIdcfgtool()) $em->persist($tool);
             if (!$toolVersion->getIdcfgtoolversion()) $em->persist($toolVersion);
 
             $em->flush(); // Save new machine, tool, and version if created
-
+            
+            $imageFilename = null;
+            if ($imageFile) {
+                // Construct the filename with site, machine name, tool name, and tool version
+                $imageFilename = sprintf(
+                    '%s_%s_%s_%s_%s.%s',
+                    $machine->getIdcfgmachine(),
+                    $tool->getIdcfgtool(),
+                    $toolVersion->getIdcfgtoolversion(),
+                    (new \DateTime())->format('YmdHis'), // Add timestamp for uniqueness
+                    $imageFile->getClientOriginalName(), // Original filename (or any other unique identifier)                    
+                    $imageFile->guessExtension() // Use the correct file extension
+                );
+    
+                // Move the image to the uploads directory
+                $imageFile->move($this->getParameter('upload_directory'), $imageFilename);
+            }
             // Call repository function to create a new SettingsStandardFile
             try {
                 $settingsFile = $em->getRepository(SettingsStandardFiles::class)->createNewSettingsStandardFile(
                     $siteId,
                     $machine->getIdcfgmachine(),
                     $tool->getIdcfgtool(),
-                    $toolVersion->getIdcfgtoolversion()
+                    $toolVersion->getIdcfgtoolversion(),
+                    $imageFilename // Pass the image filename to the method
                 );
 
                 $this->addFlash('success', 'Standard File created successfully!');
-                //$session = $request->getSession();
-                //$session->set('idstdfile', $settingsFile->getId());
                 $this->session->set('idstdfile', $settingsFile->getId());
-                return $this->redirectToRoute('template_data',['idstdfile'=>$settingsFile->getId()]);
+                return $this->redirectToRoute('template_data', ['idstdfile' => $settingsFile->getId()]);
 
             } catch (\Exception $e) {
                 $this->addFlash('error', $e->getMessage());
