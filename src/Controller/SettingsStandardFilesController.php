@@ -253,5 +253,60 @@ class SettingsStandardFilesController extends AbstractController
         ]);
     }
 
+    /**
+     * @Route("/edit-settings", name="edit_settings_standard")
+     */
+    public function editSettingsStandard(EntityManagerInterface $em, Request $request)
+    {
+        $idSettStdFile = $request->query->get('idSettStdFile');
+        // Fetch settings based on IdSettStdFile
+        $settings = $em->getRepository(SettingsStandard::class)->findBy(['idsettstdfile' => $idSettStdFile]);
+        $settingTemplates = $em->getRepository(SettingsStandardTemplate::class)->findBy([
+            'idrank' => array_map(function($setting) { return $setting->getIdrank(); }, $settings)
+        ]);;
+        if (!$settings) {
+            $this->addFlash('warning', 'No settings found for this file.');
+            return $this->redirectToRoute('settingsstandardfiles_index');
+        }
+
+        if ($request->isMethod('POST')) {
+            $formData = $request->request->all();
+            //dump($formData);
+            foreach ($settings as $setting) {
+                $id = $setting->getId();
+                //dump($id);
+                if (isset($formData["std_value_$id"])) {
+                    $setting->setStdvalue($formData["std_value_$id"]);
+                    //dump($formData["std_value_$id"]);
+                }
+                if (isset($formData["tolerancepct_$id"])) {
+                    $setting->setTolerancepct($formData["tolerancepct_$id"]);
+                    //dump($formData["tolerancepct_$id"]);
+                }
+                if (isset($formData["tolerancemini_$id"])) {
+                    $setting->setTolerancemini($formData["tolerancemini_$id"]);
+                    //dump($formData["tolerancemini_$id"]);
+
+                }
+                if (isset($formData["tolerancemaxi_$id"])) {
+                    $setting->setTolerancemaxi($formData["tolerancemaxi_$id"]);
+                    //dump($formData["tolerancemaxi_$id"]);
+
+                }
+            }
+            //exit();
+
+            $em->flush();
+            $this->addFlash('success', 'Settings updated successfully.');
+            return $this->redirectToRoute('settingsstandardfiles_index');
+        }
+
+        return $this->render('settings_standard_files/edit_settings.html.twig', [
+            'settings' => $settings,
+            'settingTemplates' => $settingTemplates,
+            'idSettStdFile' => $idSettStdFile,
+        ]);
+    }
+
 
 }
