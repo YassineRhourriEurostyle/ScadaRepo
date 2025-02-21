@@ -74,34 +74,6 @@ class DisplayLastValueController extends AbstractController
         ]);
     }
     /**
-     * @Route("/displaylastvalue/testco", name="testco")
-     */
-    public function testco(Request $request)
-    {
-        try {
-            //$entityManager = $this->getDoctrine()->getManager();
-
-            // Instantiate the UserLog service
-            //$userLogService = new UserLog($this->session, $entityManager);
-
-            // Test user credentials
-            $login = 'yassine.rhourri.dev';  // example login
-            $password = 'Euro$tyle1111!';  // example password
-            //$userLogService->checkAccess($login, $password);
-            $ldap_server='ldap://10.4.200.56';
-            $ldap_port = 389;
-            $ad = ldap_connect($ldap_server, $ldap_port);
-            $domain = "esb.src.local";
-            if(ldap_bind($ad,"$login@$domain", "$password")){
-                echo "ldap valide";
-            }
-
-        } catch (\Exception $e) {
-            // Handle authentication or access errors
-            echo "Error: " . $e->getMessage();
-        }
-    }
-    /**
      * @Route("/displaylastvalue/get-machines", name="get_machines", methods={"GET"})
      */
     public function getMachines(Request $request): Response

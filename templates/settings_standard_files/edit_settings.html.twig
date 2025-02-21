@@ -1,0 +1,93 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Settings{% endblock %}
+
+{% block body %}
+    <div class="container mt-4">
+        <h2>Settings Standard Template Data</h2>
+
+        <form method="post" action="{{ path('edit_settings_standard', {'idSettStdFile': idSettStdFile}) }}">
+            <table class="table">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Fieldname</th>
+                        <th>Field Unit</th>
+                        <th>Decimals</th>
+                        <th>Is Title</th>
+                        <th>Std Value</th>
+                        <th>% Tolerance</th>
+                        <th>Mini</th>
+                        <th>Maxi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for setting in settings %}
+                        <tr>
+                            <td>
+                                {% set template = settingTemplates[loop.index0] %}
+                                {% if template.istitle %}
+                                    <strong>{{ template.fieldname }}</strong>
+                                {% else %}
+                                    <div style="text-align: right; margin-left: 20px;">{{ template.fieldname }}</div>
+                                {% endif %}
+                                <input type="hidden" name="fieldname_{{ setting.id }}" value="{{ template.fieldname }}">
+                                <input type="hidden" name="fieldunit_{{ setting.id }}" value="{{ template.fieldunit }}">
+                                <input type="hidden" name="idrank_{{ setting.id }}" value="{{ setting.idrank }}">
+                                <input type="hidden" name="nbdecimals_{{ setting.id }}" value="{{ template.nbdecimals }}">
+                                <input type="hidden" name="idSettStdFile" value="{{ setting.idsettstdfile }}" /> {# Hidden field for idSettStdFile #}
+                            </td>
+                            <td><div style="text-align: center;">{{ template.fieldunit }}</div></td>
+                            <td>{{ template.nbdecimals }}</td>
+                            <td>{{ template.istitle ? 'Yes' : 'No' }}</td>
+
+                            {# Conditionally disable input fields if it is a title #}
+                            <td>
+                                <input 
+                                    type="text" 
+                                    name="std_value_{{ setting.id }}" 
+                                    class="form-control" 
+                                    value="{{ setting.stdvalue }}" 
+                                    {% if template.istitle %}disabled{% endif %} 
+                                    {% if not template.istitle %}style="border: 2px solid #ccc;"{% endif %}
+                                />
+                            </td>
+                            <td>
+                                <input 
+                                    type="text" 
+                                    name="tolerancepct_{{ setting.id }}" 
+                                    class="form-control" 
+                                    value="{{ setting.tolerancepct }}" 
+                                    {% if template.istitle %}disabled{% endif %} 
+                                    {% if not template.istitle %}style="border: 2px solid #ccc;"{% endif %}
+                                />
+                            </td>
+                            <td>
+                                <input 
+                                    type="text" 
+                                    name="tolerancemini_{{ setting.id }}" 
+                                    class="form-control" 
+                                    value="{{ setting.tolerancemini }}" 
+                                    {% if template.istitle %}disabled{% endif %} 
+                                    {% if not template.istitle %}style="border: 2px solid #ccc;"{% endif %}
+                                />
+                            </td>
+                            <td>
+                                <input 
+                                    type="text" 
+                                    name="tolerancemaxi_{{ setting.id }}" 
+                                    class="form-control" 
+                                    value="{{ setting.tolerancemaxi }}" 
+                                    {% if template.istitle %}disabled{% endif %} 
+                                    {% if not template.istitle %}style="border: 2px solid #ccc;"{% endif %}
+                                />
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            
+            <button type="submit" class="btn btn-success">Save Changes</button>
+            <a href="{{ path('settingsstandardfiles_index') }}" class="btn btn-secondary">Back</a>
+        </form>
+    </div>
+{% endblock %}
