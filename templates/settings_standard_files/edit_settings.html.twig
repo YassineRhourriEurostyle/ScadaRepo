@@ -12,8 +12,8 @@
                     <tr>
                         <th>Fieldname</th>
                         <th>Field Unit</th>
-                        <th>Decimals</th>
-                        <th>Is Title</th>
+                        {#<th>Decimals</th>#}
+                        {#<th>Is Title</th>#}
                         <th>Std Value</th>
                         <th>% Tolerance</th>
                         <th>Mini</th>
@@ -37,8 +37,8 @@
                                 <input type="hidden" name="idSettStdFile" value="{{ setting.idsettstdfile }}" /> {# Hidden field for idSettStdFile #}
                             </td>
                             <td><div style="text-align: center;">{{ template.fieldunit }}</div></td>
-                            <td>{{ template.nbdecimals }}</td>
-                            <td>{{ template.istitle ? 'Yes' : 'No' }}</td>
+                           {# <td>{{ template.nbdecimals }}</td>
+                            <td>{{ template.istitle ? 'Yes' : 'No' }}</td>#}
 
                             {# Conditionally disable input fields if it is a title #}
                             <td>
@@ -86,8 +86,8 @@
                 </tbody>
             </table>
             
-            <button type="submit" class="btn btn-success">Save Changes</button>
-            <a href="{{ path('settingsstandardfiles_index') }}" class="btn btn-secondary">Back</a>
+            <button type="submit" class="btn btn-success mb-2">Save Changes</button>
+            <a href="{{ path('settingsstandardfiles_index') }}" class="btn btn-secondary"><i class = "bi bi-arrow-left"></i>Back</a>
         </form>
     </div>
 {% endblock %}

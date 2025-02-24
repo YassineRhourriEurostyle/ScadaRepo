@@ -1,0 +1,54 @@
+{% extends 'column.html.twig' %}
+
+{% block title %}File Details{% endblock %}
+
+{% block body %}
+    <h1>File Details: {{ tool.toolreference }}</h1>
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">{{ tool.toolreference }}</h5>
+            <p class="card-text">
+                <strong>Site:</strong> {{ site.siteref }}<br>
+                <strong>Machine:</strong> {{ machine.macreference }}<br>
+                <strong>Tool Version:</strong> {{ toolVersion.toolversiontext }}<br>
+                <strong>Created on:</strong> {{ settingsFile.datecreationutc|date('Y-m-d H:i') }}
+            </p>
+            {% if settingsFile.imageFilename %}
+                <img src="{{ asset('uploads/' ~ settingsFile.imageFilename) }}" alt="Image for {{ tool.toolreference }}" class="img-fluid mb-2" style="max-width: 60%; height: auto;">
+            {% else %}
+                <p>No image available</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <h3>Settings for {{ tool.toolreference }}</h3>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Field</th>
+                <th>Value</th>
+                <th>Tolerance</th>
+                <th>Min</th>
+                <th>Max</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for setting in settings %}
+                <tr>
+                    <td>{{ setting.settingdescription }}</td>
+                    <td>{{ setting.stdvalue }}</td>
+                    <td>{{ setting.tolerancepct }}</td>
+                    <td>{{ setting.tolerancemini }}</td>
+                    <td>{{ setting.tolerancemaxi }}</td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="5">No settings found for this file.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('settingsstandardfiles_index') }}" class="btn btn-secondary btn-sm"><i class = "bi bi-arrow-left"></i>Back to files list</a>
+{% endblock %}

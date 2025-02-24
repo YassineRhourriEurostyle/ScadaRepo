@@ -16,6 +16,14 @@
 {% endfor %}
 
 {% if app.session.get('logged') and app.session.get('touchScreen')!=1 %}
+    {% if isInGroup1 %}
+        <li class="nav-item animated standard-hover-bg-white">
+            <a class="nav-link standard-white standard-hover-black"
+                href="{{path('auth_users_index')}}" >
+                    Users Rights
+            </a>
+        </li> 
+    {% endif %}
     <li class="nav-item dropdown animated standard-hover-bg-white">
         <a class="nav-link dropdown-toggle standard-white standard-hover-black"
         href="#" 
@@ -44,15 +52,7 @@
             <a class="dropdown-item" href="{{ path('settingsstandardfiles_index') }}">Settings Standard</a>
             <a class="dropdown-item" href="{{ path('settingsstandardfiles_new') }}">New File</a>
         </div>
-    </li>
-    {% if isInGroup1 %}
-        <li class="nav-item dropdown animated standard-hover-bg-white">
-            <a class="nav-link dropdown-toggle standard-white standard-hover-black"
-                href="{{path('auth_users_index')}}" >
-                    Users Rights
-            </a>
-        </li> 
-    {% endif %}   
+    </li>  
     <li class="nav-item animated standard-hover-bg-white {% if menu|length>0%}ms-2 ps-1 border-start border-dark border-2{%endif%}  {% if 'search'|slice(0, 5) == current_route|slice(0, 4) %} active{% endif %}">        
         <form method="get" action="/search">
             <input placeholder="Search (beta)" name="q" style="{% if not search is defined %}display:none;{%endif%}" type="text" id="menu_search" class="nav-link" value="{% if search is defined %}{{ search }}{% endif %}"/>
