@@ -308,5 +308,40 @@ class SettingsStandardFilesController extends AbstractController
         ]);
     }
 
+    /**
+     * @Route("/show-details-settings", name="settingsstandardfiles_show")
+     */
+    public function showSettingsFile(EntityManagerInterface $em,Request $request)
+    {
+        $idSettStdFile = $request->query->get('idSettStdFile');
+
+        // Fetch the SettingsStandardFile by its ID
+        $settingsFile = $em->getRepository(SettingsStandardFiles::class)->find($idSettStdFile);
+
+        // If no file is found, redirect with an error
+        if (!$settingsFile) {
+            $this->addFlash('error', 'File not found.');
+            return $this->redirectToRoute('settingsstandardfiles_index');
+        }
+
+        // Fetch related settings for this file
+        $settings = $em->getRepository(SettingsStandard::class)->findBy(['idsettstdfile' => $idSettStdFile]);
+
+        // Fetch related entities (Site, Machine, Tool, etc.)
+        $site = $em->getRepository(Sites::class)->find($settingsFile->getIdsite());
+        $machine = $em->getRepository(ConfigMachines::class)->find($settingsFile->getIdmachine());
+        $tool = $em->getRepository(ConfigTools::class)->find($settingsFile->getIdtool());
+        $toolVersion = $em->getRepository(ConfigToolVersions::class)->find($settingsFile->getIdtoolversion());
+
+        return $this->render('settings_standard_files/show.html.twig', [
+            'settingsFile' => $settingsFile,
+            'settings' => $settings,
+            'site' => $site,
+            'machine' => $machine,
+            'tool' => $tool,
+            'toolVersion' => $toolVersion,
+        ]);
+    }
+
 
 }

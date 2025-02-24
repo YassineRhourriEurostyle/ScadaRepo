@@ -25,10 +25,8 @@
                     (No groups)
                 {% endif %}
                 
-                <a href="{{ path('auth_users_edit', { id: user.id }) }}">✏️ Edit</a>
-                <a href="{{ path('auth_users_confirm_delete', { id: user.id }) }}">
-                    <button class="btn btn-danger">🗑 Delete</button>
-                </a>
+                <a href="{{ path('auth_users_edit', { id: user.id }) }}"class="btn btn-secondary mb-2">✏️ Edit</a>
+                <a href="{{ path('auth_users_confirm_delete', { id: user.id }) }}"class="btn btn-danger mb-2">🗑 Delete</a>
             </li>
         {% endfor %}
     </ul>
