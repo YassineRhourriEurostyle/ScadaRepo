@@ -13,7 +13,7 @@
                         <th>Fieldname</th>
                         <th>Field Unit</th>
                         <th>Decimals</th>
-                        <th>Is Title</th>
+                        {#<th>Is Title</th>#}
                         <th>Std Value</th>
                         <th>% Tolerance</th>
                         <th>Mini</th>
@@ -35,7 +35,7 @@
                             </td>
                             <td><div style="text-align: center;">{{ parameter.fieldunit }}</div></td>
                             <td>{{ parameter.nbdecimals }}</td>
-                            <td>{{ parameter.istitle ? 'Yes' : 'No' }}</td>
+                            {#<td>{{ parameter.istitle ? 'Yes' : 'No' }}</td>#}
 
                             {# Conditionally disable input fields if istitle is Yes #}
                             <td>
