@@ -183,7 +183,7 @@
                 refmouldSelect.innerHTML = '<option value="" disabled selected>🛠 Select a mould</option>';
 
                 // Fetch machines for the selected site
-                fetch('/displaylastvalue/get-machines?idSite=' + siteId)
+                fetch('/apifetcher/get-machines?idSite=' + siteId)
                     .then(response => response.json())
                     .then(data => {
                         if (data.length > 0) {
@@ -205,7 +205,7 @@
                     });
 
                 // Fetch molds for the selected site
-                fetch('/displaylastvalue/get-molds?idSite=' + siteId)
+                fetch('/apifetcher/get-molds?idSite=' + siteId)
                     .then(response => response.json())
                     .then(data => {
                         if (data.length > 0) {

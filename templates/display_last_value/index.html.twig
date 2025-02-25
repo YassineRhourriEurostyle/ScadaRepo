@@ -28,8 +28,9 @@
                         <option value="" disabled selected>🛠 Select a mould</option>
                     </select>
                 </td>
-                <td>
+                <td style="display: flex; gap: 10px;">
                     <button type="submit" class="btn-primary btn-lg">Display</button>
+                    <button type="reset" class="btn-secondary btn-lg" onclick="resetFilters()">Reset</button>
                 </td>
             </tr>
         </table>
@@ -80,7 +81,7 @@
                 refmouldSelect.innerHTML = '<option value="" disabled selected>🛠 Select a mould</option>';
 
                 // Fetch machines for the selected site
-                fetch('/displaylastvalue/get-machines?idSite=' + siteId)
+                fetch('/apifetcher/get-machines?idSite=' + siteId)
                     .then(response => response.json())
                     .then(data => {
                         if (data.length > 0) {
@@ -102,7 +103,7 @@
                     });
 
                 // Fetch molds for the selected site
-                fetch('/displaylastvalue/get-molds?idSite=' + siteId)
+               /* fetch('/apifetcher/get-molds?idSite=' + siteId)
                     .then(response => response.json())
                     .then(data => {
                         if (data.length > 0) {
@@ -122,9 +123,52 @@
                     .catch(error => {
                         console.error('Error fetching moulds:', error);
                     });
+                    */
             });
+
+            // Listen for change event on the machine dropdown
+            document.getElementById('refmac').addEventListener('change', function() {
+                var siteId = document.getElementById('refsite').value;
+                var macId = this.value;
+                var refmouldSelect = document.getElementById('refmould'); // Mould dropdown
+
+                // Clear existing options
+                refmouldSelect.innerHTML = '<option value="" disabled selected>🛠 Select a mould</option>';
+                console.log("Selected Site ID:", siteId);
+                console.log("Selected Machine ID:", macId);
+                // Fetch molds based on both the selected site and machine
+                if (macId) {
+                    fetch('/apifetcher/get-molds?idSite=' + siteId + '&idMac=' + macId)
+                        .then(response => response.json())
+                        .then(data => {
+                            console.log("API Response:", data); // This logs the data returned from the API
+
+                            if (data.length > 0) {
+                                data.forEach(function(tool) {
+                                    var option = document.createElement('option');
+                                    option.value = tool.id;
+                                    option.textContent = tool.name;
+                                    refmouldSelect.appendChild(option);
+                                });
+                            } else {
+                                var option = document.createElement('option');
+                                option.value = '';
+                                option.textContent = 'No moulds available';
+                                refmouldSelect.appendChild(option);
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error fetching moulds:', error);
+                        });
+                }
+            });
+            function resetFilters() {
+                document.getElementById('refsite').value = '';
+                document.getElementById('refmac').value = '';
+                document.getElementById('refmould').value = '';
+
+            }
+
         </script>
-
     {% endblock %}
-
 {% endblock %}
