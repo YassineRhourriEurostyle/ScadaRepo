@@ -30,7 +30,7 @@
                 </td>
                 <td style="display: flex; gap: 10px;">
                     <button type="submit" class="btn-primary btn-lg">Display</button>
-                    <button type="reset" class="btn-secondary btn-lg" onclick="resetFilters()">Reset</button>
+                    <button type="reset" class="btn-secondary btn-lg">Reset</button>
                 </td>
             </tr>
         </table>
@@ -134,14 +134,14 @@
 
                 // Clear existing options
                 refmouldSelect.innerHTML = '<option value="" disabled selected>🛠 Select a mould</option>';
-                console.log("Selected Site ID:", siteId);
-                console.log("Selected Machine ID:", macId);
+                //console.log("Selected Site ID:", siteId);
+                //console.log("Selected Machine ID:", macId);
                 // Fetch molds based on both the selected site and machine
                 if (macId) {
                     fetch('/apifetcher/get-molds?idSite=' + siteId + '&idMac=' + macId)
                         .then(response => response.json())
                         .then(data => {
-                            console.log("API Response:", data); // This logs the data returned from the API
+                            //console.log("API Response:", data); // This logs the data returned from the API
 
                             if (data.length > 0) {
                                 data.forEach(function(tool) {
@@ -162,12 +162,20 @@
                         });
                 }
             });
-            function resetFilters() {
-                document.getElementById('refsite').value = '';
-                document.getElementById('refmac').value = '';
-                document.getElementById('refmould').value = '';
-
-            }
+            /*function resetFilters() {
+                setTimeout(() => {
+                var refsiteSelect = document.getElementById('refsite');
+                refsiteSelect.value = '';
+                refsiteSelect.selectedIndex = 0;
+                }, 5000);
+            }*/
+            window.onload = function () {
+                setTimeout(() => {
+                    var refsiteSelect = document.getElementById('refsite');
+                    refsiteSelect.value = ''; // Reset site selection
+                    refsiteSelect.selectedIndex = 0;
+                }, 1000); // Wait 1 second before resetting
+            };
 
         </script>
     {% endblock %}

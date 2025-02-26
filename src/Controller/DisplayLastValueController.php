@@ -36,7 +36,7 @@ class DisplayLastValueController extends AbstractController
     public function index(Request $request)
     {
         //get values with get method entered by user
-        $idSite = $request->query->get('idSite', 120);
+        $idSite = $request->query->get('idSite');
         $idMac = $request->query->get('idmac');
         $idMould = $request->query->get('idmould');
 
