@@ -17,7 +17,8 @@ use App\Entity\SettingsStandardTemplate;
 use App\Entity\SettingsStandard;
 use App\Repository\SettingsStandardFilesRepository;
 use Symfony\Component\HttpFoundation\Response;
-
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 
 /**
  * @Route("/settingsstandardfiles")
@@ -155,7 +156,7 @@ class SettingsStandardFilesController extends AbstractController
                 $imageFile->move($this->getParameter('upload_directory'), $imageFilename);
             }
             // Call repository function to create a new SettingsStandardFile
-            try {
+            try {  
                 $settingsFile = $em->getRepository(SettingsStandardFiles::class)->createNewSettingsStandardFile(
                     $siteId,
                     $machine->getIdcfgmachine(),
@@ -215,7 +216,8 @@ class SettingsStandardFilesController extends AbstractController
                             'fieldname'  => null,
                             'fieldunit'  => null,
                             'nbdecimals' => null,
-                            'idsettstdfile' => $idstdfile, // Store standard file ID
+                            'idsettstdfile' => $idstdfile,// Store standard file ID
+                            'imageFilename' =>null,
                         ];
                     }
 
@@ -223,7 +225,37 @@ class SettingsStandardFilesController extends AbstractController
                     $settingsData[$idsettstdtemp][$fieldType] = $value;
                 }
             }
+            foreach ($parameters as $parameter) {
+                // Construct the input name for the file
+                $fileInputName = 'image_' . $parameter->getIdsettstdtemp();
+                
+                // Check if the file input exists and has been uploaded
+                if ($request->files->has($fileInputName)) {
+                    $file = $request->files->get($fileInputName);
+            
+                    // Check if the file is not null and is a valid uploaded file
+                    if ($file && $file->isValid()) {
+                        // Generate a unique filename
+                        $filename = $parameter->getFieldname() . '_' . 
+                        $parameter->getIdrank() . '_' . 
+                        (new \DateTime())->format('YmdHis') . '_' . 
+                        uniqid() . '.' . $file->guessExtension();
 
+                        $uploadDir = $this->getParameter('upload_directory'); // e.g., 'public/uploads/'
+            
+                        try {
+                            // Move the uploaded file to the server
+                            $file->move($uploadDir, $filename);
+                            
+                            // Save the filename to the database
+                            $settingsData[$parameter->getIdsettstdtemp()]['imageFilename'] = $filename;
+                        } catch (FileException $e) {
+                            // Handle file upload error
+                            $this->addFlash('error', 'There was an error uploading the file.');
+                        }
+                    }
+                }
+            }            
             // Save data in SettingsStandard table
             foreach ($settingsData as $idsettstdtemp => $data) {
                 $settingsStandard = new SettingsStandard();
@@ -237,7 +269,7 @@ class SettingsStandardFilesController extends AbstractController
                 $settingsStandard->setParamunit($data['fieldunit']);
                 $settingsStandard->setIdsettstdfile($data['idsettstdfile']);
                 $settingsStandard->setNbdecimals($data['nbdecimals']);
-
+                $settingsStandard->setImageFilename($data['imageFilename']);
                 $em->persist($settingsStandard);
             }
 
