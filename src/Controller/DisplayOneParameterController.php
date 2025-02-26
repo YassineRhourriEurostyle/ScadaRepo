@@ -47,7 +47,7 @@ class DisplayOneParameterController extends AbstractController
         //find the parameter selected by user in table in database
         $paramnamechart = null;
         if ($idParam) {
-            $selectedParameter = $this->getDoctrine()->getRepository(Parameters::class)->find($idParam);
+            $selectedParameter = $this->entityManager->getRepository(Parameters::class)->find($idParam);
             $paramnamechart = $selectedParameter ? $selectedParameter->getParamname() : null;
         }
 
@@ -69,26 +69,29 @@ class DisplayOneParameterController extends AbstractController
         $dateNow->modify("-1 day");
         $txtDateDebut = $dateNow->format("Y-m-d H:i");
 
-        $records = $this->entityManager->getRepository(Records::class)->findRecords($idSite, $idMac, $idMould, $idParam, $startDate, $endDate);
+        if ($idSite) {
 
-        $standardSettings = $this->entityManager->getRepository(SettingsStandard::class)->findStandardSettings($idSite, $idMac, $idMould, $idParam);
+            $records = $this->entityManager->getRepository(Records::class)->findRecords($idSite, $idMac, $idMould, $idParam, $startDate, $endDate);
 
-        $paramValues = [];
-        $stdValue = 0.00;
-        $toleranceMin = 0.00;
-        $toleranceMax = 0.00;
+            $standardSettings = $this->entityManager->getRepository(SettingsStandard::class)->findStandardSettings($idSite, $idMac, $idMould, $idParam);
 
-        if(!empty($standardSettings)){
-            foreach ($standardSettings as $setting) {
-                $stdValue = $setting->getStdValue();
-                $toleranceMin = $setting->getToleranceMini();
-                $toleranceMax = $setting->getToleranceMaxi();
-            
-                $paramValues[] = [
-                    'stdValue' => $stdValue,
-                    'toleranceMin' => $toleranceMin,
-                    'toleranceMax' => $toleranceMax,
-                ];
+            $paramValues = [];
+            $stdValue = 0.00;
+            $toleranceMin = 0.00;
+            $toleranceMax = 0.00;
+
+            if(!empty($standardSettings)){
+                foreach ($standardSettings as $setting) {
+                    $stdValue = $setting->getStdValue();
+                    $toleranceMin = $setting->getToleranceMini();
+                    $toleranceMax = $setting->getToleranceMaxi();
+                
+                    $paramValues[] = [
+                        'stdValue' => $stdValue,
+                        'toleranceMin' => $toleranceMin,
+                        'toleranceMax' => $toleranceMax,
+                    ];
+                }
             }
         }
         return $this->render('display_one_parameter/index.html.twig', [

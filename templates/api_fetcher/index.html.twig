@@ -1,0 +1,95 @@
+{% extends 'column.html.twig' %}
+
+{% block title %}ApiFetcherController Index{% endblock %}
+
+{% block submenu %}
+{% endblock %}
+
+{% block body %}
+
+<h1>ApiFetcherController API Documentation</h1>
+
+<p>This is the API documentation for the ApiFetcherController, providing endpoints for fetching machines and molds.</p>
+
+<h2>Endpoints</h2>
+
+<h3>1. Get Machines</h3>
+<p>Fetch a list of machines for a given site.</p>
+
+<pre>
+    <code>
+        GET /apifetcher/get-machines?{idSite}
+
+        Parameters:
+            - idSite (string): The ID of the site. This is a required query parameter.
+
+        Responses:
+            200 OK:
+                [
+                    {
+                        "id": 1,
+                        "name": "Machine 1"
+                    },
+                    {
+                        "id": 2,
+                        "name": "Machine 2"
+                    }
+                ]
+            400 Bad Request:
+                {
+                    "error": "Site ID is required"
+                }
+    </code>
+</pre>
+
+<h3>2. Get Molds</h3>
+<p>Fetch a list of molds for a given site and optionally a specific machine.</p>
+
+<pre>
+    <code>
+        GET /apifetcher/get-molds?{idSite}&{idMac?}
+
+        Parameters:
+            - idSite (string): The ID of the site. This is a required query parameter.
+            - idMac (string, optional): The ID of the machine. This is an optional query parameter.
+
+        Responses:
+            200 OK (with molds):
+                [
+                    {
+                        "id": 1,
+                        "name": "Mold A"
+                    },
+                    {
+                        "id": 2,
+                        "name": "Mold B"
+                    }
+                ]
+            200 OK (without molds, empty):
+                []
+            400 Bad Request:
+                {
+                    "error": "Site ID is required"
+                }
+            500 Internal Server Error:
+                {
+                    "error": "Something went wrong"
+                }
+    </code>
+</pre>
+
+<h2>Errors</h2>
+<p>List of potential error responses:</p>
+<ul>
+    <li><strong>400 Bad Request</strong> – If the required query parameters are missing or invalid.</li>
+    <li><strong>500 Internal Server Error</strong> – If something went wrong during the request processing.</li>
+</ul>
+
+<h2>Example Requests</h2>
+<ul>
+    <li>To fetch machines for site ID "1": <code>GET /apifetcher/get-machines?idSite=1</code></li>
+    <li>To fetch molds for site ID "1" and machine ID "10": <code>GET /apifetcher/get-molds?idSite=1&idMac=10</code></li>
+    <li>To fetch all molds for site ID "1": <code>GET /apifetcher/get-molds?idSite=1</code></li>
+</ul>
+
+{% endblock %}
