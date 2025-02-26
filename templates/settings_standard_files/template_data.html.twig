@@ -6,7 +6,7 @@
     <div class="container mt-4">
         <h2>Settings Standard Template Data</h2>
 
-        <form method="post" action="{{ path('template_data') }}">
+        <form method="post" action="{{ path('template_data') }}" enctype="multipart/form-data">
             <table class="table">
                 <thead class = "thead-dark">
                     <tr>
@@ -14,10 +14,11 @@
                         <th>Field Unit</th>
                         <th>Decimals</th>
                         {#<th>Is Title</th>#}
+                        <th>Image</th>
                         <th>Std Value</th>
                         <th>% Tolerance</th>
-                        <th>Mini</th>
-                        <th>Maxi</th>
+                        <th>Min</th>
+                        <th>Max</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -36,6 +37,14 @@
                             <td><div style="text-align: center;">{{ parameter.fieldunit }}</div></td>
                             <td>{{ parameter.nbdecimals }}</td>
                             {#<td>{{ parameter.istitle ? 'Yes' : 'No' }}</td>#}
+                            <td>
+                                {% if parameter.istitle %}
+                                    <input type="file" name="image_{{ parameter.idsettstdtemp }}" class="image-input" accept="image/*" data-preview-id="imagePreview_{{ parameter.idsettstdtemp }}">
+                                    <div class="mt-2">
+                                        <img id="imagePreview_{{ parameter.idsettstdtemp }}" src="#" alt="Image Preview" style="max-width: 70%; display: none;">
+                                    </div>
+                                {% endif %}
+                            </td>
 
                             {# Conditionally disable input fields if istitle is Yes #}
                             <td>
@@ -83,4 +92,24 @@
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>
     </div>
+    <script>
+        // JavaScript to show image preview for each input field
+        document.querySelectorAll('.image-input').forEach(input => {
+            input.addEventListener('change', function(event) {
+                var file = event.target.files[0];
+                var previewId = this.getAttribute('data-preview-id'); // Get the corresponding image preview ID
+                var imagePreview = document.getElementById(previewId);
+                var reader = new FileReader();
+
+                reader.onload = function(e) {
+                    imagePreview.src = e.target.result;
+                    imagePreview.style.display = 'block'; // Show the preview
+                };
+
+                if (file) {
+                    reader.readAsDataURL(file); // Read the image file
+                }
+            });
+        });
+    </script>
 {% endblock %}

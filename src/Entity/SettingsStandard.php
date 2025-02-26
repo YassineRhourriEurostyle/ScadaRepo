@@ -133,6 +133,27 @@ class SettingsStandard
      */
     private $paramdeviceid;
 
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(name="ImageFilename", type="string", length=255, nullable=true)
+     */
+    private $imageFilename;
+
+    // Getter
+    public function getImageFilename(): ?string
+    {
+        return $this->imageFilename;
+    }
+
+    // Setter
+    public function setImageFilename(?string $imageFilename): self
+    {
+        $this->imageFilename = $imageFilename;
+
+        return $this;
+    }
+
     public function getId(): ?string
     {
         return $this->idsettingstandard;

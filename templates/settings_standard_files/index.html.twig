@@ -87,4 +87,115 @@
             <p class="text-muted">No results found for the selected filters.</p>
         {% endfor %}
     </div>
+    {% block javascripts %}
+        <script>
+            // Listen for change event on the site dropdown
+            document.getElementById('site').addEventListener('change', function() {
+                var siteId = this.value; // Get the selected site ID
+                var refmacSelect = document.getElementById('machine'); // Machine dropdown
+                var refmouldSelect = document.getElementById('tool'); // Mould dropdown
+
+                // Clear existing options
+                refmacSelect.innerHTML = '<option value="" disabled selected>⚙️ Select a machine</option>';
+                refmouldSelect.innerHTML = '<option value="" disabled selected>🛠 Select a mould</option>';
+
+                // Fetch machines for the selected site
+                fetch('/apifetcher/get-machines?idSite=' + siteId)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.length > 0) {
+                            data.forEach(function(machine) {
+                                var option = document.createElement('option');
+                                option.value = machine.id;
+                                option.textContent = machine.name;
+                                refmacSelect.appendChild(option);
+                            });
+                        } else {
+                            var option = document.createElement('option');
+                            option.value = '';
+                            option.textContent = 'No machines available';
+                            refmacSelect.appendChild(option);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error fetching machines:', error);
+                    });
+
+                // Fetch molds for the selected site
+               /* fetch('/apifetcher/get-molds?idSite=' + siteId)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.length > 0) {
+                            data.forEach(function(tool) {
+                                var option = document.createElement('option');
+                                option.value = tool.id;
+                                option.textContent = tool.name;
+                                refmouldSelect.appendChild(option);
+                            });
+                        } else {
+                            var option = document.createElement('option');
+                            option.value = '';
+                            option.textContent = 'No moulds available';
+                            refmouldSelect.appendChild(option);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error fetching moulds:', error);
+                    });
+                    */
+            });
+
+            // Listen for change event on the machine dropdown
+            document.getElementById('machine').addEventListener('change', function() {
+                var siteId = document.getElementById('site').value;
+                var macId = this.value;
+                var refmouldSelect = document.getElementById('tool'); // Mould dropdown
+
+                // Clear existing options
+                refmouldSelect.innerHTML = '<option value="" disabled selected>🛠 Select a mould</option>';
+                //console.log("Selected Site ID:", siteId);
+                //console.log("Selected Machine ID:", macId);
+                // Fetch molds based on both the selected site and machine
+                if (macId) {
+                    fetch('/apifetcher/get-molds?idSite=' + siteId + '&idMac=' + macId)
+                        .then(response => response.json())
+                        .then(data => {
+                            //console.log("API Response:", data); // This logs the data returned from the API
+
+                            if (data.length > 0) {
+                                data.forEach(function(tool) {
+                                    var option = document.createElement('option');
+                                    option.value = tool.id;
+                                    option.textContent = tool.name;
+                                    refmouldSelect.appendChild(option);
+                                });
+                            } else {
+                                var option = document.createElement('option');
+                                option.value = '';
+                                option.textContent = 'No moulds available';
+                                refmouldSelect.appendChild(option);
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error fetching moulds:', error);
+                        });
+                }
+            });
+            /*function resetFilters() {
+                setTimeout(() => {
+                var refsiteSelect = document.getElementById('refsite');
+                refsiteSelect.value = '';
+                refsiteSelect.selectedIndex = 0;
+                }, 5000);
+            }*/
+            window.onload = function () {
+                setTimeout(() => {
+                    var refsiteSelect = document.getElementById('site');
+                    refsiteSelect.value = ''; // Reset site selection
+                    refsiteSelect.selectedIndex = 0;
+                }, 1000); // Wait 1 second before resetting
+            };
+
+        </script>
+    {% endblock %}
 {% endblock %}
