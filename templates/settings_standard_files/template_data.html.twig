@@ -8,7 +8,7 @@
 
         <form method="post" action="{{ path('template_data') }}" enctype="multipart/form-data">
             <table class="table">
-                <thead class = "thead-dark">
+                <thead class="thead-dark" style="position: sticky; top: 60px; z-index: 1020;">
                     <tr>
                         <th>Fieldname</th>
                         <th>Field Unit</th>
@@ -38,7 +38,7 @@
                             <td>{{ parameter.nbdecimals }}</td>
                             {#<td>{{ parameter.istitle ? 'Yes' : 'No' }}</td>#}
                             <td>
-                                {% if parameter.istitle %}
+                                {% if parameter.ispicture %}
                                     <input type="file" name="image_{{ parameter.idsettstdtemp }}" class="image-input" accept="image/*" data-preview-id="imagePreview_{{ parameter.idsettstdtemp }}">
                                     <div class="mt-2">
                                         <img id="imagePreview_{{ parameter.idsettstdtemp }}" src="#" alt="Image Preview" style="max-width: 70%; display: none;">
@@ -52,8 +52,8 @@
                                     type="text" 
                                     name="std_value_{{ parameter.idsettstdtemp }}" 
                                     class="form-control" 
-                                    {% if parameter.istitle %}disabled{% endif %} 
-                                    {% if not parameter.istitle %}style="border: 2px solid #ccc;"{% endif %} 
+                                    {% if parameter.istitle or parameter.ispicture %}disabled{% endif %} 
+                                    {% if not parameter.istitle and not parameter.ispicture %}style="border: 2px solid #ccc;"{% endif %} 
 
                                 />
                             </td>
@@ -62,8 +62,8 @@
                                     type="text" 
                                     name="tolerance_{{ parameter.idsettstdtemp }}" 
                                     class="form-control" 
-                                    {% if parameter.istitle %}disabled{% endif %} 
-                                    {% if not parameter.istitle %}style="border: 2px solid #ccc;"{% endif %} 
+                                    {% if parameter.istitle or parameter.ispicture %}disabled{% endif %} 
+                                    {% if not parameter.istitle and not parameter.ispicture %}style="border: 2px solid #ccc;"{% endif %} 
                                 />
                             </td>
                             <td>
@@ -71,8 +71,8 @@
                                     type="text" 
                                     name="mini_{{ parameter.idsettstdtemp }}" 
                                     class="form-control" 
-                                    {% if parameter.istitle %}disabled{% endif %} 
-                                    {% if not parameter.istitle %}style="border: 2px solid #ccc;"{% endif %} 
+                                    {% if parameter.istitle or parameter.ispicture %}disabled{% endif %} 
+                                    {% if not parameter.istitle and not parameter.ispicture %}style="border: 2px solid #ccc;"{% endif %} 
                                 />
                             </td>
                             <td>
@@ -80,8 +80,8 @@
                                     type="text" 
                                     name="maxi_{{ parameter.idsettstdtemp }}" 
                                     class="form-control" 
-                                    {% if parameter.istitle %}disabled{% endif %} 
-                                    {% if not parameter.istitle %}style="border: 2px solid #ccc;"{% endif %}                                
+                                    {% if parameter.istitle or parameter.ispicture %}disabled{% endif %} 
+                                    {% if not parameter.istitle and not parameter.ispicture %}style="border: 2px solid #ccc;"{% endif %}                                
                                 />
                             </td>
                         </tr>
