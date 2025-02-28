@@ -91,6 +91,25 @@ class SettingsStandardTemplate
      */
     private $datemodification;
 
+    /**
+     * @var bool|null
+     *
+     * @ORM\Column(name="IsPicture", type="boolean", nullable=true, options={"comment"="0 = No / 1 = Yes"})
+     */
+    private $ispicture;
+
+    public function getIspicture(): ?bool
+    {
+        return $this->ispicture;
+    }
+
+    public function setIspicture(?bool $ispicture): self
+    {
+        $this->ispicture = $ispicture;
+
+        return $this;
+    }
+
     public function getId(): ?string
     {
         return $this->idsettstdtemp;
