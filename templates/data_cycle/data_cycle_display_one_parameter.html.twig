@@ -1,0 +1,284 @@
+{% extends 'column.html.twig' %}
+
+{% block title %}Display One Parameter{% endblock %}
+
+{% block submenu %}
+{% endblock %}
+
+{% block body %}
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+
+    <h1 class="page-title">🔍 Display One Parameter</h1>
+
+    <!-- Form -->
+    <form name="dispParamVal" action="{{ path('datacycle_displayoneparameter') }}" method="get" class="filter-form">
+        <table id="tabFilter" class="table table-borderless">
+            <tr>
+                <!-- Site -->
+                <td>
+                    <select id="refsite" name="idSite" class="form-select">
+                        <option value = "" disabled selected>🏭 Select a site</option>
+                        {% for site in sites %}
+                            <option value="{{ site.idsites }}" {% if site.idsites == app.request.query.get('idSite') %}selected{% endif %}>
+                                {{ site.siteref }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </td>
+
+                <!-- Machine -->
+                <td>
+                    <select id="refmac" name="idmac" class="form-select">
+                        <option value = "" disabled selected>⚙️ Select a machine</option>
+                        {% for machine in machines %}
+                            <option value="{{ machine.idCfgMachine }}" {% if machine.idCfgMachine == app.request.query.get('idmac') %}selected{% endif %}>
+                                {{ machine.macreference }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </td>
+
+                <!-- Mould -->
+                <td>
+                    <select id="refmould" name="idmould" class="form-select">
+                        <option value = "" disabled selected>🛠 Select a mould</option>
+                        {% for tool in tools %}
+                            <option value="{{ tool.idCfgTool }}" {% if tool.idCfgTool == app.request.query.get('idmould') %}selected{% endif %}>
+                                {{ tool.toolreference }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </td>
+                <!-- Parameter -->
+                <td>
+                    <select id="param" name="idparam" class="form-select">
+                        <option value = "" disabled selected>🔧 Select a parameter</option>
+                        {% for parameter in parameters %}
+                            <option value="{{ parameter.idparameters }}" {% if parameter.idparameters == app.request.query.get('idparam') %}selected{% endif %}>
+                                {{ parameter.paramname }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </td>
+
+                <!-- Date -->
+                <tr>
+                    <td>
+                        <label for="startDate">Start Date</label>
+                        <input type="datetime-local" id="startDate" name="startDate" class="form-select" placeholder="Select start date">
+                    </td>
+
+                    <td>
+                        <label for="endDate">End Date</label>
+                        <input type="datetime-local" id="endDate" name="endDate" class="form-select" placeholder="Select end date">
+                    </td>
+                </tr>
+                <td>
+                    <button type="submit" class="btn btn-primary btn-lg">Display</button>
+                </td>
+            </tr>
+        </table>
+    </form>
+    <div id="GraphContainer"></div>
+
+    <script>
+        Highcharts.chart('GraphContainer', {
+            title: {
+                text: '{{ paramnamechart }}',  // Use dynamic parameter name from controller
+                align: 'center'
+            },
+            chart: {
+                shadow: true,  // Enable shadow for the entire chart
+                zoomType: 'xy',  // Enable zooming
+                borderColor: '#cccccc',  // Light border color
+                borderWidth: 1,
+                borderRadius: 10  // Rounded corners for the chart
+            },
+            xAxis: {
+                categories: [
+                    {% for record in records %}
+                        '{{ record.DataCycleDateUTC|date('Y-m-d H:i') }} / {{ record.DataCycleNo }}',
+                    {% endfor %}
+                ],
+                accessibility: {
+                    description: 'Date / Cycle'
+                }
+            },
+
+            yAxis: {
+                title: {
+                    text: 'Values'
+                },
+                labels: {
+                    format: '{value}'
+                }
+            },
+            tooltip: {
+                backgroundColor : '#FCFFC5',
+                borderColor : 'black',
+                borderRadius : '10',
+                borderWidth : '3'
+            },
+            series: [
+                {
+                    name: '{{ paramnamechart }}',  // Dynamic parameter name
+                    data: [
+                        {% for record in records %}
+                            {{ record.DataValue|default(0) }},
+                        {% endfor %}
+                    ],
+                    marker: {
+                        enabled: true,  
+                        radius: 4, 
+                        symbol: 'circle',
+                    }
+                },
+                {
+                    name: 'Std value',
+                    data: [
+                        {% for p in paramvalues %}
+                            {{ p.stdValue|default(0)|number_format(0, '.', '') }},
+                        {% endfor %}                    
+                    ],
+                    marker :{
+                        symbol : 'diamond'
+                    }
+                },
+                {
+                    name: 'Tolerance Mini',
+                    data: [
+                        {% for p in paramvalues %}
+                            {{ p.toleranceMin|default(0)|number_format(0, '.', '') }},
+                        {% endfor %}                     
+                    ],
+                    marker:{
+                        symbol : 'triangle-down'
+                    }
+                },
+                {
+                    name: 'Tolerance Max',
+                    data: [
+                        {% for p in paramvalues %}
+                            {{ p.toleranceMax|default(0)|number_format(0, '.', '') }},
+                        {% endfor %} 
+                    ],
+                    marker:{
+                        symbol : 'triangle'
+                    }
+                }
+            ]
+        });
+    </script>
+
+    {% block javascripts %}
+        <script>
+            // Listen for change event on the site dropdown
+            document.getElementById('refsite').addEventListener('change', function() {
+                var siteId = this.value; // Get the selected site ID
+                var refmacSelect = document.getElementById('refmac'); // Machine dropdown
+                var refmouldSelect = document.getElementById('refmould'); // Mould dropdown
+
+                // Clear existing options
+                refmacSelect.innerHTML = '<option value="" disabled selected>⚙️ Select a machine</option>';
+                refmouldSelect.innerHTML = '<option value="" disabled selected>🛠 Select a mould</option>';
+
+                // Fetch machines for the selected site
+                fetch('/apifetcher/get-machines?idSite=' + siteId)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.length > 0) {
+                            data.forEach(function(machine) {
+                                var option = document.createElement('option');
+                                option.value = machine.id;
+                                option.textContent = machine.name;
+                                refmacSelect.appendChild(option);
+                            });
+                        } else {
+                            var option = document.createElement('option');
+                            option.value = '';
+                            option.textContent = 'No machines available';
+                            refmacSelect.appendChild(option);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error fetching machines:', error);
+                    });
+
+                // Fetch molds for the selected site
+               /* fetch('/apifetcher/get-molds?idSite=' + siteId)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.length > 0) {
+                            data.forEach(function(tool) {
+                                var option = document.createElement('option');
+                                option.value = tool.id;
+                                option.textContent = tool.name;
+                                refmouldSelect.appendChild(option);
+                            });
+                        } else {
+                            var option = document.createElement('option');
+                            option.value = '';
+                            option.textContent = 'No moulds available';
+                            refmouldSelect.appendChild(option);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error fetching moulds:', error);
+                    });
+                    */
+            });
+
+            // Listen for change event on the machine dropdown
+            document.getElementById('refmac').addEventListener('change', function() {
+                var siteId = document.getElementById('refsite').value;
+                var macId = this.value;
+                var refmouldSelect = document.getElementById('refmould'); // Mould dropdown
+
+                // Clear existing options
+                refmouldSelect.innerHTML = '<option value="" disabled selected>🛠 Select a mould</option>';
+                //console.log("Selected Site ID:", siteId);
+                //console.log("Selected Machine ID:", macId);
+                // Fetch molds based on both the selected site and machine
+                if (macId) {
+                    fetch('/apifetcher/get-molds?idSite=' + siteId + '&idMac=' + macId)
+                        .then(response => response.json())
+                        .then(data => {
+                            //console.log("API Response:", data); // This logs the data returned from the API
+
+                            if (data.length > 0) {
+                                data.forEach(function(tool) {
+                                    var option = document.createElement('option');
+                                    option.value = tool.id;
+                                    option.textContent = tool.name;
+                                    refmouldSelect.appendChild(option);
+                                });
+                            } else {
+                                var option = document.createElement('option');
+                                option.value = '';
+                                option.textContent = 'No moulds available';
+                                refmouldSelect.appendChild(option);
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error fetching moulds:', error);
+                        });
+                }
+            });
+            /*function resetFilters() {
+                setTimeout(() => {
+                var refsiteSelect = document.getElementById('refsite');
+                refsiteSelect.value = '';
+                refsiteSelect.selectedIndex = 0;
+                }, 5000);
+            }*/
+            window.onload = function () {
+                setTimeout(() => {
+                    var refsiteSelect = document.getElementById('refsite');
+                    refsiteSelect.value = ''; // Reset site selection
+                    refsiteSelect.selectedIndex = 0;
+                }, 1000); // Wait 1 second before resetting
+            };
+
+        </script>
+    {% endblock %}
+{% endblock %}

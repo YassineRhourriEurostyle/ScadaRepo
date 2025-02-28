@@ -99,5 +99,65 @@ class DataCycleRepository extends ServiceEntityRepository
 
         return $qb->getQuery()->getResult();
     }
+    //retrieve data for display one parameter
+    public function findRecords($macId, $mouldId, $paramId, $startDate, $endDate)
+    {
+        $qb = $this->createQueryBuilder('datacyc')
+            ->select('
+            datacyc.id,
+            datacyc.idCfgMachine,
+            datacyc.idCfgTool,
+            datacyc.DataCycleNo,
+            datacyc.DataCycleDateUTC,
+            datacyc.DataCycle_DateCreationUTC,
+            datarec.DataValue,
+            datarec.idParamMac
+            ')
+        ->join('App\Entity\DataRecord','datarec','WITH', 'datarec.idDataCycle = datacyc.id' )
+        ->where('datacyc.idCfgMachine = :macId')
+        ->andWhere('datacyc.idCfgTool = :mouldId')
+        ->andWhere('datarec.idParamMac = :paramId')
+        ->andWhere('datacyc.DataCycleDateUTC BETWEEN :startDate AND :endDate')
+        ->setParameters([
+            'mouldId' => $mouldId,
+            'paramId' => $paramId,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+            'macId'=> $macId,
+        ])
+        ->orderBy('datacyc.DataCycleDateUTC', 'DESC');
+        
+        return $qb->getQuery()->getResult();
 
+    }
+    //retrieve data for display multiple parameters
+    public function findRecordsMultipleParameters ($macId, $mouldId, $paramIds, $startDate, $endDate)
+    {
+        $qb = $this->createQueryBuilder('datacyc')
+            ->select('
+            datacyc.id,
+            datacyc.idCfgMachine,
+            datacyc.idCfgTool,
+            datacyc.DataCycleNo,
+            datacyc.DataCycleDateUTC,
+            datacyc.DataCycle_DateCreationUTC,
+            datarec.DataValue,
+            datarec.idParamMac
+            ')
+        ->join('App\Entity\DataRecord','datarec','WITH', 'datarec.idDataCycle = datacyc.id' )
+        ->where('datacyc.idCfgMachine = :macId')
+        ->andWhere('datacyc.idCfgTool = :mouldId')
+        ->andWhere('datacyc.DataCycleDateUTC BETWEEN :startDate AND :endDate')
+        ->andWhere('datarec.idParamMac IN (:paramIds)')
+        ->setParameters([
+            'macId'=>$macId,
+            'mouldId'=>$mouldId,
+            'paramIds'=>$paramIds,
+            'startDate'=>$startDate,
+            'endDate'=>$endDate,
+        ])
+        ->orderBy('datacyc.DataCycleDateUTC')
+        ->setMaxResults(500);
+        return $qb->getQuery()->getresult();
+    }
 }
