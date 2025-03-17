@@ -19,6 +19,7 @@ use App\Repository\SettingsStandardFilesRepository;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * @Route("/settingsstandardfiles")
@@ -74,6 +75,8 @@ class SettingsStandardFilesController extends AbstractController
             $groupedFiles[$siteName][] = $file;
 
         }
+        //check group user if he is admin to allow him hide files to other users
+        $isInGroup1 = UserLog::isUserInGroup($this->session, $em, 1);
         return $this->render('settings_standard_files/index.html.twig', [
             'settingsFiles' => $settingsFiles,
             'groupedFiles' => $groupedFiles,
@@ -83,6 +86,7 @@ class SettingsStandardFilesController extends AbstractController
             'selectedSite' => $siteId,
             'selectedMachine' => $machineId,
             'selectedTool' => $toolId,
+            'isInGroup1'=>$isInGroup1
         ]);
     }
     /**
@@ -374,6 +378,33 @@ class SettingsStandardFilesController extends AbstractController
             'toolVersion' => $toolVersion,
         ]);
     }
+    /**
+     * @Route("/file-hidden/{id}", name= "file_hidden")
+     */
+    public function fileHidden(int $id,EntityManagerInterface $em)
+    {
+        // Check if the user is in Group 1
+        $isInGroup1 = UserLog::isUserInGroup($this->session, $em, 1);
+
+        if (!$isInGroup1) {
+            // If the user is not in Group 1, redirect with an error or show an error message
+            $this->session->set('errorFlash', "You must be member of ADMIN group.");
+            throw new AccessDeniedException('');
+        }
+
+        // Find the file
+        $file = $em->getRepository(SettingsStandardFiles::class)->find($id);
+
+        if ($file) {
+            // Toggle the ActiveFile status
+            $file->setActivefile(!$file->getActivefile());
+            $em->flush(); // Save changes to the database
+        }
+
+        // Redirect back to the file list or the file's details page
+        return $this->redirectToRoute('settingsstandardfiles_index');
+    }
+
 
 
 }

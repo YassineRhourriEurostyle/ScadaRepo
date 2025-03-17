@@ -60,27 +60,39 @@
             </h3>
             <div class="row">
                 {% for file in files %}
-                    <div class="col-md-3 mb-4">
-                        <div class="card">
-                            {% if file.imageFilename %}
-                                <img src="{{ asset('uploads/' ~ file.imageFilename) }}" alt="Image for {{ file.toolName }}" class="card-img-top" style="height: 200px; object-fit: cover;">
-                            {% else %}
-                                <div class="card-img-top" style="height: 200px; background-color: #f0f0f0; display: flex; justify-content: center; align-items: center;">
-                                    No Image
+                    {% if isInGroup1 or file.activefile %}
+                        <div class="col-md-3 mb-4">
+                            <div class="card">
+                                {% if file.imageFilename %}
+                                    <img src="{{ asset('uploads/' ~ file.imageFilename) }}" alt="Image for {{ file.toolName }}" class="card-img-top" style="height: 200px; object-fit: cover;">
+                                {% else %}
+                                    <div class="card-img-top" style="height: 200px; background-color: #f0f0f0; display: flex; justify-content: center; align-items: center;">
+                                        No Image
+                                    </div>
+                                {% endif %}
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ file.toolName }}</h5>
+                                    <p class="card-text">
+                                        <strong>Site:</strong> {{ file.siteName }}<br>
+                                        <strong>Machine:</strong> {{ file.machineName }}<br>
+                                        <strong>Tool Version:</strong> {{ file.toolVersionName }}<br>
+                                    </p>
+                                    <a href="{{ path('edit_settings_standard', { idSettStdFile: file.idsettstdfile }) }}" class="btn btn-secondary btn-sm mb-2">✏️ Edit Settings</a>
+                                    <a href="{{ path('settingsstandardfiles_show', { idSettStdFile: file.idsettstdfile }) }}" class="btn btn-info btn-sm"> <i class="bi bi-eye-fill"></i> View Details</a>
+                                    {% if isInGroup1 %}
+                                    <!-- Button to toggle the active status -->
+                                        <a href="{{ path('file_hidden', { id: file.idsettstdfile }) }}" class="btn btn-warning btn-sm mt-2">
+                                            {% if file.activefile %}
+                                                <i class="fa-solid fa-lock"></i> Deactivate
+                                            {% else %}
+                                                <i class="fa-solid fa-lock-open"></i> Activate
+                                            {% endif %}
+                                        </a>
+                                    {% endif %}
                                 </div>
-                            {% endif %}
-                            <div class="card-body">
-                                <h5 class="card-title">{{ file.toolName }}</h5>
-                                <p class="card-text">
-                                    <strong>Site:</strong> {{ file.siteName }}<br>
-                                    <strong>Machine:</strong> {{ file.machineName }}<br>
-                                    <strong>Tool Version:</strong> {{ file.toolVersionName }}<br>
-                                </p>
-                                <a href="{{ path('edit_settings_standard', { idSettStdFile: file.idsettstdfile }) }}" class="btn btn-secondary btn-sm mb-2">✏️ Edit Settings</a>
-                                <a href="{{ path('settingsstandardfiles_show', { idSettStdFile: file.idsettstdfile }) }}" class="btn btn-info btn-sm"> <i class="bi bi-eye-fill"></i> View Details</a>
                             </div>
                         </div>
-                    </div>
+                    {% endif %}
                 {% endfor %}
             </div>
         {% else %}
