@@ -200,6 +200,24 @@ class SettingsStandardFilesController extends AbstractController
         // Retrieve all parameters from SettingsStandardTemplate, ordered by idrank
         $parameters = $em->getRepository(SettingsStandardTemplate::class)
             ->findBy([], ['idrank' => 'ASC']);
+
+        // Retrieve all files from SettingsStandardFiles
+        $files = $em->getRepository(SettingsStandardFiles::class)->findAll();
+    
+        $filesdata = [];
+        foreach($files as $file){
+            $siteName = $em->getRepository(Sites::class)->findOneBy(['idsites' => $file->getIdsite()])->getSiteref();
+            $machineName = $em->getRepository(ConfigMachines::class)->findOneBy(['idcfgmachine' => $file->getIdmachine()])->getMacreference();
+            $toolName = $em->getRepository(ConfigTools::class)->findOneBy(['idcfgtool' => $file->getIdtool()])->getToolreference();
+            $toolVersionName = $em->getRepository(ConfigToolVersions::class)->findOneBy(['idcfgtoolversion' => $file->getIdtoolversion()])->getToolversiontext();
+            $filesdata[] = [
+                'id' => $file->getId(),
+                'siteName' => $siteName,
+                'machineName' => $machineName,
+                'toolName' => $toolName,
+                'toolVersionName' => $toolVersionName,
+            ]; 
+        }
         if ($request->isMethod('POST')) {
             $formData = $request->request->all();
             $settingsData = [];
@@ -286,6 +304,7 @@ class SettingsStandardFilesController extends AbstractController
         return $this->render('settings_standard_files/template_data.html.twig', [
             'parameters' => $parameters,
             'idstdfile' => $idstdfile,
+            'files' => $filesdata,
         ]);
     }
 
@@ -404,7 +423,42 @@ class SettingsStandardFilesController extends AbstractController
         // Redirect back to the file list or the file's details page
         return $this->redirectToRoute('settingsstandardfiles_index');
     }
+    /**
+     * @Route("/settings/load-settings/{id}", name="load_settings")
+     */
+    public function loadSettings($id, EntityManagerInterface $em)
+    {
+        // Retrieve the settings from the selected file (settings_standard)
+        $settings = $em->getRepository(SettingsStandard::class)->findBy(['idsettstdfile' => $id]);
 
+        // Retrieve all parameters from SettingsStandardTemplate (settings_standard_template), ordered by idRank
+        $parameters = $em->getRepository(SettingsStandardTemplate::class)->findBy([], ['idrank' => 'ASC']);
+        
+        // Prepare data in a format that can be used in the front end
+        $settingsData = [];
+        
+        // Create an associative array of settings by idRank for easy lookup
+        $settingsByIdRank = [];
+        foreach ($settings as $setting) {
+            // Map settings by idRank for easy lookup
+            $settingsByIdRank[$setting->getIdRank()] = $setting;
+        }
+        
+        // Now, loop through parameters and match with the settings by idRank
+        foreach ($parameters as $param) {
+            // Find the corresponding setting for each parameter by its idRank
+            $setting = isset($settingsByIdRank[$param->getIdRank()]) ? $settingsByIdRank[$param->getIdRank()] : null;
+            
+            // Prepare the data for the front-end
+            $settingsData[] = [
+                'id' => $param->getId(), // Use parameter's ID here (from settings_standard_template)
+                'std_value' => $setting ? $setting->getStdValue() : '', // If setting exists, use its value
+                'tolerance' => $setting ? $setting->getTolerancePct() : null,
+                'mini' => $setting ? $setting->getToleranceMini() : '',
+                'maxi' => $setting ? $setting->getToleranceMaxi() : '',
+            ];
+        }
 
-
+        return $this->json(['success' => true, 'settings' => $settingsData]);
+    }
 }
