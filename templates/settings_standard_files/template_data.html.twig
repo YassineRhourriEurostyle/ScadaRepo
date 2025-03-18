@@ -5,7 +5,35 @@
 {% block body %}
     <div class="container mt-4">
         <h2>Settings Standard Template Data</h2>
-
+        <!-- Button to trigger copy settings -->
+        <div class="mb-3">
+            <button type="button" class="btn btn-secondary" id="copySettingsBtn">Copy Settings from Another File</button>
+        </div>
+        <!-- Modal for selecting the file -->
+        <div class="modal fade" id="copySettingsModal" tabindex="-1" role="dialog" aria-labelledby="copySettingsModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="copySettingsModalLabel">Select File to Copy Settings From</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <select id="fileSelector" class="form-control">
+                            <option value="">Select a file...</option>
+                            {% for file in files %}
+                                <option value="{{ file.id }}">{{ file.siteName }} - {{ file.toolName }} - {{ file.machineName }} - {{file.toolVersionName}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" id="closeBtn" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" id="loadSettingsBtn">Load Settings</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <form method="post" action="{{ path('template_data') }}" enctype="multipart/form-data">
             <table class="table">
                 <thead class="thead-dark" style="position: sticky; top: 60px; z-index: 1020;">
@@ -111,5 +139,50 @@
                 }
             });
         });
+        document.getElementById('copySettingsBtn').addEventListener('click', function() {
+            $('#copySettingsModal').modal('show');
+        });
+        document.getElementById('closeBtn').addEventListener('click', function() {
+            $('#copySettingsModal').modal('hide');
+        });
+        document.getElementById('loadSettingsBtn').addEventListener('click', function() {
+            var fileId = document.getElementById('fileSelector').value;
+            if (fileId) {
+                fetchSettings(fileId);
+            }
+        });
+
+        function fetchSettings(fileId) {
+            fetch(`/settingsstandardfiles/settings/load-settings/${fileId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        populateForm(data.settings);
+                        $('#copySettingsModal').modal('hide');
+                    } else {
+                        alert('Failed to load settings.');
+                    }
+                });
+        }
+
+        function populateForm(settings) {
+            settings.forEach(setting => {
+                console.log(setting); // This will help you see the actual data being returned
+                console.log('Input element for std_value:', document.querySelector(`[name="std_value_${setting.id}"]`));
+                        
+                console.log('Populating setting with ID:', setting.id);
+
+                // Ensure the correct parameter ID is being used to populate each field
+                const stdValueInput = document.querySelector(`[name="std_value_${setting.id}"]`);
+                const toleranceInput = document.querySelector(`[name="tolerance_${setting.id}"]`);
+                const miniInput = document.querySelector(`[name="mini_${setting.id}"]`);
+                const maxiInput = document.querySelector(`[name="maxi_${setting.id}"]`);
+                
+                if (stdValueInput) stdValueInput.value = setting.std_value || '';
+                if (toleranceInput) toleranceInput.value = setting.tolerance || '';
+                if (miniInput) miniInput.value = setting.mini || '';
+                if (maxiInput) maxiInput.value = setting.maxi || '';
+            });
+        }
     </script>
 {% endblock %}
