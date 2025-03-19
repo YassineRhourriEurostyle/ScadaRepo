@@ -49,7 +49,7 @@ class SettingsStandardFilesController extends AbstractController
         $siteId = !empty($siteId) ? (int) $siteId : null;
         $machineId = !empty($machineId) ? (int) $machineId : null;
         $toolId = !empty($toolId) ? (int) $toolId : null;
-        $settingsFiles = $em->getRepository(SettingsStandardFiles::class)->findFilteredFiles($siteId,$machineId,$toolId);
+        $settingsFiles = $em->getRepository(SettingsStandardFiles::class)->findAll();
         $groupedFiles = [];
         
         foreach ($settingsFiles as $file) {

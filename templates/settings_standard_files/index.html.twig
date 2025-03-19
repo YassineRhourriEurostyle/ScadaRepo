@@ -6,7 +6,7 @@
     <h1>Settings Standard Files</h1>
 
     <!-- FILTER FORM -->
-    <form method="get" class="mb-4">
+    <div class="mt-4">
         <div class="row">
             <!-- Site Filter -->
             <div class="col-md-3">
@@ -46,27 +46,26 @@
 
             <!-- Submit Button -->
             <div class="col-md-3 d-flex align-items-end">
-                <button type="submit" class="btn btn-primary btn-lg">Filter</button>
-                <a href="{{ path('settingsstandardfiles_index') }}" class="btn btn-secondary ml-2">Reset</a>
+                <a href="#" id="resetFilters" class="btn btn-secondary ml-2">Reset</a>
             </div>
         </div>
-    </form>
+    </div>
 
     <!-- DISPLAY FILTERED RESULTS -->
-    <div class="container mt-4">
+    <div class="mt-4">
         {% for siteName, files in groupedFiles %}
-            <h3 style="background-color: rgb(222, 222, 222); color: rgb(0, 0, 0); padding: 10px; margin-top: 20px;">
+            <h3 id="headers" style="background-color: rgb(222, 222, 222); color: rgb(0, 0, 0); padding: 10px; margin-top: 20px;">
                 {{ siteName }}
             </h3>
             <div class="row">
                 {% for file in files %}
                     {% if isInGroup1 or file.activefile %}
-                        <div class="col-md-3 mb-4">
+                        <div class="col-md-3 mb-4 file-card" data-site="{{ file.siteName }}" data-machine="{{ file.machineName }}" data-tool="{{ file.toolName }}">                            
                             <div class="card">
                                 {% if file.imageFilename %}
-                                    <img src="{{ asset('uploads/' ~ file.imageFilename) }}" alt="Image for {{ file.toolName }}" class="card-img-top" style="height: 200px; object-fit: cover;">
+                                    <img src="{{ asset('uploads/' ~ file.imageFilename) }}" alt="Image for {{ file.toolName }}" class="card-img-top" style="height: 150px; object-fit: cover;">
                                 {% else %}
-                                    <div class="card-img-top" style="height: 200px; background-color: #f0f0f0; display: flex; justify-content: center; align-items: center;">
+                                    <div class="card-img-top" style="height: 150px; background-color: #f0f0f0; display: flex; justify-content: center; align-items: center;">
                                         No Image
                                     </div>
                                 {% endif %}
@@ -77,18 +76,20 @@
                                         <strong>Machine:</strong> {{ file.machineName }}<br>
                                         <strong>Tool Version:</strong> {{ file.toolVersionName }}<br>
                                     </p>
-                                    <a href="{{ path('edit_settings_standard', { idSettStdFile: file.idsettstdfile }) }}" class="btn btn-secondary btn-sm mb-2">✏️ Edit Settings</a>
-                                    <a href="{{ path('settingsstandardfiles_show', { idSettStdFile: file.idsettstdfile }) }}" class="btn btn-info btn-sm"> <i class="bi bi-eye-fill"></i> View Details</a>
+                                    <div class="d-flex">
+                                    <a href="{{ path('edit_settings_standard', { idSettStdFile: file.idsettstdfile }) }}" class="btn btn-warning btn-sm me-2" title="Edit Settings"><i class="fa-solid fa-pencil"></i></a>
+                                    <a href="{{ path('settingsstandardfiles_show', { idSettStdFile: file.idsettstdfile }) }}" class="btn btn-warning btn-sm me-2" title="View Details"><i class="fa-solid fa-eye"></i></a>
                                     {% if isInGroup1 %}
                                     <!-- Button to toggle the active status -->
-                                        <a href="{{ path('file_hidden', { id: file.idsettstdfile }) }}" class="btn btn-warning btn-sm mt-2">
+                                        <a href="{{ path('file_hidden', { id: file.idsettstdfile }) }}" class="btn btn-warning btn-sm">
                                             {% if file.activefile %}
-                                                <i class="fa-solid fa-lock"></i> Deactivate
+                                                <i class="fa-solid fa-book-open"title="Archive a file"></i>
                                             {% else %}
-                                                <i class="fa-solid fa-lock-open"></i> Activate
+                                                <i class="fa-solid fa-book"title="Unarchive a file"></i>
                                             {% endif %}
                                         </a>
                                     {% endif %}
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -132,29 +133,6 @@
                     .catch(error => {
                         console.error('Error fetching machines:', error);
                     });
-
-                // Fetch molds for the selected site
-               /* fetch('/apifetcher/get-molds?idSite=' + siteId)
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.length > 0) {
-                            data.forEach(function(tool) {
-                                var option = document.createElement('option');
-                                option.value = tool.id;
-                                option.textContent = tool.name;
-                                refmouldSelect.appendChild(option);
-                            });
-                        } else {
-                            var option = document.createElement('option');
-                            option.value = '';
-                            option.textContent = 'No moulds available';
-                            refmouldSelect.appendChild(option);
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error fetching moulds:', error);
-                    });
-                    */
             });
 
             // Listen for change event on the machine dropdown
@@ -165,15 +143,11 @@
 
                 // Clear existing options
                 refmouldSelect.innerHTML = '<option value="" disabled selected>🛠 Select a mould</option>';
-                //console.log("Selected Site ID:", siteId);
-                //console.log("Selected Machine ID:", macId);
                 // Fetch molds based on both the selected site and machine
                 if (macId) {
                     fetch('/apifetcher/get-molds?idSite=' + siteId + '&idMac=' + macId)
                         .then(response => response.json())
                         .then(data => {
-                            //console.log("API Response:", data); // This logs the data returned from the API
-
                             if (data.length > 0) {
                                 data.forEach(function(tool) {
                                     var option = document.createElement('option');
@@ -193,13 +167,6 @@
                         });
                 }
             });
-            /*function resetFilters() {
-                setTimeout(() => {
-                var refsiteSelect = document.getElementById('refsite');
-                refsiteSelect.value = '';
-                refsiteSelect.selectedIndex = 0;
-                }, 5000);
-            }*/
             window.onload = function () {
                 setTimeout(() => {
                     var refsiteSelect = document.getElementById('site');
@@ -207,7 +174,64 @@
                     refsiteSelect.selectedIndex = 0;
                 }, 1000); // Wait 1 second before resetting
             };
+            document.addEventListener("DOMContentLoaded", function () {
+                // Get dropdowns and reset button
+                const siteFilter = document.getElementById("site");
+                const machineFilter = document.getElementById("machine");
+                const toolFilter = document.getElementById("tool");
+                const resetButton = document.getElementById("resetFilters");
+                const fileCards = document.querySelectorAll(".file-card");
 
+                // Function to filter files dynamically
+                function filterFiles() {
+                    const selectedSite = siteFilter.options[siteFilter.selectedIndex].text.trim().toLowerCase();
+                    const selectedMachine = machineFilter.options[machineFilter.selectedIndex].text.trim().toLowerCase();
+                    const selectedTool = toolFilter.options[toolFilter.selectedIndex].text.trim().toLowerCase();
+                    
+                    let visibleSites = new Set();
+
+                    // Check if the selected value is a placeholder (e.g., "⚙️ select a machine" or "🛠 select a mould")
+                    const isSiteSelected = selectedSite !== "⚙️ select a site" && selectedSite !== "" && selectedSite !== "select a site";
+                    const isMachineSelected = selectedMachine !== "⚙️ select a machine" && selectedMachine !== "" && selectedMachine !== "select a machine";
+                    const isToolSelected = selectedTool !== "🛠 select a mould" && selectedTool !== "" && selectedTool !== "select a mould";
+
+                    fileCards.forEach(card => {
+                        const cardSite = card.getAttribute("data-site").trim().toLowerCase();
+                        const cardMachine = card.getAttribute("data-machine").trim().toLowerCase();
+                        const cardTool = card.getAttribute("data-tool").trim().toLowerCase();
+                        
+                        const matchesSite = !isSiteSelected || cardSite === selectedSite;
+                        const matchesMachine = !isMachineSelected || cardMachine === selectedMachine;
+                        const matchesTool = !isToolSelected || cardTool === selectedTool;
+                        
+                        if (matchesSite && matchesMachine && matchesTool) {
+                            card.style.display = "block";
+                            visibleSites.add(cardSite); // Track visible site names
+                        } else {
+                            card.style.display = "none";
+                        }
+                    });
+                }
+                // Trigger filtering when dropdowns change
+                siteFilter.addEventListener("change", filterFiles);
+                machineFilter.addEventListener("change", filterFiles);
+                toolFilter.addEventListener("change", filterFiles);
+
+                // Reset button functionality (client-side reset)
+                resetButton.addEventListener("click", function(event) {
+                    event.preventDefault(); // Prevent the default action (page reload)
+
+                    // Reset dropdowns to their default values
+                    siteFilter.selectedIndex = 0;
+                    machineFilter.selectedIndex = 0;
+                    toolFilter.selectedIndex = 0;
+
+                    // Show all file cards (reset filter)
+                    fileCards.forEach(card => {
+                        card.style.display = "block"; // Show all cards
+                    });
+                });
+            });
         </script>
     {% endblock %}
 {% endblock %}

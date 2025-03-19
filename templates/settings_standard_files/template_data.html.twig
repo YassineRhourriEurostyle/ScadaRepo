@@ -167,11 +167,6 @@
 
         function populateForm(settings) {
             settings.forEach(setting => {
-                console.log(setting); // This will help you see the actual data being returned
-                console.log('Input element for std_value:', document.querySelector(`[name="std_value_${setting.id}"]`));
-                        
-                console.log('Populating setting with ID:', setting.id);
-
                 // Ensure the correct parameter ID is being used to populate each field
                 const stdValueInput = document.querySelector(`[name="std_value_${setting.id}"]`);
                 const toleranceInput = document.querySelector(`[name="tolerance_${setting.id}"]`);
