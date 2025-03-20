@@ -64,6 +64,7 @@ class DisplayLastValueController extends AbstractController
                     'ToleranceMini' => null,
                     'ToleranceMaxi' => null,
                     'ToolReference' => $record['toolreference'],
+                    'MacReference' => $record['macreference'],
                 ];
             }
         }
