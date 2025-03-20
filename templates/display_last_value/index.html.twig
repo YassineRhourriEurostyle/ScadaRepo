@@ -28,8 +28,11 @@
                         <option value="" disabled selected>🛠 Select a mould</option>
                     </select>
                 </td>
-                <td style="display: flex; gap: 10px;">
+                <td style="display: flex;gap: 10px;">
                     <button type="submit" class="btn-primary btn-lg">Display</button>
+                    <button type="button" onclick="exportTableToExcel()" class="btn-success btn-md">
+                        Export to Excel
+                    </button>
                 </td>
             </tr>
         </table>
@@ -41,6 +44,7 @@
                 <thead class="thead-dark">
                     <tr>
                         <th>#</th>
+                        <th>Machine</th>
                         <th>Mould</th>
                         <th>Date (Y-M-D)</th>
                         <th>Parameter</th>
@@ -54,6 +58,7 @@
                     {% for record in recordData %}
                         <tr>
                             <td>{{ loop.index }}</td>
+                            <td>{{ record.MacReference }}</td>
                             <td>{{ record.ToolReference }}</td>
                             <td>{{ record.DateRecord|date("Y-m-d H:i:s") }}</td>
                             <td>{{ record.ParamName }}</td>
@@ -100,29 +105,6 @@
                     .catch(error => {
                         console.error('Error fetching machines:', error);
                     });
-
-                // Fetch molds for the selected site
-               /* fetch('/apifetcher/get-molds?idSite=' + siteId)
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.length > 0) {
-                            data.forEach(function(tool) {
-                                var option = document.createElement('option');
-                                option.value = tool.id;
-                                option.textContent = tool.name;
-                                refmouldSelect.appendChild(option);
-                            });
-                        } else {
-                            var option = document.createElement('option');
-                            option.value = '';
-                            option.textContent = 'No moulds available';
-                            refmouldSelect.appendChild(option);
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error fetching moulds:', error);
-                    });
-                    */
             });
 
             // Listen for change event on the machine dropdown
@@ -133,8 +115,6 @@
 
                 // Clear existing options
                 refmouldSelect.innerHTML = '<option value="" disabled selected>🛠 Select a mould</option>';
-                //console.log("Selected Site ID:", siteId);
-                //console.log("Selected Machine ID:", macId);
                 // Fetch molds based on both the selected site and machine
                 if (macId) {
                     fetch('/apifetcher/get-molds?idSite=' + siteId + '&idMac=' + macId)
@@ -161,13 +141,6 @@
                         });
                 }
             });
-            /*function resetFilters() {
-                setTimeout(() => {
-                var refsiteSelect = document.getElementById('refsite');
-                refsiteSelect.value = '';
-                refsiteSelect.selectedIndex = 0;
-                }, 5000);
-            }*/
             window.onload = function () {
                 setTimeout(() => {
                     var refsiteSelect = document.getElementById('refsite');
@@ -175,7 +148,27 @@
                     refsiteSelect.selectedIndex = 0;
                 }, 1000); // Wait 1 second before resetting
             };
+        </script>
+        <script src="https://cdn.sheetjs.com/xlsx-0.19.3/package/dist/xlsx.full.min.js"></script>
+        <script>
+                function exportTableToExcel() {
+                    // Get the table
+                    const table = document.getElementById('tabStyleA');
 
+                    // Convert table data to worksheet
+                    const ws = XLSX.utils.table_to_sheet(table);
+                    
+                    // Create workbook and add worksheet
+                    const wb = XLSX.utils.book_new();
+                    XLSX.utils.book_append_sheet(wb, ws, 'Last Values');
+                    
+                    // Generate filename with current date 
+                    const timestamp = new Date().toISOString().slice(0,19).replace(/[:]/g, '-');
+                    const fileName = `last_values_${timestamp}.xlsx`;
+                    
+                    // Save the file
+                    XLSX.writeFile(wb, fileName);
+                }
         </script>
     {% endblock %}
 {% endblock %}
